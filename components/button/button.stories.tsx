@@ -54,7 +54,8 @@ const meta: Meta<ButtonProps> = {
     // iconL: ArrowUpRightIcon, // Default icon set for the story
     // iconR: ShoppingCartIcon, // Default icon set for the story
     // children: "Create An account",
-    onClick: fn()
+    onClick: fn(),
+    className: ""
   },
   
 };
@@ -115,7 +116,7 @@ export const Cart: Story = {
     color: "light",
     iconL: ShoppingCartIcon,
     children: "Cart",
-    className: "bg-black-600 border-0"
+    className: "bg-black-650 border-0"
   },
 };
 
@@ -124,6 +125,5 @@ export const SignIn: Story = {
     color: "light",
     iconL: LogInIcon,
     children: "Sign In",
-    
   },
 };

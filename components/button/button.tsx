@@ -29,20 +29,20 @@ export const Button: React.FC<ButtonProps> = ({
       "bg-black-100 text-white": color === "dark",
       "bg-white text-black-100 border border-black-100": color === "light",
     },
+    IconL || IconR ? "gap-2 flex items-center" : null, // Add flex layout and gap if there's an icon
     className,
-    IconL || IconR ? "gap-2 flex items-center" : null // Add flex layout and gap if there's an icon
   );
 
   return (
     <button className={buttonClassnames} {...props}>
       {/* Render icon on the left or both positions */}
       { IconL && (
-        <IconL size={size === "lg" ? "20px" : "16px"} color={color === "light" ? undefined: "#ffffff"} />
+        <IconL size={size === "lg" ? "24px" : "16px"} color={color === "light" ? undefined: "#ffffff"} />
       )}
       {children}
       {/* Render icon on the right or both positions */}
       {IconR && (
-        <IconR size={size === "lg" ? "20px" : "16px"} color={color === "light" ? undefined: "#ffffff"} />
+        <IconR size={size === "lg" ? "24px" : "16px"} color={color === "light" ? undefined: "#ffffff"} />
       )}
     </button>
   );

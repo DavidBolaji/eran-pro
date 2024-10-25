@@ -29,6 +29,10 @@ export const Typography: React.FC<TypographyProps> = ({
       "text-h4 font-regular": size === "h4",
       "text-h5": size === "h5",
       "text-h6": size === "h6",
+      "font-bold": size === "s1",
+      "font-bold t": size === "s2",
+      "font-regular": size === "c1",
+      "font-regular t": size === "c2",
     },
     {
       "text-left": align === "left",
