@@ -16,11 +16,12 @@ const config: Config = {
         "black-300": "#6E8C7B",
         "black-400": "#92B09F",
         "black-500": "#C8E0D2",
-        "black-600": "#DDEEE5",
+        "black-630": "#DDEEE5",
         "black-700": "#F0FAF4",
         "green": "#066932",
         "lemon": "#7DBA00",
-        "grey": "#F5F5F5",
+        "grey-100": "#E7E7E7",
+        "grey-200": "#F5F5F5",
         "red-100": "#E83B3B",
         "red-200": "#FF8A8A",
         "orange-100": "#D28209",
@@ -42,10 +43,13 @@ const config: Config = {
         satoshi: ["Satoshi Variable", "sans-serif"],
       },
       letterSpacing: {
-        tightest: "-.05em",
-        tighter: "-.025em",
-        normal: "0",
-        wide: ".25em",
+        'widest': '0.125em',  // 1.25
+        'wide': '0.025em',    // 0.25
+        'normal': '0em',     // 0
+        'narrow': '0.015em',  // 0.15
+        'narrower': '-0.01em', // 0.1
+        'wider': '0.05em',    // 0.5
+        'semi-wide': '0.04em',// 0.4
       },
     },
   },

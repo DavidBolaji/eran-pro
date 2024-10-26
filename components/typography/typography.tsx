@@ -21,18 +21,18 @@ export const Typography: React.FC<TypographyProps> = ({
   
   const HeadingTag = as;
   const headingClassnames = classNames(
-    "font-satoshi",
+    "font-satoshi text-black-100",
     {
-      "text-h1 font-regular": size === "h1",
-      "text-h2 font-regular": size === "h2",
-      "text-h3 font-regular": size === "h3",
+      "text-h1 font-regular font tracking-wide": size === "h1",
+      "text-h2 font-regular tracking-wide": size === "h2",
+      "text-h3 font-regular tracking-wide": size === "h3",
       "text-h4 font-regular": size === "h4",
-      "text-h5": size === "h5",
-      "text-h6": size === "h6",
-      "font-bold": size === "s1",
-      "font-bold t": size === "s2",
-      "font-regular": size === "c1",
-      "font-regular t": size === "c2",
+      "text-h5 tracking-normal": size === "h5",
+      "text-h6 tracking-narrow": size === "h6",
+      "text-s1 font-semibold tracking-narrow": size === "s1",
+      "text-s2 font-semibold tracking-narrower": size === "s2",
+      "text-c1 font-regular tracking-semi-wide": size === "c1",
+      "text-c2 font-regular tracking-semi-wide": size === "c2",
     },
     {
       "text-left": align === "left",
@@ -42,5 +42,7 @@ export const Typography: React.FC<TypographyProps> = ({
     rest.className
   );
 
-  return <HeadingTag className={headingClassnames}>{children}</HeadingTag>;
+  return <HeadingTag className={headingClassnames}>{children}
+  <div className="f"></div>
+  </HeadingTag>;
 };

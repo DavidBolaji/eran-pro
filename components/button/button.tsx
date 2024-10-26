@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { ButtonHTMLAttributes, ElementType, ReactNode } from "react";
+import React, { ButtonHTMLAttributes, ReactNode } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: "sm" | "lg";
@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   const { className, ...props } = rest;
 
   const buttonClassnames = classNames(
-    "text-s2 text-center py-2 rounded-full font-medium",
+    "text-s2 text-center py-2 rounded-full font-medium h-10",
     {
       "px-6": size === "lg",
       "px-3": size === "sm",

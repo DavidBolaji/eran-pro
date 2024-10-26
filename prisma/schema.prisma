@@ -9,6 +9,121 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum OrderStatus {
+  PENDING
+  CANCELED
+  COMPLETED
+}
+
+enum PromotionType {
+  CATEGORY
+  ITEM
+}
+
+enum STATUS {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum UNIT {
+  PER_KG
+  PER_ITEM
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(50)
+  description String    @db.VarChar(300)
+  products    Product[]
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Promotion Promotion[]
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  User        User        @relation(fields: [userId], references: [id])
+  products    Product[]
+  address     String
+  country     String
+  city        String
+  state       String
+  status      OrderStatus @default(PENDING)
+  info        String?
+  paymentType String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String      @db.VarChar(50)
+  description String      @db.VarChar(300)
+  img         String      @db.VarChar(300)
+  price       Float
+  qty         Int         @default(0)
+  stock       Boolean
+  unit        UNIT        @default(PER_ITEM)
+  status      STATUS      @default(ACTIVE)
+  Order       Order[]
+  Promotion   Promotion[]
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+model Promotion {
+  id            String        @id @default(uuid())
+  name          String
+  promotionType PromotionType
+  code          String
+  categoryId    String?
+  category      Category?     @relation(fields: [categoryId], references: [id]) // Relation to Category
+  productId     String?
+  product       Product?      @relation(fields: [productId], references: [id]) // Relation to Product
+
+  discount     Int
+  startDate DateTime
+  endDate   DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([productId])
+}
+
+model User {
+  id       String  @id @default(uuid())
+  fname    String
+  lname    String
+  email    String
+  password String?
+  phone    String
+  address  String
+  country  String
+  city     String
+  state    String
+  orders   Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
 }

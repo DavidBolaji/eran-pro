@@ -16,6 +16,7 @@ import { RotateCCWIcon } from "./icons/rotate-ccw";
 import { ShoppingCartIcon } from "./icons/shopping-cart";
 import { TrashIcon } from "./icons/trash";
 import { UserIcon } from "./icons/user";
+import { whatsappIcon } from "./icons/whatsapp";
 
 export const ICON = {
   ArrowUpRightIcon,
@@ -36,4 +37,5 @@ export const ICON = {
   ShoppingCartIcon,
   TrashIcon,
   UserIcon,
+  whatsappIcon
 };
