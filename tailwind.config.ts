@@ -16,7 +16,7 @@ const config: Config = {
         "black-300": "#6E8C7B",
         "black-400": "#92B09F",
         "black-500": "#C8E0D2",
-        "black-630": "#DDEEE5",
+        "black-610": "#DDEEE5",
         "black-700": "#F0FAF4",
         "green": "#066932",
         "lemon": "#7DBA00",

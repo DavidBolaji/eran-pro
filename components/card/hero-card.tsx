@@ -8,7 +8,7 @@ import { Images } from "@/constants/image";
 
 export const HeroCcard = () => {
   return (
-    <div className="relative w-full py-10 bg-black-630 rounded-2xl">
+    <div className="relative w-full py-10 bg-black-610 rounded-2xl">
       <div className="px-6">
         <Typography
           as="h4"
@@ -17,7 +17,7 @@ export const HeroCcard = () => {
           className="pt- mb-4 text-black-100 font-bold max-w-xl "
         >
           Get 15% Off All Chicken Orders <br />
-          <span className="bg-black-630 px-4 ml-5 relative z-10">One Day Only! 🐔</span>
+          <span className="bg-black-610 px-4 ml-5 relative z-10">One Day Only! 🐔</span>
           <hr className="bg-black-100 h-1 -translate-y-7 -z-10 w-10/12" />
         </Typography>
 

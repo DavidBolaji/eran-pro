@@ -77,7 +77,7 @@ model Product {
   unit        UNIT        @default(PER_ITEM)
   status      STATUS      @default(ACTIVE)
   Order       Order[]
-  Promotion   Promotion[]
+  promotion   Promotion[]
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])

@@ -1,17 +1,21 @@
-import { Product } from "@prisma/client";
-import React from "react";
+import React, { forwardRef } from "react";
 import { ProductCard } from "../card/product-card";
+import { IProduct } from "@/actions/get-products";
 
-export const ProductComponent = React.forwardRef<
+// eslint-disable-next-line react/display-name
+export const ProductComponent = forwardRef<
   HTMLDivElement,
-  { products: Product[] }
+  { products: IProduct[] }
 >(({ products }, ref) => {
   return (
-    <div className="py-10 pl-24">
+    <div className="py-10 pl-20">
       {/* Scrollable container with hidden scrollbar */}
-      <div ref={ref} className="flex gap-4 overflow-x-scroll pr-24 scrollbar-hide">
-        {products.map((product: any) => (
-          <ProductCard product={product} />
+      <div
+        ref={ref}
+        className="flex gap-4 overflow-x-scroll pr-24 scrollbar-hide"
+      >
+        {products.map((product: IProduct, index: number) => (
+          <ProductCard key={index} product={product} />
         ))}
       </div>
     </div>

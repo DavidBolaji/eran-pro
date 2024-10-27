@@ -11,6 +11,7 @@ export const getCategories = async (): Promise<Pick<Category, "id" | "name">[]> 
         name: true,
       },
     });
+
     return categories;
   } catch (error) {
     throw new Error((error as Error).message);
@@ -21,9 +22,6 @@ export const getCategories = async (): Promise<Pick<Category, "id" | "name">[]> 
 export const selectCategory = (formData: FormData) => {
     const catFilter = formData.getAll("Category")
     const nameFilter = formData.getAll("Name")
-
-    // console.log(catFilter)
-    // console.log(nameFilter)
 
     const params = new URLSearchParams();
 

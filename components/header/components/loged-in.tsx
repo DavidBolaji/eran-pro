@@ -12,7 +12,7 @@ export const LogedIn = () => {
       <div className="flex items-center gap-4">
         <Button
           iconL={ShoppingCartIcon}
-          className="bg-black-630 border-0"
+          className="bg-black-610 border-0"
           iconR={() => <CartCount />}
           size="lg"
           color="light"
@@ -20,7 +20,7 @@ export const LogedIn = () => {
           Cart
         </Button>
         <Button
-          className="bg-black-630 border-0"
+          className="bg-black-610 border-0"
           iconL={RotateCCWIcon}
           size="lg"
           color="light"

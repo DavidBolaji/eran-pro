@@ -1,14 +1,19 @@
 "use client";
-import React, { useRef } from "react";
+import React, {  useRef } from "react";
 import { Wrapper } from "../wrapper/wrapper";
 import { SelectedCategoryButtons } from "./select-category-button";
 import { ProductComponent } from "./product-component";
 import { ChevronRightIcon } from "@/constants/icons/chevron-right";
+import { Category } from "@prisma/client";
+import { IProduct } from "@/actions/get-products";
+// import { useSearchParams } from "next/navigation";
+
+
 
 export const ShoppingComponent: React.FC<{
   categoryName: string;
-  categories: any;
-  products: any;
+  categories: Pick<Category, "id" | "name">[];
+  products: IProduct[];
 }> = ({ categories, categoryName, products }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 

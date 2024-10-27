@@ -7,21 +7,21 @@ import { IProduct } from "@/actions/get-products";
 import Image from "next/image";
 
 
-export const ProductCard: React.FC<{
+export const ProductCardMini: React.FC<{
   product: IProduct;
 }> = ({ product }) => {
   const isOnSale = product.status === "ACTIVE";
   return (
     <div
       key={product.id}
-      className="min-w-[328px] min-h-[462px] border relative rounded-2xl bg-white shrink-0"
+      className="min-h-[401px] pb-4 col-span-2 border relative rounded-2xl bg-white shadow-md shrink-0"
     >
       {isOnSale && (
         <div className="bg-red-100 pl-4 flex items-center text-xs font-extrabold text-white top-5 h-8 w-20 absolute rounded-e-2xl">
           On Sale!
         </div>
       )}
-      <div className="h-64 relative bg-gray-800 rounded-t-2xl mb-4 overflow-hidden">
+      <div className="h-44 relative bg-gray-800 rounded-t-2xl mb-4 overflow-hidden">
         <Image width={328} height={256} src={product.img} priority className="object-cover absolute w-full h-64" alt={product.name} />
       </div>
       <div className="px-4">
@@ -35,15 +35,6 @@ export const ProductCard: React.FC<{
         </Typography>
         <div className="text-lg font-bold">
           <Typography
-            as="p"
-            size="c1"
-            align="left"
-            className="inline-block text-black-300 mr-2"
-          >
-            price / kg
-          </Typography>
-
-          <Typography
             as="h6"
             size="h6"
             align="left"
@@ -52,16 +43,17 @@ export const ProductCard: React.FC<{
             ₦{product.price.toLocaleString()}
           </Typography>
         </div>
-        <div className="flex mt-4 gap-x-3">
+        <div className="mt-4 space-y-3">
           <Button
             iconR={ShoppingCartIcon}
             type="button"
             size="lg"
             color="light"
+            className="w-full flex justify-center"
           >
             Add To Cart
           </Button>
-          <Button iconR={ArrowUpRightIcon} type="button" size="lg" color="dark">
+          <Button iconR={ArrowUpRightIcon} className="w-full flex justify-center" type="button" size="lg" color="dark">
             Buy Now
           </Button>
         </div>
@@ -70,15 +62,3 @@ export const ProductCard: React.FC<{
   );
 };
 
-{
-  /* {product.oldPrice && (
-          <Typography
-            as="h6"
-            size="h6"
-            align="left"
-            className="inline-block text-black-300 mr-2"
-          >
-            ₦{product.oldPrice.toLocaleString()}
-          </Typography>
-        )} */
-}
