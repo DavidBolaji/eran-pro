@@ -19,6 +19,7 @@ interface HomeSearchParams {
 }
 
 export default async function Home({
+
   searchParams,
 }: {
   searchParams: HomeSearchParams;
@@ -27,9 +28,11 @@ export default async function Home({
   const categoryName = searchParams?.name || "All Categories";
   const categoryId = searchParams?.category || "1";
   const products = await getProducts(categoryId);
+  const allProducts = await getProducts('');
 
   return (
     <div className="bg-grey-200">
+
       <Header2 />
       <Header />
       <HeroSection />
@@ -69,7 +72,7 @@ export default async function Home({
         </Typography>
         <div className="pb-20">
           <div className="grid grid-cols-10 gap-x-4 gap-y-10">
-            {products.map((product: IProduct, index: number) => (
+            {allProducts.map((product: IProduct, index: number) => (
               <ProductCardMini key={index} product={product} />
             ))}
           </div>

@@ -33,7 +33,7 @@ export const Footer = () => {
                 size="h6"
                 as="h6"
                 align="left"
-                className="pb-2 font-bold"
+                className="pb-2 font-bold text-[20px]"
               >
                 {foot.title}
               </Typography>
@@ -41,9 +41,9 @@ export const Footer = () => {
                 <Typography
                   key={nav.name}
                   align="left"
-                  size="s1"
+                  size="s2"
                   as="p"
-                  className="font-normal text-base pb-5 leading-5"
+                  className="text-base pb-4"
                 >
                   {nav.name}
                 </Typography>

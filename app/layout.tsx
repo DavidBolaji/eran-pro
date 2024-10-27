@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "./globals.css";
+import { TanstackProvider } from "@/tanstack/tanstack-provider";
+import { CartDrawer } from "@/components/drawer/cart-drawer/cart-drawer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <TanstackProvider>
+            {children}
+            <CartDrawer />
+          </TanstackProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

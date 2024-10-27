@@ -1,11 +1,8 @@
 import React from "react";
 import { Typography } from "../typography/typography";
-import { Button } from "../button/button";
-import { ShoppingCartIcon } from "@/constants/icons/shopping-cart";
-import { ArrowUpRightIcon } from "@/constants/icons/arrow-up-right";
 import { IProduct } from "@/actions/get-products";
 import Image from "next/image";
-
+import { CardButton } from "../button/card-button";
 
 export const ProductCard: React.FC<{
   product: IProduct;
@@ -22,7 +19,13 @@ export const ProductCard: React.FC<{
         </div>
       )}
       <div className="h-64 relative bg-gray-800 rounded-t-2xl mb-4 overflow-hidden">
-        <Image width={328} height={256} src={product.img} priority className="object-cover absolute w-full h-64" alt={product.name} />
+        <Image
+          fill
+          src={product.img}
+          priority
+          className="object-cover absolute w-full h-64"
+          alt={product.name}
+        />
       </div>
       <div className="px-4">
         <div className="text-sm mb-2 inline-block px-2 py-1 rounded-full border-black-100 text-gray-500 border">
@@ -53,17 +56,7 @@ export const ProductCard: React.FC<{
           </Typography>
         </div>
         <div className="flex mt-4 gap-x-3">
-          <Button
-            iconR={ShoppingCartIcon}
-            type="button"
-            size="lg"
-            color="light"
-          >
-            Add To Cart
-          </Button>
-          <Button iconR={ArrowUpRightIcon} type="button" size="lg" color="dark">
-            Buy Now
-          </Button>
+          <CardButton product={product} />
         </div>
       </div>
     </div>

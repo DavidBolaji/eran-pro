@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { HTMLAttributes, ReactNode } from "react";
 
 type headings = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-type texts = "c1" | "c2" | "s1" | "s2"
+type texts = "c1" | "c2" | "s1" | "s2";
 
 export interface TypographyProps extends HTMLAttributes<HTMLElement> {
   as: headings | "p";
@@ -13,12 +13,11 @@ export interface TypographyProps extends HTMLAttributes<HTMLElement> {
 
 export const Typography: React.FC<TypographyProps> = ({
   as = "h4",
-  size = 'h4',
-  align = 'left',
+  size = "h4",
+  align = "left",
   children,
   ...rest
 }) => {
-  
   const HeadingTag = as;
   const headingClassnames = classNames(
     "font-satoshi text-black-100",
@@ -42,7 +41,5 @@ export const Typography: React.FC<TypographyProps> = ({
     rest.className
   );
 
-  return <HeadingTag className={headingClassnames}>{children}
-  <div className="f"></div>
-  </HeadingTag>;
+  return <HeadingTag className={headingClassnames}>{children}</HeadingTag>;
 };

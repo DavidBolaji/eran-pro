@@ -39,7 +39,7 @@ export const TanstackProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return (
       <PersistQueryClientProvider client={client} persistOptions={{ persister }}>
         {children}
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={true} />
       </PersistQueryClientProvider>
     );
   }

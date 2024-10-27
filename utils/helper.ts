@@ -6,3 +6,11 @@ export const getQueryCategoryParams = (url: string) => {
 
   return { category, name };
 };
+
+export const formatToNaira = (amount: number) => {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    minimumFractionDigits: 0,
+  }).format(amount);
+};
