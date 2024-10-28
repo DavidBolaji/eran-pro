@@ -4,9 +4,7 @@ import { EnhanceCard } from "@/components/card/enhance-card";
 import { FoodCard } from "@/components/card/food-card";
 import { FreshMeatCard } from "@/components/card/fresh-meat-card";
 import { ProductCardMini } from "@/components/card/product-card-mini";
-import { Footer } from "@/components/footer/footer";
-import { Header } from "@/components/header/header";
-import { Header2 } from "@/components/header/header2";
+// import { Footer } from "@/components/footer/footer";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ShoppingComponent } from "@/components/sections/shopping-component";
 
@@ -31,8 +29,6 @@ export default async function Home({
 
   return (
     <div className="bg-grey-200">
-      <Header2 />
-      <Header />
       <HeroSection />
       <Wrapper>
         <Typography
@@ -72,7 +68,7 @@ export default async function Home({
         <div className="md:hidden block">
           <FreshMeatCard />
           <div className="flex px-4 gap-x-4 overflow-x-scroll mt-6 mb-12 scrollbar-hide">
-            {["a", "b", "c"].map((food, index: number) => (
+            {["a", "b", "c"].map((food) => (
               <FoodCard key={food} />
             ))}
           </div>
@@ -104,9 +100,8 @@ export default async function Home({
           </div>
         </div>
         <EnhanceCard />
-      </Wrapper>
-
-      <Footer />
+        <div className="pb-20" />
+      </Wrapper>     
     </div>
   );
 }

@@ -6,9 +6,6 @@ import { ProductComponent } from "./product-component";
 import { ChevronRightIcon } from "@/constants/icons/chevron-right";
 import { Category } from "@prisma/client";
 import { IProduct } from "@/actions/get-products";
-// import { useSearchParams } from "next/navigation";
-
-
 
 export const ShoppingComponent: React.FC<{
   categoryName: string;
@@ -31,12 +28,12 @@ export const ShoppingComponent: React.FC<{
       <Wrapper>
         <div className="flex md:flex-row items-center justify-between">
           <div className="md:my-0 my-6 lg:px-0 md:px-4 px-4 overflow-x-scroll scrollbar-hide">
-          {/* <div className="flex px-4 gap-x-4 mt-6 mb-12 scrollbar-hide overflow-x-scroll "> */}
+         
             <SelectedCategoryButtons
               categories={[{ name: "All Categories", id: "1" }, ...categories]}
               initialCategoryName={categoryName}
             />
-            {/* </div> */}
+         
           </div>
           <div className="md:flex gap-x-3 md:px-0 px-4 hidden">
             <button

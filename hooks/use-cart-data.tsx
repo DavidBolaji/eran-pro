@@ -2,26 +2,44 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Product } from "@prisma/client";
 import { IProduct } from "@/actions/get-products";
-// import { useCallback, useMemo } from "react";
 
 export const useCartData = () => {
   const queryClient = useQueryClient();
 
-  // if (!queryClient.getQueryData(["CART_DATA"])) {
-  //   queryClient.setQueryData(["CART_DATA"], []);
-  // }
-
-  const addProduct = (product: IProduct) => {
+  const addProduct = (product: IProduct & { weight: number }) => {
+    queryClient.setQueryData(["CART_QTY"], 0.5);
     queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
-      const productData = { ...product, weight: 0.5 };
-      if (!prev?.length) {
-        return [productData];
-      } else {
-        return [...prev, productData];
+      const exists = prev.length;
+      const exists2 = prev?.filter((el) => el.id === product.id);
+      const all = exists && exists2.length;
+
+      if (all) {
+        return prev?.map((el) => {
+          if (el.id === product.id) {
+            return {
+              ...product,
+              weight: product.weight ? product.weight : 0.5,
+            };
+          } else {
+            return el;
+          }
+        });
       }
+
+      if (!exists) {
+        const productData = {
+          ...product,
+          weight: product.weight ? product.weight : 0.5,
+        };
+        return [productData];
+      }
+      console.log("[weight]", product.weight);
+      return [
+        ...prev,
+        { ...product, weight: product.weight ? product.weight : 0.5 },
+      ];
     });
   };
-
 
   const deleteProduct = (productId: string) => {
     queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {

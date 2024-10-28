@@ -16,7 +16,7 @@ export const CartOrderCard: React.FC<{
         <div className="bg-black-100 w-[120px] h-[120px] rounded-xl relative">
           <Image
             priority
-            src={product.img}
+            src={product.img ?? ""}
             fill
             alt={product.name}
             className="object-cover w-full h-full -z-10 rounded-xl absolute"
@@ -29,7 +29,7 @@ export const CartOrderCard: React.FC<{
           <Typography as="h6" size="h6" align="left" className="pb-2 font-bold leading-7">
             {formatToNaira(product.price)}
           </Typography>
-          <Stepper weight={product.weight} productId={product.id} />
+          <Stepper weight={product.weight} product={product} />
         </div>
       </div>
       <CartDeleteButton productId={product.id} />

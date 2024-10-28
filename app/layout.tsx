@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 
 import dynamic from "next/dynamic";
 
-// Import your component with SSR disabled
 const TanstackProvider = dynamic(
   () =>
     import("../tanstack/tanstack-provider").then((mod) => mod.TanstackProvider),

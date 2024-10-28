@@ -8,7 +8,7 @@ import { ArrowUpRightIcon } from "@/constants/icons/arrow-up-right";
 
 export const EnhanceCard = () => {
   return (
-    <div className="relative w-full py-10 bg-black-600 md:rounded-2xl mb-20">
+    <div className="relative w-full py-10 bg-black-600 md:rounded-2xl">
       <div className="px-6">
         <Typography
           as="h4"

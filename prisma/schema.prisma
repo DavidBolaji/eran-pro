@@ -47,6 +47,17 @@ model Category {
   Promotion Promotion[]
 }
 
+model Image {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
 model Order {
   id          String      @id @default(uuid())
   userId      String
@@ -69,8 +80,8 @@ model Order {
 model Product {
   id          String      @id @default(uuid())
   name        String      @db.VarChar(50)
-  description String      @db.VarChar(300)
-  img         String      @db.VarChar(300)
+  description String      @db.VarChar(600)
+  img         String?      @db.VarChar(300)
   price       Float
   qty         Int         @default(0)
   stock       Boolean
@@ -78,6 +89,7 @@ model Product {
   status      STATUS      @default(ACTIVE)
   Order       Order[]
   promotion   Promotion[]
+  images     Image[]
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])

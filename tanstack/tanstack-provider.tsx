@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
 
 // Custom persister to handle cache persistence in localStorage
 const customPersister = {
-  persistClient: async (client: any) => {
+  persistClient: async (client: unknown) => {
     window.localStorage.setItem("react-query-cache", JSON.stringify(client));
   },
   restoreClient: async () => {
@@ -29,7 +29,7 @@ const customPersister = {
     return cache ? JSON.parse(cache) : undefined;
   },
   removeClient: async () => {
-    window.localStorage.removeItem("react-query-cache");
+    // window?.localStorage?.removeItem("react-query-cache");
   },
 };
 
@@ -45,7 +45,10 @@ export const TanstackProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [client] = useState(queryClient);
 
   return (
-    <PersistQueryClientProvider client={client} persistOptions={{ persister: customPersister }}>
+    <PersistQueryClientProvider
+      client={client}
+      persistOptions={{ persister: customPersister }}
+    >
       {children}
       <ReactQueryDevtools initialIsOpen={true} />
     </PersistQueryClientProvider>

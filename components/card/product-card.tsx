@@ -21,7 +21,7 @@ export const ProductCard: React.FC<{
       <div className="h-64 relative bg-gray-800 rounded-t-2xl mb-4 overflow-hidden">
         <Image
           fill
-          src={product.img}
+          src={product.img ?? ""}
           priority
           className="object-cover absolute w-full h-64"
           alt={product.name}

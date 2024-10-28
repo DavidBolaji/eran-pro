@@ -1,5 +1,5 @@
 import db from "@/db/db";
-import { Category, Product, Promotion } from "@prisma/client";
+import { Category, Image, Product, Promotion } from "@prisma/client";
 
 export type IProduct = Omit<
   Product,
@@ -7,7 +7,37 @@ export type IProduct = Omit<
 > & {
   promotion: Pick<Promotion, "name" | "discount">[]; // Note: promotion is an array
   category: Pick<Category, "name" | "id">;
+  images: Pick<Image, "url">[]
 };
+
+export const productQuery = {
+  id: true,
+  name: true,
+  description: true,
+  img: true,
+  price: true,
+  qty: true,
+  stock: true,
+  unit: true,
+  status: true,
+  images: {
+    select: {
+      url: true
+    }
+  },
+  category: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+  promotion: {
+    select: {
+      name: true,
+      discount: true,
+    },
+  },
+}
 
 export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
   try {
@@ -18,29 +48,7 @@ export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
             ? undefined
             : categoryId,
       },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        img: true,
-        price: true,
-        qty: true,
-        stock: true,
-        unit: true,
-        status: true,
-        category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        promotion: {
-          select: {
-            name: true,
-            discount: true,
-          },
-        },
-      },
+      select: productQuery
     });
     return products;
   } catch (error) {

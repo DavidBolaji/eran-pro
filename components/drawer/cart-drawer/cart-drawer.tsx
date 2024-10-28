@@ -1,7 +1,7 @@
 "use client";
 import { useCartDrawer } from "@/hooks/use-cart-drawer";
 import React from "react";
-import { StyledCartDrawer } from "./cart-drawer.style";
+import { StyledCartDrawer, StyledCartMobileDrawer } from "./cart-drawer.style";
 import { CloseIcon } from "@/constants/icons/close";
 import { ShoppingCartIcon } from "@/constants/icons/shopping-cart";
 import { useCartData } from "@/hooks/use-cart-data";
@@ -54,9 +54,9 @@ export const CartDrawer = () => {
           )}
         </StyledCartDrawer>
       )}
-      <div className="rounded rounded-tl-2xl overflow-hidden">
+
         {!screen.lg && (
-          <StyledCartDrawer
+          <StyledCartMobileDrawer
             open={(cartDrawer as boolean) ?? false}
             onClose={() => toggleDrawer(!cartDrawer)}
             placement="bottom"
@@ -90,9 +90,9 @@ export const CartDrawer = () => {
                 </div>
               ))
             )}
-          </StyledCartDrawer>
+          </StyledCartMobileDrawer>
         )}
-      </div>
+
     </div>
   );
 };
