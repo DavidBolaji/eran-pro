@@ -14,7 +14,7 @@ export const LogedOut = () => {
           size="lg"
           iconL={ShoppingCartIcon}
           iconR={() => <CartCount />}
-          className="bg-black-650 border-0"
+          className="bg-black-600 border-0"
           color="light"
         >
           Cart

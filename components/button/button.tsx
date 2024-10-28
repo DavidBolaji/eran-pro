@@ -7,6 +7,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconL?: React.ComponentType<{ size?: string, color?: string }>; // Make `size` optional
   iconR?: React.ComponentType<{ size?: string, color?: string }>;
   children: ReactNode;
+  round?: boolean
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -15,21 +16,27 @@ export const Button: React.FC<ButtonProps> = ({
   iconL: IconL,
   iconR: IconR,
   children,
+  round = true,
   ...rest
 }) => {
   const { className, ...props } = rest;
 
   const buttonClassnames = classNames(
-    "text-s2 text-center py-2 rounded-full font-medium h-10",
+    "text-s2 text-center py-2 font-medium h-10 text-nowrap",
     {
       "px-6": size === "lg",
       "px-3": size === "sm",
     },
     {
+      "rounded-full": round,
+      "rounded-2xl": !round,
+    },
+    {
       "bg-black-100 text-white": color === "dark",
-      "bg-white text-black-100 border border-black-100": color === "light",
+      "bg-white black-100 border border-black-100": color === "light",
     },
     IconL || IconR ? "gap-2 flex items-center" : null, // Add flex layout and gap if there's an icon
+    "md:px-6 px-3",
     className,
   );
 

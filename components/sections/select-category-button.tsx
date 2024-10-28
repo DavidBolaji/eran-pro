@@ -21,7 +21,10 @@ export const SelectedCategoryButtons: React.FC<Props> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState(initialCategoryName);
 
-  const handleClick = async (e: React.FormEvent<HTMLFormElement>, category: Category) => {
+  const handleClick = async (
+    e: React.FormEvent<HTMLFormElement>,
+    category: Category
+  ) => {
     e.preventDefault();
     setSelectedCategory(category.name);
 
@@ -42,11 +45,12 @@ export const SelectedCategoryButtons: React.FC<Props> = ({
           <input type="hidden" name="Name" value={category.name} />
           <Button
             type="submit"
+            round={false}
             size="lg"
             color={selectedCategory === category.name ? "dark" : "light"}
-            className="inline-block rounded-2xl"
+            className="inline-block text-nowrap text-[14px]  h-12 rounded-2xl md:px-6 px-3 text-xs"
           >
-            {category.name}
+            <span className="font-bold">{category.name}</span>
           </Button>
         </form>
       ))}

@@ -14,7 +14,7 @@ export const CartButton = () => {
   return (
     <Button
       iconL={ShoppingCartIcon}
-      className="bg-black-610 border-0"
+      className="bg-black-600 border-0"
       iconR={() => <CartCount />}
       size="lg"
       color="light"

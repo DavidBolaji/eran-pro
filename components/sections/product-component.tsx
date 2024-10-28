@@ -8,7 +8,7 @@ export const ProductComponent = forwardRef<
   { products: IProduct[] }
 >(({ products }, ref) => {
   return (
-    <div className="py-10 pl-20">
+    <div className="md:py-10 md:pb-0 pb-12 md:pl-3 lg:pl-20 lg:px-0 md:px-4 px-4">
       {/* Scrollable container with hidden scrollbar */}
       <div
         ref={ref}

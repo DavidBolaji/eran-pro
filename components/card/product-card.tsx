@@ -29,11 +29,11 @@ export const ProductCard: React.FC<{
       </div>
       <div className="px-4">
         <div className="text-sm mb-2 inline-block px-2 py-1 rounded-full border-black-100 text-gray-500 border">
-          <Typography as="p" size="c1" align="center">
+          <Typography as="p" size="c1" align="center" className="black-100">
             {product.category.name}
           </Typography>
         </div>
-        <Typography as="p" size="s1" align="left" className="mb-2">
+        <Typography as="p" size="s1" align="left" className="mb-2 black-100">
           {product.name}
         </Typography>
         <div className="text-lg font-bold">
@@ -41,7 +41,7 @@ export const ProductCard: React.FC<{
             as="p"
             size="c1"
             align="left"
-            className="inline-block text-black-300 mr-2"
+            className="inline-block black-300 font-light mr-2 black-300"
           >
             price / kg
           </Typography>
@@ -50,7 +50,7 @@ export const ProductCard: React.FC<{
             as="h6"
             size="h6"
             align="left"
-            className="inline-block text-black-100 mr-2"
+            className="inline-block black-100 mr-2 black-100"
           >
             ₦{product.price.toLocaleString()}
           </Typography>
@@ -69,7 +69,7 @@ export const ProductCard: React.FC<{
             as="h6"
             size="h6"
             align="left"
-            className="inline-block text-black-300 mr-2"
+            className="inline-block black-300 mr-2"
           >
             ₦{product.oldPrice.toLocaleString()}
           </Typography>

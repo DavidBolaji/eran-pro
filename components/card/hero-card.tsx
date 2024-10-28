@@ -1,5 +1,4 @@
-// import { Images } from "@/constants/image";
-// import Image from "next/image";
+
 import React from "react";
 import { Typography } from "../typography/typography";
 import { Button } from "../button/button";
@@ -8,24 +7,24 @@ import { Images } from "@/constants/image";
 
 export const HeroCcard = () => {
   return (
-    <div className="relative w-full py-10 bg-black-610 rounded-2xl">
+    <div className="relative w-full py-10 bg-black-600 md:rounded-2xl">
       <div className="px-6">
         <Typography
           as="h4"
           size="h4"
           align="left"
-          className="pt- mb-4 text-black-100 font-bold max-w-xl "
+          className="pt- mb-4 black-100 font-bold max-w-xl md:text-h4 text-h6 black-100"
         >
           Get 15% Off All Chicken Orders <br />
-          <span className="bg-black-610 px-4 ml-5 relative z-10">One Day Only! 🐔</span>
-          <hr className="bg-black-100 h-1 -translate-y-7 -z-10 w-10/12" />
+          <span className="bg-black-600 px-4 ml-5 relative z-10">One Day Only! 🐔</span>
+          <hr className="bg-black-100 h-1 md:-translate-y-7 -translate-y-4 -z-10 w-10/12" />
         </Typography>
 
         <Typography
           as="p"
           size="s1"
           align="left"
-          className="max-w-[516px] mb-[22px]"
+          className="md:max-w-[516px] max-w-[290px] mb-[22px] md:text-s1 text-s2 black-100"
         >
           This 19th October, enjoy fresh, premium chicken delivered to your
           doorstep at a discount. Don&apos;t miss out – order now and savor the

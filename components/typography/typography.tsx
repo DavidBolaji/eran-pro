@@ -18,9 +18,9 @@ export const Typography: React.FC<TypographyProps> = ({
   children,
   ...rest
 }) => {
-  const HeadingTag = as;
+const HeadingTag = as;
   const headingClassnames = classNames(
-    "font-satoshi text-black-100",
+    "font-satoshi",
     {
       "text-h1 font-regular font tracking-wide": size === "h1",
       "text-h2 font-regular tracking-wide": size === "h2",
@@ -38,7 +38,7 @@ export const Typography: React.FC<TypographyProps> = ({
       "text-center": align === "center",
       "text-right": align === "right",
     },
-    rest.className
+    rest.className,
   );
 
   return <HeadingTag className={headingClassnames}>{children}</HeadingTag>;

@@ -38,7 +38,7 @@ export const ProductCardMini: React.FC<{
             as="h6"
             size="h6"
             align="left"
-            className="inline-block text-black-100 mr-2"
+            className="inline-block black-100 mr-2"
           >
             ₦{product.price.toLocaleString()}
           </Typography>

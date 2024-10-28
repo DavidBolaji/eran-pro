@@ -11,7 +11,7 @@ export const HeroRightCard = () => {
         as="h4"
         size="h4"
         align="left"
-        className="text-white pb-4 max-w-[394px]"
+        className="text-white pb-4 max-w-[394px] md:text-h4 text-h6"
       >
         Explore Our Fresh <br /> Meat Selection 🍖
       </Typography>
@@ -19,12 +19,12 @@ export const HeroRightCard = () => {
         as="p"
         size="s1"
         align="left"
-        className="pb-7 text-white max-w-[266px]"
+        className="pb-7 text-white max-w-[266px] md:text-s1 text-s2"
       >
         From whole chicken to gizzard to briskets and cow tail, we&apos;ve got
         all your favourites.
       </Typography>
-      <Button className="bg-black-610 text-black-100" size="lg" color="light">
+      <Button className="bg-black-600 black-100" size="lg" color="light">
         Explore Categories
       </Button>
       <Image

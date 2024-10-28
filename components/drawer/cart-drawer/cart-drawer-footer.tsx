@@ -21,7 +21,7 @@ export const CartDrawerFooter = () => {
           as="h6"
           size="h6"
           align="left"
-          className="pb-2 font-bold leading-5 text-black-200"
+          className="pb-2 font-bold leading-5 black-200"
         >
           Subtotal
         </Typography>

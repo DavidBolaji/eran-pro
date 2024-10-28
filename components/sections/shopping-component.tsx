@@ -29,14 +29,16 @@ export const ShoppingComponent: React.FC<{
   return (
     <>
       <Wrapper>
-        <div className="flex justify-between">
-          <div>
+        <div className="flex md:flex-row items-center justify-between">
+          <div className="md:my-0 my-6 lg:px-0 md:px-4 px-4 overflow-x-scroll scrollbar-hide">
+          {/* <div className="flex px-4 gap-x-4 mt-6 mb-12 scrollbar-hide overflow-x-scroll "> */}
             <SelectedCategoryButtons
               categories={[{ name: "All Categories", id: "1" }, ...categories]}
               initialCategoryName={categoryName}
             />
+            {/* </div> */}
           </div>
-          <div className="flex gap-3">
+          <div className="md:flex gap-x-3 md:px-0 px-4 hidden">
             <button
               onClick={() => scroll(-300)}
               className="bg-black-400 rounded-full flex items-center justify-center w-8 h-8 rotate-180"

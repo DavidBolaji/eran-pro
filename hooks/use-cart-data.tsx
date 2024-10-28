@@ -7,9 +7,9 @@ import { IProduct } from "@/actions/get-products";
 export const useCartData = () => {
   const queryClient = useQueryClient();
 
-  if (!queryClient.getQueryData(["CART_DATA"])) {
-    queryClient.setQueryData(["CART_DATA"], []);
-  }
+  // if (!queryClient.getQueryData(["CART_DATA"])) {
+  //   queryClient.setQueryData(["CART_DATA"], []);
+  // }
 
   const addProduct = (product: IProduct) => {
     queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {

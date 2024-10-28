@@ -1,4 +1,5 @@
-@import url('https://fonts.cdnfonts.com/css/satoshi');
+/* @import url('https://fonts.cdnfonts.com/css/satoshi'); */
+@import url('satoshi.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,5 +16,54 @@
   }
 
 body {
-    font-family: 'Satoshi', sans-serif;
+    font-family: 'Satoshi-Regular', sans-serif;
 }
+
+/* Black color classes */
+.black-100 { color: #23342A; }
+.black-200 { color: #516158; }
+.black-300 { color: #6E8C7B; }
+.black-400 { color: #92B09F; }
+.black-500 { color: #C8E0D2; }
+.black-600 { color: #DDEEE5; }
+.black-700 { color: #F0FAF4; }
+
+/* Background color variants for black */
+.bg-black-100 { background-color: #23342A; }
+.bg-black-200 { background-color: #516158; }
+.bg-black-300 { background-color: #6E8C7B; }
+.bg-black-400 { background-color: #92B09F; }
+.bg-black-500 { background-color: #C8E0D2; }
+.bg-black-600 { background-color: #DDEEE5; }
+.bg-black-700 { background-color: #F0FAF4; }
+
+/* Green and Lemon color classes */
+.green { color: #066932; }
+.bg-green { background-color: #066932; }
+
+.lemon { color: #7DBA00; }
+.bg-lemon { background-color: #7DBA00; }
+
+/* Grey color classes */
+.grey-100 { color: #E7E7E7; }
+.grey-200 { color: #F5F5F5; }
+
+.bg-grey-100 { background-color: #E7E7E7; }
+.bg-grey-200 { background-color: #F5F5F5; }
+
+/* Red color classes */
+.red-100 { color: #E83B3B; }
+.red-200 { color: #FF8A8A; }
+
+.bg-red-100 { background-color: #E83B3B; }
+.bg-red-200 { background-color: #FF8A8A; }
+
+/* Orange color classes */
+.orange-100 { color: #D28209; }
+.orange-200 { color: #F9C77B; }
+
+.bg-orange-100 { background-color: #D28209; }
+.bg-orange-200 { background-color: #F9C77B; }
+
+.white { color: "#ffffff" !important}
+.bg-white { background-color: "#ffffff";}

@@ -19,7 +19,6 @@ interface HomeSearchParams {
 }
 
 export default async function Home({
-
   searchParams,
 }: {
   searchParams: HomeSearchParams;
@@ -28,19 +27,28 @@ export default async function Home({
   const categoryName = searchParams?.name || "All Categories";
   const categoryId = searchParams?.category || "1";
   const products = await getProducts(categoryId);
-  const allProducts = await getProducts('');
+  const allProducts = await getProducts("");
 
   return (
     <div className="bg-grey-200">
-
       <Header2 />
       <Header />
       <HeroSection />
       <Wrapper>
-        <Typography as="h4" size="h4" align="left" className="font-bold">
+        <Typography
+          as="h4"
+          size="h4"
+          align="left"
+          className="font-bold md:pb-0 pb-2 lg:px-0 px-4 black-100"
+        >
           Shop by Meat Category: Find Your Perfect Cut 🍗🥩
         </Typography>
-        <Typography as="p" size="s1" align="left" className="pb-10">
+        <Typography
+          as="p"
+          size="s1"
+          align="left"
+          className="md:pb-10 lg:px-0 md:px-4 px-4 black-100"
+        >
           Discover fresh, top-quality chicken, turkey, beef, and goat. Browse
           and order the perfect cut for any meal!
         </Typography>
@@ -51,27 +59,45 @@ export default async function Home({
         products={[...products]}
       />
       <Wrapper>
-        <div className="grid grid-cols-10 mt-20 gap-x-4 pb-20">
-          <div className="col-span-4">
+        <div className="md:grid grid-cols-10 md:mt-20 gap-x-4 pb-20 md:px-0 hidden">
+          <div className="md:col-span-4 col-span-10 md:mb-0 mb-4">
             <FreshMeatCard />
           </div>
           {["a", "b", "c"].map((el: string) => (
-            <div key={el} className="col-span-2">
+            <div key={el} className="md:col-span-2 md:mt-0 mt-6 md:mb-0 mb-4">
               <FoodCard />
             </div>
           ))}
         </div>
+        <div className="md:hidden block">
+          <FreshMeatCard />
+          <div className="flex px-4 gap-x-4 overflow-x-scroll mt-6 mb-12 scrollbar-hide">
+            {["a", "b", "c"].map((food, index: number) => (
+              <FoodCard key={food} />
+            ))}
+          </div>
+        </div>
       </Wrapper>
       <Wrapper>
-        <Typography as="h4" size="h4" align="left" className="font-bold">
+        <Typography
+          as="h4"
+          size="h4"
+          align="left"
+          className="font-bold lg:px-0 px-4 black-100"
+        >
           Selling Fast: Get Them Before They&apos;re Gone! 🚀
         </Typography>
-        <Typography as="p" size="s1" align="left" className="pb-10">
+        <Typography
+          as="p"
+          size="s1"
+          align="left"
+          className="pb-10 lg:px-0 px-4 black-100"
+        >
           Discover fresh, top-quality chicken, turkey, beef, and goat. Browse
           and order the perfect cut for any meal!
         </Typography>
-        <div className="pb-20">
-          <div className="grid grid-cols-10 gap-x-4 gap-y-10">
+        <div className="pb-20 lg:px-0 px-4">
+          <div className="grid md:grid-cols-10 grid-cols-4 gap-x-4 gap-y-10">
             {allProducts.map((product: IProduct, index: number) => (
               <ProductCardMini key={index} product={product} />
             ))}

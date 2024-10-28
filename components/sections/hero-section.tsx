@@ -6,11 +6,11 @@ import { HeroRightCard } from "../card/hero-right-card";
 export const HeroSection = () => {
   return (
     <Wrapper>
-      <div className="grid grid-cols-10 gap-4 mt-10 pb-20">
-        <div className=" col-span-6">
+      <div className="grid md:grid-cols-10 grid-cols-6 gap-4 md:mt-10 md:pb-20 pb-12">
+        <div className="col-span-6 ">
           <HeroCcard />
         </div>
-        <div className="col-span-4">
+        <div className="md:col-span-4 col-span-6 md:px-0 md:mt-0 mt-6 px-4">
           <HeroRightCard />
         </div>
       </div>
