@@ -8,7 +8,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <div className="bg-grey-200">
       <Header2 />
       <Header />
       {children}

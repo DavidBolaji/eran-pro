@@ -26,7 +26,7 @@ const StepperTwo: React.FC<{ weight: number; product?: IProduct }> = ({
   }, [queryClient]);
 
   return (
-    <div className="flex items-center justify-center w-[140px] h-[40px] border border-gray-800 rounded-full font-bold text-gray-800 px-1">
+    <div className="flex items-center justify-center w-[140px] h-12 border border-gray-800 rounded-full font-bold text-gray-800 px-1">
       <button
         onClick={decrement}
         disabled={value <= 0.5}

@@ -6,14 +6,26 @@ import { ShoppingCartIcon } from "@/constants/icons/shopping-cart";
 import { Typography } from "@/components/typography/typography";
 import { formatToNaira } from "@/utils/helper";
 import { useCartData } from "@/hooks/use-cart-data";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CartDrawerFooter = () => {
-  const { cartData } = useCartData();
-  const calculateTotal = () => {
-    return cartData?.reduce((acc, prod) => {
-      return (acc += prod.price);
-    }, 0);
+  const { calculateTotal } = useCartData();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  
+
+  const navigate = () => {
+    close();
+    router.push("/cart");
   };
+
+  const close = () => {
+    queryClient.setQueryData(['CART_DRAWER'], () => false)
+  }
+
+
   return (
     <div className="h-[200px] bg-black-700 py-6 px-4">
       <div className="flex justify-between items-center mb-8">
@@ -39,6 +51,7 @@ export const CartDrawerFooter = () => {
           color="light"
           size="lg"
           iconR={ShoppingCartIcon}
+          onClick={() => close()}
           className="w-full flex items-center justify-center"
         >
           Continue shopping
@@ -47,9 +60,10 @@ export const CartDrawerFooter = () => {
           color="dark"
           size="lg"
           iconR={CheckCircleIcon}
+          onClick={navigate}
           className="w-full flex items-center justify-center"
         >
-          Continue shopping
+          Proceed to Cart
         </Button>
       </div>
     </div>

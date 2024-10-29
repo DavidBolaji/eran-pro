@@ -9,7 +9,7 @@ export const CartDeleteButton: React.FC<{ productId: string }> = ({
   const { deleteProduct } = useCartData();
   return (
     <div className="cursor-pointer" onClick={() => deleteProduct(productId)}>
-      <TrashIcon />
+      <TrashIcon color="#6E8C7B" />
     </div>
   );
 };

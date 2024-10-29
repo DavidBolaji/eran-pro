@@ -22,5 +22,4 @@ export const Images = {
   Briefcase,
   Side3,
   Top,
-  
 };

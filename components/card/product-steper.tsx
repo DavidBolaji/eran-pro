@@ -4,7 +4,7 @@ import { MinusIcon } from "@/constants/icons/minus";
 import { PlusIcon } from "@/constants/icons/plus";
 import { Product } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback,  useEffect,  useState } from "react";
 
 const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
   weight,
@@ -54,7 +54,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
   }, [product, queryClient]);
 
   return (
-    <div className="flex items-center justify-center w-[140px] h-[40px] border border-gray-800 rounded-full font-bold text-gray-800 px-1">
+    <div className="flex items-center justify-center w-[140px] h-12 border border-gray-800 rounded-full font-bold text-gray-800 px-1">
       <button
         onClick={decrement}
         disabled={value <= 0.5}

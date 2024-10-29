@@ -48,6 +48,12 @@ export const useCartData = () => {
     });
   };
 
+  const calculateTotal = () => {
+    return cartData?.reduce((acc, prod) => {
+      return (acc += prod.price);
+    }, 0);
+  };
+
   const { data: cartData } = useQuery({
     queryKey: ["CART_DATA"],
     queryFn: () =>
@@ -56,5 +62,5 @@ export const useCartData = () => {
       })[]) || [],
     staleTime: Infinity,
   });
-  return { addProduct, cartData, deleteProduct };
+  return { addProduct, cartData, deleteProduct, calculateTotal };
 };
