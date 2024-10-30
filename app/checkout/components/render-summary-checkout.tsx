@@ -7,11 +7,25 @@ import { Typography } from "@/components/typography/typography";
 import { CheckCircleIcon } from "@/constants/icons/check-circle";
 import { useCartData } from "@/hooks/use-cart-data";
 import { formatToNaira } from "@/utils/helper";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect } from "react";
 
 export const RenderSummaryCheckout = () => {
   const { calculateTotal, cartData } = useCartData();
   const total = (calculateTotal() ?? 0) + 2500;
+  const router = useRouter();
+
+  const prefetch = useCallback(() => {
+    router.prefetch("/success");
+  }, []);
+
+  useEffect(() => {
+    prefetch();
+  }, []);
+
+  const navigateTo = () => {
+    router.push("/success");
+  };
 
   return (
     <div className="bg-black-100 lg:rounded-2xl ">
@@ -98,6 +112,7 @@ export const RenderSummaryCheckout = () => {
           color="light"
           className="border-0 bg-black-600 black-100 w-full flex items-center justify-center"
           iconR={CheckCircleIcon}
+          onClick={navigateTo}
         >
           Complete order
         </Button>

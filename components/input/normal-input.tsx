@@ -50,7 +50,7 @@ const NormalInput: React.FC<InputProps> = ({
   };
 
   return (
-    <div className="relative w-full border border-[#C8E0D2] bg-grey-200 rounded-2xl">
+    <div className={`relative w-full border border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
