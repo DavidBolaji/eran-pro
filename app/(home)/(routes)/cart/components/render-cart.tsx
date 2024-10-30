@@ -6,6 +6,6 @@ import React from 'react'
 export const RenderCart = () => {
   const {cartData} =  useCartData();
   return cartData?.map(cart => (
-    <CartOrderCard key={cart.id} product={cart} />
+    <CartOrderCard key={cart.id} product={cart} border light />
   ))
 }

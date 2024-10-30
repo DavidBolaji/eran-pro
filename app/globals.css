@@ -67,3 +67,12 @@ body {
 
 .white { color: "#ffffff" !important}
 .bg-white { background-color: "#ffffff";}
+
+select {
+  transition: border-color 0.3s ease;
+  /* Remove default styling in browsers */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+

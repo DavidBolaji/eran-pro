@@ -19,7 +19,6 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
   
 
   const increment = useCallback(() => {
-    console.log('first')
     setValue((prevValue) => {
       queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
         const newData = prev?.map((el) => {

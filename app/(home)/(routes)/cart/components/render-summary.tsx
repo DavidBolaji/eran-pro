@@ -15,15 +15,15 @@ export const RenderSummary = () => {
         align="left"
         size="h5"
         as="h5"
-        className="border-b black-100 pl-6 pt-8 pb-6"
+        className="border-b font-bold black-100 pl-6 pt-8 pb-6"
       >
         Order Summary
       </Typography>
       <div className="flex items-center justify-between px-6 pt-8 pb-6 border-b mb-4">
-        <Typography align="left" size="h6" as="h6" className="black-200 flex">
+        <Typography align="left" size="h6" as="h6" className="black-200 font-bold flex">
           Subtotal
         </Typography>
-        <Typography align="left" size="h6" as="h6" className="black-100">
+        <Typography align="left" size="h6" as="h6" className="black-100 font-bold">
           {formatToNaira(calculateTotal() ?? 0, 2)}
         </Typography>
       </div>
@@ -58,10 +58,10 @@ export const RenderSummary = () => {
         </div>
       </div>
       <div className="flex items-center justify-between px-6 pt-8 bg-grey-200 pb-6 mb-4">
-      <Typography align="left" size="h6" as="h6" className="black-200 flex">
+      <Typography align="left" size="h6" as="h6" className="black-200 flex font-bold">
           Total
         </Typography>
-        <Typography align="left" size="h6" as="h6" className="black-100">
+        <Typography align="left" size="h6" as="h6" className="black-100 font-bold">
           {formatToNaira(total, 2)}
         </Typography>
       </div>

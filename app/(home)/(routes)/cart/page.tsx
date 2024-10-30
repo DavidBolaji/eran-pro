@@ -17,7 +17,6 @@ const CartPage = () => {
           <RenderSummary />
         </div>
       </div>
-     
     </div>
   );
 };

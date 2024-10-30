@@ -6,12 +6,23 @@ import Stepper from "./product-steper";
 import { formatToNaira } from "@/utils/helper";
 import Image from "next/image";
 import { CartDeleteButton } from "../button/cart-delete-button";
+import classNames from "classnames";
 
 export const CartOrderCard: React.FC<{
   product: IProduct & { weight: number };
-}> = ({ product }) => {
+  border?: boolean;
+  light?: boolean
+}> = ({ product, border = false, light = false }) => {
+  const cartOrderStyles = classNames("w-full h-[152px] p-4 flex mt-1 justify-between items-center rounded-xl", 
+    {
+      "border border-[#DDEEE5]": border
+    },
+    {
+      "bg-white": light
+    }
+  )
   return (
-    <div className="w-full h-[152px] p-4 flex border mt-1 justify-between items-center rounded-xl">
+    <div className={cartOrderStyles}>
       <div className="flex items-center gap-x-4">
         <div className="bg-black-100 w-[120px] h-[120px] rounded-xl relative">
           <Image

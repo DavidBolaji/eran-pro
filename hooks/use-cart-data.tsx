@@ -33,7 +33,6 @@ export const useCartData = () => {
         };
         return [productData];
       }
-      console.log("[weight]", product.weight);
       return [
         ...prev,
         { ...product, weight: product.weight ? product.weight : 0.5 },
