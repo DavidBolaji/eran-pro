@@ -1,4 +1,5 @@
-import { IProduct, productQuery } from "@/actions/get-products";
+import { productQuery } from "@/actions/data";
+import { IProduct } from "@/actions/get-products";
 import { ProductCardMini } from "@/components/card/product-card-mini";
 import { CollapseComponent } from "@/components/collapsible";
 import { Crumb } from "@/components/crumb/crumb";

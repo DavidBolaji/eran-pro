@@ -1,5 +1,9 @@
+"use server";
+
 import db from "@/db/db";
-import { Category, Image, Product, Promotion } from "@prisma/client";
+import { Category, Image, Prisma, Product, Promotion } from "@prisma/client";
+import { redirect } from "next/navigation";
+import { productQuery } from "./data";
 
 export type IProduct = Omit<
   Product,
@@ -7,48 +11,24 @@ export type IProduct = Omit<
 > & {
   promotion: Pick<Promotion, "name" | "discount">[]; // Note: promotion is an array
   category: Pick<Category, "name" | "id">;
-  images: Pick<Image, "url">[]
+  images: Pick<Image, "url">[];
 };
 
-export const productQuery = {
-  id: true,
-  name: true,
-  description: true,
-  img: true,
-  price: true,
-  qty: true,
-  stock: true,
-  unit: true,
-  status: true,
-  images: {
-    select: {
-      url: true
-    }
-  },
-  category: {
-    select: {
-      id: true,
-      name: true,
-    },
-  },
-  promotion: {
-    select: {
-      name: true,
-      discount: true,
-    },
-  },
+interface GetProductsParams {
+  categories?: string[];
+  page?: number;
+  limit?: number;
+  sort?: string, // default sorting field
+  sortOrder?: string, // ascending or descending order
 }
 
 export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
   try {
     const products = await db.product.findMany({
       where: {
-        categoryId:
-          categoryId === "1" || !categoryId
-            ? undefined
-            : categoryId,
+        categoryId: categoryId === "1" || !categoryId ? undefined : categoryId,
       },
-      select: productQuery
+      select: productQuery,
     });
     return products;
   } catch (error) {
@@ -97,4 +77,115 @@ export const seedProductDb = async () => {
       },
     ],
   });
+};
+
+export const getDashboardProduct = async ({
+  categories,
+  page = 1,
+  limit = 10,
+  sort = "createdAt", // default sorting field
+  sortOrder = "asc", // ascending or descending order
+}: GetProductsParams) => {
+  const skip = (page - 1) * limit;
+  // Build the `where` clause conditionally
+  const whereClause: Prisma.ProductWhereInput = {};
+
+  if (
+    categories &&
+    categories.length > 0 &&
+    categories[0].trim().length !== 0
+  ) {
+    whereClause.category = {
+      name: {
+        in: categories,
+      },
+    };
+  }
+
+  const orderBy: Prisma.ProductOrderByWithRelationInput = sort === "category"
+  ? { category: { name: sortOrder as Prisma.SortOrder } }
+  : { [sort]: sortOrder as Prisma.SortOrder };
+
+  try {
+    const totalItems = await db.product.count({ where: whereClause });
+    const products = await db.product.findMany({
+      where: whereClause,
+      select: {
+        id: true,
+        name: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        price: true,
+        stock: true,
+        promotion: {
+          select: {
+            code: true,
+            discount: true,
+          },
+        },
+        status: true,
+        img: true,
+        images: {
+          select: {
+            url: true,
+          },
+        },
+      },
+      skip,
+      take: limit,
+      orderBy,
+    });
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return { products: products ?? [], totalPages };
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+};
+
+export const filterProduct = (formData: FormData, currentParams: URLSearchParams) => {
+  const params = new URLSearchParams(currentParams);
+  const prodFilter = formData.getAll("Categories[]");
+  const page = formData.get("page") as string;  // Cast to string if necessary
+  const sort = (formData.get("sort") as string) || params.get("sort") || "name";  // Default to "name"
+  const sortOrder = (formData.get("sortOrder") as string) || params.get("sortOrder") || "asc";
+
+  // Handle page and category filters as before
+  const hasSelectedFilters = prodFilter.length > 0;
+  const currentCategoryFilters = params.getAll("category");
+
+  if (!hasSelectedFilters && page) {
+    params.set("page", page);
+  }
+
+  if (hasSelectedFilters) {
+    if (JSON.stringify(Array.from(prodFilter)) !== JSON.stringify(Array.from(currentCategoryFilters))) {
+      params.delete("category");
+      params.append("category", prodFilter.join(","));
+      params.set("page", "1");
+    } else {
+      params.set("page", page ? page.toString() : "1");
+    }
+  }
+
+  // Set the sorting fields in the URL parameters
+  if (sort) params.set("sort", sort);
+  if (sortOrder) params.set("sortOrder", sortOrder);
+
+  if (params.toString()) {
+    redirect(`/dashboard/products?${params.toString()}`);
+  } else {
+    console.log("No filters applied");
+  }
+};
+
+
+
+export const resetProduct = (
+) => {
+  redirect(`/dashboard/products`);
 };
