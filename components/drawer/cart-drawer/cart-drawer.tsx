@@ -1,7 +1,6 @@
 "use client";
 import { useCartDrawer } from "@/hooks/use-cart-drawer";
 import React from "react";
-import { StyledCartDrawer, StyledCartMobileDrawer } from "./cart-drawer.style";
 import { CloseIcon } from "@/constants/icons/close";
 import { ShoppingCartIcon } from "@/constants/icons/shopping-cart";
 import { useCartData } from "@/hooks/use-cart-data";
@@ -10,6 +9,7 @@ import { CartOrderCard } from "@/components/card/cart-order-card";
 import { IProduct } from "@/actions/get-products";
 import { CartDrawerFooter } from "./cart-drawer-footer";
 import { Grid } from "antd";
+import { StyledDrawer, StyledMobileDrawer } from "../drawer.style";
 const { useBreakpoint } = Grid;
 
 export const CartDrawer = () => {
@@ -20,7 +20,7 @@ export const CartDrawer = () => {
   return (
     <div>
       {screen.lg && (
-        <StyledCartDrawer
+        <StyledDrawer
           open={(cartDrawer as boolean) ?? false}
           onClose={() => toggleDrawer(!cartDrawer)}
           closeIcon={null}
@@ -47,16 +47,16 @@ export const CartDrawer = () => {
             <EmptyCart close={() => toggleDrawer(!cartDrawer)} />
           ) : (
             cartData?.map((product: IProduct & { weight: number }) => (
-              <div key={product.id} className="px-5">
+              <div key={product.id} className="px-5 space-y-4">
                 <CartOrderCard product={product} />
               </div>
             ))
           )}
-        </StyledCartDrawer>
+        </StyledDrawer>
       )}
 
         {!screen.lg && (
-          <StyledCartMobileDrawer
+          <StyledMobileDrawer
             open={(cartDrawer as boolean) ?? false}
             onClose={() => toggleDrawer(!cartDrawer)}
             placement="bottom"
@@ -85,12 +85,12 @@ export const CartDrawer = () => {
               <EmptyCart close={() => toggleDrawer(!cartDrawer)} />
             ) : (
               cartData?.map((product: IProduct & { weight: number }) => (
-                <div key={product.id} className="px-5">
+                <div key={product.id} className="px-5 space-y-2">
                   <CartOrderCard product={product} />
                 </div>
               ))
             )}
-          </StyledCartMobileDrawer>
+          </StyledMobileDrawer>
         )}
 
     </div>

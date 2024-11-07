@@ -8,13 +8,15 @@ import React, { useRef } from "react";
 import { FilterCollapse } from "./filter-collapse";
 import { filterProduct, resetProduct } from "@/actions/get-products";
 import { useSearchParams } from "next/navigation";
+import { Category } from "@prisma/client";
 
 interface FilterDialogProps {
   open: boolean;
   onClose: () => void;
+  categories?: Pick<Category, "id" | "name">[]
 }
 
-export default function FilterDialog({ open, onClose }: FilterDialogProps) {
+export default function FilterDialog({ open, onClose, categories }: FilterDialogProps) {
   const searchParams = useSearchParams();
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -46,23 +48,23 @@ export default function FilterDialog({ open, onClose }: FilterDialogProps) {
                 >
                   <div className="">
                     <div className="">
-                      {["Chicken", "Cow", "Goat"].map((category) => (
+                      {categories && categories.map((category) => (
                         <div
-                          key={category}
+                          key={category.id}
                           className="flex items-center space-x-2 space-y-2"
                         >
                           <Checkbox
                             className="mt-2"
-                            id={category.toLowerCase()}
+                            id={category.name.toLowerCase()}
                             name="Categories[]"
-                            value={category}
-                            defaultChecked={isChecked(`category`, category)}
+                            value={category.name}
+                            defaultChecked={isChecked(`category`, category.name)}
                           />
                           <label
-                            htmlFor={category.toLowerCase()}
+                            htmlFor={category.name.toLowerCase()}
                             className="font-bold font-satoshi text-sm leading-5 black-100"
                           >
-                            {category}
+                            {category.name}
                           </label>
                         </div>
                       ))}

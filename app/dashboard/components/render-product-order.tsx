@@ -3,12 +3,13 @@ import { SideCards } from "./side-cards";
 import FilterComponent from "./filter-component";
 import { Typography } from "@/components/typography/typography";
 import PendingOrdersTable from "@/components/table/pending-orders/pending-orders-table";
+import { dummyPendingOrders } from "@/components/table/pending-orders/pending-orders-data";
 
 export const RenderProductOrder = () => {
   return (
     <div className="grid grid-cols-12 gap-x-6 mt-6">
       <div className="col-span-8">
-        <PendingOrdersTable />
+        <PendingOrdersTable initialOrders={dummyPendingOrders} />
       </div>
       <div className="col-span-4">
         <SideCards
@@ -21,7 +22,7 @@ export const RenderProductOrder = () => {
                 { weight: 2, order: 129 },
                 { weight: 0.5, order: 110 },
               ]?.map((data) => (
-                <div className="flex justify-between items-center h-14 py-4 border-b border-[#DDEEE5]">
+                <div key={data.weight} className="flex justify-between items-center h-14 py-4 border-b border-[#DDEEE5]">
                   <Typography as="p" size="s1" align="left" className="mb-2">
                     {data.weight}kg
                   </Typography>

@@ -1,3 +1,4 @@
+import { getCategories } from "@/actions/get-categories";
 import {  getDashboardProduct } from "@/actions/get-products";
 import ProductTable from "@/components/table/product-table/product-table";
 import React from "react";
@@ -18,15 +19,19 @@ export default async function ProductPage({
   const limit = parseInt(searchParams.limit) || 10;
   const sort = searchParams.sort || "createdAt"; 
   const sortOrder = searchParams.sortOrder || "asc"; 
-  console.log(categories);
+  
 
-  const data = await getDashboardProduct({
+  const req = getDashboardProduct({
     categories: categories.map((el) => el.toLowerCase()),
     page,
     limit,
     sort,
     sortOrder
   });
+
+  const req2 = getCategories() 
+
+  const [data, categoryList] = await Promise.all([req, req2])
 
 
 
@@ -37,6 +42,7 @@ export default async function ProductPage({
         totalPages={data?.totalPages}
         page={page}
         itemsPerPage={limit}
+        categories={categoryList}
       />
     </div>
   );

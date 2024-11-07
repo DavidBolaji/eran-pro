@@ -1,25 +1,60 @@
 // PendingOrdersTableHeader.tsx
 import React from 'react'
-import { TableHead, TableRow } from '@/components/ui/table'
+import { TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { PendingOrders } from './types'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+
 
 interface PendingOrdersTableHeaderProps {
-  onSort?: (column: keyof PendingOrders, direction: 'asc' | 'desc') => void
+  handleSort: (column: keyof PendingOrders, path?: string) => void;
+  sortDirection: "asc" | "desc";
+  sortColumn: keyof PendingOrders | null;
 }
 
-export default function PendingOrdersTableHeader({ onSort }: PendingOrdersTableHeaderProps) {
-  const handleSort = (column: keyof Product) => {
-    // Sort logic
-  }
+const headerList = [
+  { key: "name", title: "Product name", hasSort: true },
+  { key: "customer", title: "Customer", hasSort: true },
+  { key: "phone", title: "Phone no", hasSort: true },
+  { key: "order", title: "Order date", hasSort: true },
+  { key: "actions", title: "", hasSort: false },
+];
 
+export default function PendingOrdersTableHeader({
+  handleSort,
+  sortDirection,
+  sortColumn,
+}: PendingOrdersTableHeaderProps) {
   return (
-    <thead>
+    <TableHeader>
       <TableRow>
-        <TableHead className="pl-6 py-3 black-300 font-bold text-sm">Product name</TableHead>
-        <TableHead className='black-300 font-bold text-sm'>Customer</TableHead>
-        <TableHead className='black-300 font-bold text-sm'>Phone no</TableHead>
-        <TableHead className='black-300 font-bold text-sm'>Order date</TableHead>
+        {headerList.map((header) =>
+          header.hasSort ? (
+            <TableHead
+              className="pl-6 py-3 black-300 font-bold text-sm"
+              key={header.title}
+            >
+              <button
+                onClick={() => handleSort(header.key as keyof PendingOrders, '/dashboard')}
+                className="flex items-center gap-1"
+              >
+                {header.title}
+                {sortColumn === header.key ? (
+                  sortDirection === "asc" ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )
+                ) : (
+                  <ChevronDown className="h-4 w-4 opacity-50" />
+                )}
+              </button>
+            </TableHead>
+          ) : (
+            <TableHead key={header.title}>{header.title}</TableHead>
+          )
+        )}
       </TableRow>
-    </thead>
-  )
+    </TableHeader>
+  );
 }
+

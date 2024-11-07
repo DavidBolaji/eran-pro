@@ -14,3 +14,23 @@ export const formatToNaira = (amount: number, dp?: number) => {
     minimumFractionDigits: dp ?? 0,
   }).format(amount);
 };
+
+export const errorMessage = {
+  "Description is required":
+    "You must fill the category description field in order to create a category",
+  "Category name is required":
+    "You must fill the category name field in order to create a category",
+  "Product category is required": "Product must belong to a category",
+  "Product name is required":
+    "You must fill the product name field in order to create a product",
+  "Product description is required":
+    "You must fill the product description field in order to create a product",
+  "Product quantity is required":
+    "You must fill the product quantity field in order to create a product",
+  "Product price is required":
+    "You must fill the product price field in order to create a product",
+  "Product quantity must be number":
+    "Product quantity field can only contain numeric characters",
+  "Product price must be number":
+    "Product price field can only contain numeric characters",
+};

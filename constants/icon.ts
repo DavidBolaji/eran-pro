@@ -5,6 +5,7 @@ import { CheckCircleIcon } from "./icons/check-circle";
 import { ChevronDownIcon } from "./icons/chevron-down";
 import { ChevronRightIcon } from "./icons/chevron-right";
 import { CloseIcon } from "./icons/close";
+import { ExclamationIcon } from "./icons/exclamation";
 import { EyeIcon } from "./icons/eye";
 import { EyeOffIcon } from "./icons/eye-off";
 import { FileIcon } from "./icons/file";
@@ -37,6 +38,7 @@ export const ICON = {
   ChevronDownIcon,
   ChevronRightIcon,
   CloseIcon,
+  ExclamationIcon,
   EyeOffIcon,
   EyeIcon,
   FileIcon,

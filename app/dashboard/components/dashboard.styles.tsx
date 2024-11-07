@@ -33,7 +33,6 @@ export const MenuStyled = styled(Menu)`
     .ant-menu-item.ant-menu-item-active {
       background-color: #DDEEE5 !important;
       border-radius: 0px;
-      border-left: 4px solid #066932;
     }
     .ant-menu-item.ant-menu-item-active > * {
       color: #066932 !important;

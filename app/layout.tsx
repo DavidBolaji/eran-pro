@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 import dynamic from "next/dynamic";
 import { Overlay } from "@/components/overlay/overlay";
+import { NotificationDrawer } from "@/components/drawer/notification-drawer/notification-drawer";
 
 const TanstackProvider = dynamic(
   () =>
@@ -31,6 +32,7 @@ export default function RootLayout({
         <AntdRegistry>
           <TanstackProvider>
             {children}
+            <NotificationDrawer />
             <CartDrawer />
             <Overlay />
           </TanstackProvider>

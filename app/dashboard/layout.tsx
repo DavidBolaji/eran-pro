@@ -1,7 +1,8 @@
 import { Layout } from "antd";
-import { Content, Header } from "antd/es/layout/layout";
+import { Content } from "antd/es/layout/layout";
 import { Sidebar } from "./components/sidebar";
 import { DashboardHeader } from "./components/dashboard-header";
+import { CategoryDrawer } from "@/components/drawer/category-drawer/category-drawer";
 
 
 export default function HomeLayout({
@@ -10,19 +11,25 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Layout>
+    <Layout
+    
+    >
       <Sidebar />
-      <Layout>
+      <Layout
+       
+      >
        <DashboardHeader />
         <Content
           style={{
             padding: 16,
             minHeight: "89vh",
             height: "89vh",
+           
           }}
           className={`overflow-auto scrollbar-hide`}
         >
           {children}
+          <CategoryDrawer />
         </Content>
       </Layout>
     </Layout>

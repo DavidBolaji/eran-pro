@@ -9,23 +9,26 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   align?: number;
+  naira?: boolean
 }
 
 const NormalInput: React.FC<InputProps> = ({
   rightIcon,
   leftIcon,
   align = -15,
+  naira = false,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
 
-  let { className, placeholder, required, onBlur, ...props } = rest;
-  required = required ?? true; // Use nullish coalescing to ensure `required` is true if not provided.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { className, placeholder, onBlur, ...props } = rest;
+  props.required = props.required ?? false; // Use nullish coalescing to ensure `required` is true if not provided.
 
   // Optimize input style classes with classNames utility.
   const inputStyle = classNames(
-    "w-full pl-4 bg-transparent translate-y-1.5 h-12 flex items-center focus:outline-none",
+    "w-full pl-4 font-satoshi placeholder:font-medium placeholder:black-300 placeholder:leading-4 bg-transparent translate-y-1.5 h-12 flex items-center focus:outline-none",
     {
       "pl-10": leftIcon,
       "pl-3": !leftIcon,
@@ -33,6 +36,9 @@ const NormalInput: React.FC<InputProps> = ({
     {
       "pr-10": rightIcon,
       "pr-3": !rightIcon,
+    },
+    {
+      "ml-8 ": naira,
     },
     {
       "placeholder:text-transparent": isFocused || hasValue,
@@ -53,12 +59,17 @@ const NormalInput: React.FC<InputProps> = ({
     <div className={`relative w-full border border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
       {/* Left Icon */}
       {leftIcon && (
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+        <div className="absolute border left-3 top-1/2 transform -translate-y-1/2">
           {leftIcon}
         </div>
       )}
 
       {/* Input Field */}
+      {naira && (
+        <div className="absolute z-20 bg-black border h-[51.01px] rounded-s-2xl border-black flex items-center justify-center font-satoshi text-white top-1/2 w-10 transform -translate-y-1/2">
+          ₦
+        </div>
+      )}
       <input
         type="text"
         onFocus={handleFocus}
@@ -78,9 +89,13 @@ const NormalInput: React.FC<InputProps> = ({
         transition={{ type: "linear", stiffness: 200 }}
         className={`absolute ${
           leftIcon ? "left-6" : "left-3"
-        } top-3 text-sm pointer-events-none`}
+        } top-3 black-300 text-sm pointer-events-none  ${
+          isFocused || hasValue ? "text-base" : "text-sm"
+        } ${
+          naira ? "pl-10" : "text-sm"
+        }`}
       >
-        {placeholder} {required && "*"}
+        {placeholder} {props.required && "*"}
       </motion.label>
 
       {/* Right Icon */}

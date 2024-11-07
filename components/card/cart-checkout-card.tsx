@@ -13,10 +13,10 @@ export const CartCheckoutCard: React.FC<{
         <div className="bg-white w-[60px] h-[60px] rounded-xl relative">
           <Image
             priority
-            src={product.img ?? ""}
+            src={product?.images[0]?.url ?? ""}
             fill
             alt={product.name}
-            className="object-cover w-full h-full -z-10 rounded-xl absolute"
+            className="object-cover w-full h-full  rounded-xl absolute"
           />
         </div>
         <div>

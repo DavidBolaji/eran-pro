@@ -1,127 +1,129 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card } from "@/components/ui/card";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DashboardTitleHeader } from "@/components/dashboard-header/dashboard-header";
+import { ProductDetailsForm } from "@/components/form/add-product/product-details-form";
+import { UploadImageForm } from "@/components/form/add-product/upload-image-form";
+import { ProductPriceForm } from "@/components/form/add-product/product-price-form";
+import { Typography } from "@/components/typography/typography";
+import { ProductCategoryForm } from "@/components/form/add-product/product-category-form";
+import { Button } from "@/components/button/button";
+import { ICON } from "@/constants/icon";
+import { ProductInentoryForm } from "@/components/form/add-product/product-inventory-form";
+import { useCategoryDrawer } from "@/hooks/use-category-drawer";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Axios } from "@/request/request";
+import {
+  allProductSchema,
+} from "@/components/form/add-product/product-validation";
+import { errorMessage } from "@/utils/helper";
+import { useNotification } from "@/hooks/use-notification";
+// import { useRouter } from "next/navigation";
 
-import { ChevronRight, Plus, Upload } from "lucide-react"
-import Link from "next/link"
+export default function AddProduct() {
+  const { toggleDrawer } = useCategoryDrawer();
+  const { toggleNotification } = useNotification();
+  const queryClient = useQueryClient();
 
-export default function Component() {
+  // const router = useRouter()
+  const { mutate } = useMutation({
+    mutationKey: ["CREATE_PRODUCT"],
+    mutationFn: async () => {
+      const product = queryClient.getQueryData(["CREATE_PRODUCT"]);
+      allProductSchema.validate(product).then(async () => {
+
+        await Axios.post('/product', product)
+        toggleNotification({
+          show: true,
+          title: "Product Created",
+          type: "success",
+          message:
+            "Product has been created succesfully",
+        });
+
+      }).catch((reason) => {
+        console.log(reason?.message);
+        const errorList = String(reason)?.split(":");
+        toggleNotification({
+          show: true,
+          title: errorList[1],
+          type: "error",
+          message:
+          errorMessage[errorList[1].trim() as keyof typeof errorMessage],
+        });
+      })
+    },
+    onSuccess: () => {
+      alert("Product ");
+    },
+  });
   return (
-    <div className="container mx-auto p-6">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-        <Link href="/dashboard" className="hover:text-foreground">
-          Dashboard
-        </Link>
-        <ChevronRight className="h-4 w-4" />
-        <Link href="/products" className="hover:text-foreground">
-          Products
-        </Link>
-        <ChevronRight className="h-4 w-4" />
-        <span className="text-foreground">Add Product</span>
-      </nav>
-
+    <div className="container mx-auto mt-6 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold">Add Product</h1>
-        <div className="flex gap-3">
-          <Button variant="outline">Discard Changes</Button>
-          <Button>Add Product</Button>
-        </div>
-      </div>
+      <DashboardTitleHeader
+        title={"Add Product"}
+        discardKey="ADD_PRODUCT"
+        addItem={mutate}
+      />
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Product Details */}
-        <Card className="p-6">
-          <h2 className="text-lg font-medium mb-4">Product Details</h2>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="product-name">Product name *</Label>
-              <Input id="product-name" required />
-            </div>
-            <div>
-              <Label htmlFor="product-description">Product description *</Label>
-              {/* <Textarea id="product-description" className="min-h-[120px]" required /> */}
-            </div>
-          </div>
+        <Card className="px-4 pt-6 h-[248px]">
+          <Typography size="s1" as="p" align="left" className="mb-4">
+            Product Details
+          </Typography>
+          <ProductDetailsForm />
         </Card>
 
         {/* Product Image */}
-        <Card className="p-6">
-          <h2 className="text-lg font-medium mb-4">Product Image</h2>
-          <p className="text-sm text-muted-foreground mb-2">*Must add at least one product image</p>
-          <div className="border-2 border-dashed rounded-lg p-8 text-center">
-            <div className="flex flex-col items-center gap-2">
-              <Upload className="h-8 w-8 text-muted-foreground" />
-              <p className="text-sm">Upload Images</p>
-              <p className="text-xs text-muted-foreground">PNG, JPEG not more than 5mb in size.</p>
-            </div>
-            <Button variant="secondary" className="mt-4">
-              Upload Images
-            </Button>
+        <Card className="px-4 pt-6 h-[248px]">
+          <div className="flex items-center justify-between mb-4">
+            <Typography size="s1" as="p" align="left" className="">
+              Product Image
+            </Typography>
+            <p className="text-sm text-muted-foreground ">
+              *Must add at least one product image
+            </p>
           </div>
+          <UploadImageForm />
         </Card>
 
         {/* Product Price */}
         <Card className="p-6">
-          <h2 className="text-lg font-medium mb-4">Product Price</h2>
+          <Typography size="s1" as="p" align="left" className="mb-4">
+            Product Price
+          </Typography>
           <div className="space-y-4">
             <div>
-              <Label>Unit Type</Label>
-              {/* <RadioGroup defaultValue="per-kg" className="flex gap-4 mt-2">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="per-kg" id="per-kg" />
-                  <Label htmlFor="per-kg">Per kg</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="per-item" id="per-item" />
-                  <Label htmlFor="per-item">Per item</Label>
-                </div>
-              </RadioGroup> */}
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="price">Price per unit</Label>
-                <Input id="price" type="number" min="0" step="0.01" />
-              </div>
-              <div>
-                <Label htmlFor="promotion">Select promotion to apply</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select promotion" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
-                    <SelectItem value="discount-10">10% Discount</SelectItem>
-                    <SelectItem value="discount-20">20% Discount</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <Typography
+                size="s1"
+                as="p"
+                align="left"
+                className="mb-2 black-300"
+              >
+                Unit type
+              </Typography>
+              <ProductPriceForm />
             </div>
           </div>
         </Card>
 
         {/* Category */}
         <Card className="p-6">
-          <h2 className="text-lg font-medium mb-4">Category</h2>
-          <div className="space-y-4">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="fruits">Fruits</SelectItem>
-                <SelectItem value="vegetables">Vegetables</SelectItem>
-                <SelectItem value="meat">Meat</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="secondary" className="w-full">
-              <Plus className="h-4 w-4 mr-2" />
+          <Typography size="s1" as="p" align="left" className="mb-4">
+            Category
+          </Typography>
+
+          <ProductCategoryForm />
+          <div className="flex justify-end mt-6">
+            <Button
+              size="lg"
+              color="light"
+              className="border-0 bg-black-600 black-100"
+              iconR={ICON.PlusCircleIcon}
+              onClick={() => toggleDrawer(true)}
+            >
               Add New Category
             </Button>
           </div>
@@ -129,19 +131,13 @@ export default function Component() {
 
         {/* Inventory */}
         <Card className="p-6">
-          <h2 className="text-lg font-medium mb-4">Inventory</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="in-stock">In stock</Label>
-              {/* <Switch id="in-stock" /> */}
-            </div>
-            <div>
-              <Label htmlFor="quantity">Quantity in stock *</Label>
-              <Input id="quantity" type="number" min="0" required />
-            </div>
-          </div>
+          <Typography size="s1" as="p" align="left" className="mb-4">
+            Inventory
+          </Typography>
+
+          <ProductInentoryForm />
         </Card>
       </div>
     </div>
-  )
+  );
 }

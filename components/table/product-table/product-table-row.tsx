@@ -20,9 +20,10 @@ export default function ProductTableRow({
   selectedItems,
   toggleSelectItem,
 }: ProductTableRowProps) {
+
   return (
-    <TableRow>
-      <TableCell className="pl-6 py-3">
+    <TableRow className={selectedItems.has(product.id) ? 'bg-black-600': ""} >
+      <TableCell className="pl-6 py-3 flex mt-2 items-end h-full">
         <Checkbox
           checked={selectedItems.has(product.id)}
           onCheckedChange={() => toggleSelectItem(product.id)}
@@ -47,7 +48,7 @@ export default function ProductTableRow({
         {formatToNaira(product.price)}
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
-        {product.stock}
+        {product?.qty}
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
         {product.promotion[0]?.code ?? "-"}
@@ -58,7 +59,7 @@ export default function ProductTableRow({
         </Badge>
       </TableCell>
       <TableCell className="py-3">
-        <div className="flex gap-x-3">
+        <div className="flex">
           <Button variant={'ghost'}>
             <Eye className="w-4 h-4 black-100" />
           </Button>

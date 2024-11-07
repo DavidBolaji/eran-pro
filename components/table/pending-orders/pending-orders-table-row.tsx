@@ -2,20 +2,32 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import React from "react";
 import { PendingOrders } from "./types";
 import { Button } from "@/components/button/button";
+import Image from "next/image";
 
 interface PendingOrdersTableRowProps {
-  product: PendingOrders;
+  orders: PendingOrders;
 }
 
 export default function PendingordersTableRow({
-  product,
+  orders,
 }: PendingOrdersTableRowProps) {
   return (
     <TableRow>
-      <TableCell className="pl-6 py-3">{product.name}</TableCell>
-      <TableCell className="pl-6 py-3">{product.user.name}</TableCell>
-      <TableCell className="pl-6 py-3">{product.user.phone}</TableCell>
-      <TableCell className="pl-6 py-3">{product.createdAt}</TableCell>
+       <TableCell className="pl-6 py-3">
+        <div className="flex items-center gap-3">
+          <Image
+            src={orders?.product ? orders.product[0]?.images[0]?.url ?? "": ""}
+            alt={orders.name}
+            width={40}
+            height={40}
+            className="rounded-md object-cover"
+          />
+          <span className="font-bold text-sm  black-100">{orders.name}</span>
+        </div>
+      </TableCell>
+      <TableCell className="pl-6 py-3">{orders.user.name}</TableCell>
+      <TableCell className="pl-6 py-3">{orders.user.phone}</TableCell>
+      <TableCell className="pl-6 py-3">{orders.createdAt}</TableCell>
       <TableCell className="pl-6 py-3">
         <Button
           size="sm"

@@ -9,6 +9,7 @@ export const dummyPendingOrders: PendingOrders[] = [
       name: "Will Smith",
       phone: "08067453421",
     },
+    
     createdAt: "18-09-2022",
   },
   {
@@ -18,11 +19,13 @@ export const dummyPendingOrders: PendingOrders[] = [
       name: "Sam Jones",
       phone: "08067453421",
     },
+   
     createdAt: "12-07-1243",
   },
   {
     id: "1",
     name: "Fresh Chicken Leg",
+   
     user: {
       name: "Amos Philip",
       phone: "08067453421",

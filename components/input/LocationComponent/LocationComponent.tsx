@@ -1,7 +1,7 @@
 import useAddress from "@/hooks/useAddress";
 import useCountry from "@/hooks/useCountry";
 import { Field, useFormikContext } from "formik";
-import React from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 import FormikNormalInput from "../formik-normal-input";
 import FormikSelectInput from "../formik-select-input";
 
@@ -38,7 +38,7 @@ const LocationComponent: React.FC<{
             options={countries ?? []}
             as={FormikSelectInput}
             placeholder={"Select Country"}
-            onChange={(e: any) => {
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
               setCity([]);
               setStates([]);
@@ -46,7 +46,7 @@ const LocationComponent: React.FC<{
               setFieldValue(sName!, "");
               setFieldValue(country, e.target.value);
             }}
-            onBlur={(e: any) => {
+            onBlur={(e: ChangeEvent<HTMLSelectElement>) => {
               handleBlur(e);
               setFieldTouched(country);
             }}
@@ -61,7 +61,7 @@ const LocationComponent: React.FC<{
             options={states ?? []}
             as={FormikSelectInput}
             placeholder={"Select state"}
-            onChange={(e: any) => {
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
               setCity([]);
               setFieldValue(cName!, "");
@@ -69,7 +69,7 @@ const LocationComponent: React.FC<{
 
               setFieldValue(sName, e.target.value);
             }}
-            onBlur={(e: any) => {
+            onBlur={(e: FocusEvent<HTMLSelectElement>) => {
               handleBlur(e);
               setFieldTouched(sName);
             }}
@@ -86,11 +86,11 @@ const LocationComponent: React.FC<{
             options={city ?? []}
             as={FormikSelectInput}
             placeholder={"Select City/Town"}
-            onChange={(e: any) => {
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
               setFieldValue(cName!, e.target.value);
             }}
-            onBlur={(e: any) => {
+            onBlur={(e: FocusEvent<HTMLSelectElement>) => {
               handleBlur(e);
               setFieldTouched(cName!);
             }}
@@ -103,10 +103,10 @@ const LocationComponent: React.FC<{
             name={address}
             as={FormikNormalInput}
             placeholder={"House number and street name"}
-            onChange={(e: any) => {
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
             }}
-            onBlur={(e: any) => {
+            onBlur={(e: FocusEvent<HTMLSelectElement>) => {
               handleBlur(e);
             }}
           />

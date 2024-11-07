@@ -14,12 +14,23 @@ export type IProduct = Omit<
   images: Pick<Image, "url">[];
 };
 
+export type ICreateProduct = {
+  name: string;
+  description: string;
+  price: number;
+  qty: number;
+  stock: boolean;
+  unit: string;
+  images: string[];
+  categoryId: string;
+};
+
 interface GetProductsParams {
   categories?: string[];
   page?: number;
   limit?: number;
-  sort?: string, // default sorting field
-  sortOrder?: string, // ascending or descending order
+  sort?: string; // default sorting field
+  sortOrder?: string; // ascending or descending order
 }
 
 export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
@@ -102,9 +113,10 @@ export const getDashboardProduct = async ({
     };
   }
 
-  const orderBy: Prisma.ProductOrderByWithRelationInput = sort === "category"
-  ? { category: { name: sortOrder as Prisma.SortOrder } }
-  : { [sort]: sortOrder as Prisma.SortOrder };
+  const orderBy: Prisma.ProductOrderByWithRelationInput =
+    sort === "category"
+      ? { category: { name: sortOrder as Prisma.SortOrder } }
+      : { [sort]: sortOrder as Prisma.SortOrder };
 
   try {
     const totalItems = await db.product.count({ where: whereClause });
@@ -121,6 +133,7 @@ export const getDashboardProduct = async ({
         },
         price: true,
         stock: true,
+        qty: true,
         promotion: {
           select: {
             code: true,
@@ -147,12 +160,17 @@ export const getDashboardProduct = async ({
   }
 };
 
-export const filterProduct = (formData: FormData, currentParams: URLSearchParams) => {
+export const filterProduct = (
+  formData: FormData,
+  currentParams: URLSearchParams,
+  path?: string 
+) => {
   const params = new URLSearchParams(currentParams);
   const prodFilter = formData.getAll("Categories[]");
-  const page = formData.get("page") as string;  // Cast to string if necessary
-  const sort = (formData.get("sort") as string) || params.get("sort") || "name";  // Default to "name"
-  const sortOrder = (formData.get("sortOrder") as string) || params.get("sortOrder") || "asc";
+  const page = formData.get("page") as string; // Cast to string if necessary
+  const sort = (formData.get("sort") as string) || params.get("sort") || "name"; // Default to "name"
+  const sortOrder =
+    (formData.get("sortOrder") as string) || params.get("sortOrder") || "asc";
 
   // Handle page and category filters as before
   const hasSelectedFilters = prodFilter.length > 0;
@@ -163,7 +181,10 @@ export const filterProduct = (formData: FormData, currentParams: URLSearchParams
   }
 
   if (hasSelectedFilters) {
-    if (JSON.stringify(Array.from(prodFilter)) !== JSON.stringify(Array.from(currentCategoryFilters))) {
+    if (
+      JSON.stringify(Array.from(prodFilter)) !==
+      JSON.stringify(Array.from(currentCategoryFilters))
+    ) {
       params.delete("category");
       params.append("category", prodFilter.join(","));
       params.set("page", "1");
@@ -177,15 +198,16 @@ export const filterProduct = (formData: FormData, currentParams: URLSearchParams
   if (sortOrder) params.set("sortOrder", sortOrder);
 
   if (params.toString()) {
-    redirect(`/dashboard/products?${params.toString()}`);
+    if (path) {
+      redirect(`${path}?${params.toString()}`);
+    } else {
+      redirect(`/dashboard/products?${params.toString()}`);
+    }
   } else {
     console.log("No filters applied");
   }
 };
 
-
-
-export const resetProduct = (
-) => {
+export const resetProduct = () => {
   redirect(`/dashboard/products`);
 };

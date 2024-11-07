@@ -12,7 +12,7 @@ export default function FormikSelectInput({
   options,
   ...rest
 }: FormikInput) {
-  const [field, meta] = useField(rest.name!);
+  const [field] = useField(rest.name!);
 
   const handleBlur = (e: FocusEvent<HTMLSelectElement>) => {
     field.onBlur(e); // Calls Formik's onBlur to update Formik state

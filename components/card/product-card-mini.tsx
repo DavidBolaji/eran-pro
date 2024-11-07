@@ -19,8 +19,8 @@ export const ProductCardMini: React.FC<{
           On Sale!
         </div>
       )}
-      <div className="h-44 relative bg-gray-800 rounded-t-2xl mb-4 overflow-hidden">
-        <Image width={328} height={256} src={product?.img ?? ""} priority className="object-cover absolute w-full h-64" alt={product.name} />
+      <div className="h-44 relative flex items-center justify-center bg-white rounded-t-2xl mb-4 overflow-hidden">
+        <Image width={328} height={256} src={product?.images[0]?.url ?? ""} priority className="object-contain absolute w-full h-64" alt={product.name} />
       </div>
       <div className="px-4">
         <div className="text-sm mb-2 inline-block px-2 py-1 rounded-full border-black-100 text-gray-500 border">

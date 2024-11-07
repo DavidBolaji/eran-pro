@@ -6,7 +6,7 @@ import ProductTableHeader from "./product-table-header";
 import ProductTableRow from "./product-table-row";
 import Pagination from "./pagination";
 import { useTable } from "@/hooks/use-table";
-import { ProductMainHeader } from "./product-main-header";
+import { MainHeader } from "../main-header";
 import { Table, TableBody } from "@/components/ui/table";
 import { Product, ProductTableProps } from "./types";
 
@@ -17,7 +17,8 @@ export default function ProductTable({
   onSearch,
   totalPages,
   page,
-  itemsPerPage
+  itemsPerPage,
+  categories
 }: ProductTableProps) {
   const {
     items,
@@ -42,12 +43,13 @@ export default function ProductTable({
 
   return (
     <div className="w-full">
-      <ProductMainHeader
+      <MainHeader
         title={"Product List"}
         name={"Add Product"}
-        url={"/dashboard/create"}
+        url={"/dashboard/products/add"}
         setShowFilters={setShowFilters}
         showFilters={showFilters}
+        categories={categories}
         filter
         search
         more

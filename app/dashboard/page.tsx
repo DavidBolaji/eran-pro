@@ -12,13 +12,14 @@ export default async function Dashboard({
 }: {
   searchParams: DashboardSearchParams;
 }) {
+  console.log(searchParams)
 
 
   return (
     <div className="bg-grey-200">
       <RenderDashboardcards />
       <RenderRevenueProduct />
-      <RenderProductOrder />
+      <RenderProductOrder  />
     </div>
   );
 }

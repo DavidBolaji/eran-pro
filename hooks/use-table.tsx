@@ -51,7 +51,7 @@ export const useTable = <T extends { id: string }>({
     }
   };
 
-  const handleSort = (column: keyof T) => {
+  const handleSort = (column: keyof T, path?: string) => {
     const direction =
       sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
     setSortColumn(column);
@@ -64,7 +64,12 @@ export const useTable = <T extends { id: string }>({
     params.set("sort", column as string);
     params.set("sortOrder", direction);
 
-    filterProduct(new FormData(), params);
+    if (path) {
+      filterProduct(new FormData(), params, path);
+    } else {
+      filterProduct(new FormData(), params);
+    }
+
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

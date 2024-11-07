@@ -8,6 +8,7 @@ import { Typography } from "@/components/typography/typography";
 import db from "@/db/db";
 import { collapseData, collapseData2 } from "@/utils/data";
 import { formatToNaira } from "@/utils/helper";
+import Image from "next/image";
 import React from "react";
 
 interface ProductPageProps {
@@ -34,9 +35,18 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
       <div className="py-10 lg:px-0 px-4">
         <Crumb
           crumbData={[
-            "Home",
-            product?.category.name as string,
-            product?.name as string,
+            {
+              text: "Home",
+              href: "/",
+            },
+            {
+              text: product?.category?.name as string,
+              href: "#",
+            },
+            {
+              text: product?.name as string,
+              href: "",
+            },
           ]}
         />
       </div>
@@ -60,10 +70,28 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
       </div>
       <div className="grid lg:grid-cols-10 grid-cols-6 ">
         <div className="lg:col-span-4 col-span-6">
-          <div className=" h-[443px] bg-black rounded-2xl mr-4 lg:ml-0 ml-4"></div>
+          <div className="h-[443px] relative flex items-center justify-center bg-white rounded-2xl mr-4 lg:ml-0 ml-4">
+            <Image
+              fill
+              className="w-full h-full object-contain absolute"
+              src={product?.images[0].url as string}
+              alt={product?.category?.name as string}
+              
+            />
+          </div>
           <div className="flex items-center lg:px-0 px-4 gap-3 lg:pb-0 pb-8 overflow-x-scroll scrollbar-hide pt-4">
-            {["x", "y", "z"].map((el) => (
-              <div key={el} className="rounded-2xl bg-black w-24 h-24"></div>
+            {product?.images.map((el) => (
+              <div
+                key={el.url}
+                className="rounded-2xl flex relative items-center justify-center bg-white w-24 h-24"
+              >
+                <Image
+                  fill
+                  className="w-full h-full object-contain absolute"
+                  src={el.url}
+                  alt={product.category.name}
+                />
+              </div>
             ))}
           </div>
         </div>

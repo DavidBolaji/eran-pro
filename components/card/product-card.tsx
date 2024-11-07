@@ -18,12 +18,12 @@ export const ProductCard: React.FC<{
           On Sale!
         </div>
       )}
-      <div className="h-64 relative bg-gray-800 rounded-t-2xl mb-4 overflow-hidden">
+      <div className="h-64 relative flex items-center justify-center bg-white rounded-t-2xl mb-4 overflow-hidden">
         <Image
           fill
-          src={product.img ?? ""}
+          src={product?.images[0]?.url ?? ""}
           priority
-          className="object-cover absolute w-full h-64"
+          className="object-contain absolute w-full h-64"
           alt={product.name}
         />
       </div>

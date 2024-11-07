@@ -2,8 +2,8 @@
 import React from "react";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Product } from "./types";
+import { CheckboxMinus } from "@/components/ui/checkboxminus";
 
 interface ProductTableHeaderProps {
   allChecked: boolean;
@@ -17,7 +17,7 @@ const headerList = [
   { key: "name", title: "Product name", hasSort: true },
   { key: "category", title: "Category", hasSort: true },
   { key: "price", title: "Price", hasSort: true },
-  { key: "stock", title: "Stock", hasSort: true },
+  { key: "qty", title: "Stock", hasSort: true },
   { key: "promotion", title: "Promotion", hasSort: true },
   { key: "status", title: "Status", hasSort: true },
   { key: "actions", title: "", hasSort: false },
@@ -33,8 +33,8 @@ export default function ProductTableHeader({
   return (
     <TableHeader>
       <TableRow>
-        <TableHead className="pl-6 py-3 flex items-center">
-          <Checkbox checked={allChecked} onCheckedChange={toggleSelectAll} />
+        <TableHead className="pl-6 h-full py-3 flex items-center">
+          <CheckboxMinus checked={allChecked} onCheckedChange={toggleSelectAll} />
         </TableHead>
         {headerList.map((header) =>
           header.hasSort ? (

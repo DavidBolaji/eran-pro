@@ -17,8 +17,8 @@ const TextAreaInput: React.FC<InputProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
 
-  const { className, ...prop } = rest;
-  prop.required = prop.required ? prop.required : true
+  const { className, onBlur, ...prop } = rest;
+  prop.required = prop.required ? prop.required : false
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -26,11 +26,13 @@ const TextAreaInput: React.FC<InputProps> = ({
 
   const handleBlur = (e: FocusEvent<HTMLTextAreaElement>) => {
     setIsFocused(false);
-    setHasValue(!!e.target.value);
+    setHasValue(Boolean(e.target.value)); // Update `hasValue` only if a value is selected.
+    if (onBlur) onBlur(e); // Call external onBlur if provided
   };
 
+
   const inputStyle = classNames(
-    "w-full pl-4 bg-transparent placeholder:text-transparent translate-y-4 flex items-center focus:outline-none",
+    "w-full pl-4 pt-1 bg-transparent font-satoshi resize-none placeholder:text-transparent translate-y-4 flex items-center focus:outline-none",
     {
       "pl-10": leftIcon,
       "pl-3": !leftIcon,
@@ -46,7 +48,7 @@ const TextAreaInput: React.FC<InputProps> = ({
   );
 
   return (
-    <div className="relative w-full border border-[#C8E0D2] bg-grey-200 rounded-2xl">
+    <div className="relative w-full border pb-5 border-[#C8E0D2] bg-grey-200 rounded-2xl">
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -73,7 +75,9 @@ const TextAreaInput: React.FC<InputProps> = ({
         transition={{ type: "linear", stiffness: 200 }}
         className={`absolute left-${
           leftIcon ? 20 : 3
-        } top-3 black-300 text-sm pointer-events-none`}
+        } top-3 black-300 text-nowrap pointer-events-none black-300 font-medium ${
+          isFocused || hasValue ? "text-base" : "text-sm"
+        }`}
       >
         {prop.placeholder} {prop.required && "*"}
       </motion.label>

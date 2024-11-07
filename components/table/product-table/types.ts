@@ -1,3 +1,5 @@
+import { Category } from "@prisma/client";
+
 export interface Product {
   id: string;
   name: string;
@@ -6,6 +8,7 @@ export interface Product {
     name: string;
   };
   price: number;
+  qty: number;
   stock: boolean;
   status: "DRAFT" | "ACTIVE" | "ARCHIVED";
   promotion: { code: string; discount: number }[];
@@ -21,4 +24,5 @@ export interface ProductTableProps {
   totalPages?: number;
   page?: number;
   itemsPerPage?: number
+  categories: Pick<Category, "id" | "name">[]
 }

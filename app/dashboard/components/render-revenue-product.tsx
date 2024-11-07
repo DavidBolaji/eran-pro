@@ -20,7 +20,7 @@ export const RenderRevenueProduct = () => {
                 <MeatCard
                   key={data.id}
                   title={data.name}
-                  img={data.img as string}
+                  img={data.images[0].url as string}
                   order={153}
                 />
               ))}

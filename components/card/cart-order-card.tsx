@@ -24,13 +24,13 @@ export const CartOrderCard: React.FC<{
   return (
     <div className={cartOrderStyles}>
       <div className="flex items-center gap-x-4">
-        <div className="bg-black-100 w-[120px] h-[120px] rounded-xl relative">
+        <div className="bg-white w-[120px] h-[120px] rounded-xl relative">
           <Image
             priority
-            src={product.img ?? ""}
+            src={product?.images[0]?.url ?? ""}
             fill
             alt={product.name}
-            className="object-cover w-full h-full -z-10 rounded-xl absolute"
+            className="object-contain w-full h-full rounded-xl absolute"
           />
         </div>
         <div>

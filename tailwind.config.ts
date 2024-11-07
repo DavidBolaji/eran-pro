@@ -22,7 +22,7 @@ const config: Config = {
   			c2: '10px'
   		},
   		fontFamily: {
-  			satoshi: ["Satoshi Variable", "sans-serif"]
+  			satoshi: ["Satoshi-Variable", "sans-serif"]
   		},
   		letterSpacing: {
   			widest: '0.125em',
@@ -82,6 +82,7 @@ const config: Config = {
   		}
   	}
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 };
 export default config;

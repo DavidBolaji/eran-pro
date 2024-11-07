@@ -6,9 +6,10 @@ import NormalInput from "./normal-input";
 
 interface FormikInputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
+  naira?: boolean
 }
 
-export default function FormikNormalInput({ placeholder, ...rest }: FormikInputProps) {
+export default function FormikNormalInput({ placeholder, naira, ...rest }: FormikInputProps) {
   const [field] = useField(rest.name!);
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
@@ -20,6 +21,7 @@ export default function FormikNormalInput({ placeholder, ...rest }: FormikInputP
     <NormalInput
       {...rest}
       {...field}
+      naira={naira}
       onBlur={handleBlur}
       placeholder={placeholder}
     />
