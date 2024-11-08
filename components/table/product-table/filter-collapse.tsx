@@ -4,37 +4,63 @@ import styled from "@emotion/styled";
 import { ICollapseData } from "@/utils/data";
 
 const StyledCollapse = styled.div`
-  background-color: #Fff !important;
+  background-color: #fff !important;
   padding: 0px;
-  border-radius: 10px;
-  border: 1px solid #DDEEE5 !important;
-  overflow: hidden;
 
-  * > .ant-collapse-header {
-    background-color: #F5F6F8 !important;
-    padding: 16px !important;
-    border-start-start-radius: 16px !important;
-    .ant-collapse-header-text {
-      color: #23342A;
-      font-weight: 900;
-      font-size: 14px;
-      line-height: 22px;
-      font-family: "Satoshi-Regular";
+  .ant-collapse {
+    background-color: #fff;
+  }
+
+  .ant-collapse-content.ant-collapse-content-active {
+    border-left: 1px solid #ddeee5 !important;;
+    border-right: 1px solid #ddeee5 !important;;
+    border-bottom: 1px solid #ddeee5 !important;;
+    border-top: 0px solid black;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+
+  .ant-collapse-item {
+    margin-bottom: 24px;
+    border-radius: 20px;
+    border: none;
+  }
+
+  .ant-collapse-item.ant-collapse-item-active {
+    .ant-collapse-header {
+      border: 1px solid #ddeee5 !important;
+      background-color: #f5f6f8 !important;
+      border-bottom-left-radius: 0px !important;
+      border-bottom-right-radius: 0px !important;
     }
   }
 
-  * > .ant-collapse-content-box > p {
-    font-size: 16px;
-    font-weight: 500;
-    /* transform: translateX(-15px); */
-    color: #23342a;
-    line-height: 24px;
-    font-family: "Satoshi-Regular";
+  .ant-collapse-header {
+    border: 1px solid #ddeee5 !important;
+    background-color: #f5f6f8 !important;
+    border-radius: 16px !important;
+    .ant-collapse-header-text {
+      color: #23342a;
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 22px;
+      font-family: "Satoshi-Variable";
+    }
   }
 
-  * > .ant-collapse-content-box {
+  .ant-collapse-content-box > p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #23342a;
+    line-height: 24px;
+    font-family: "Satoshi-Variable";
+  }
+
+  .ant-collapse-content-box {
     background-color: #ffffff !important;
     padding: 0px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
   }
 
   @media (max-width: 500px) {

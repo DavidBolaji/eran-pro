@@ -15,6 +15,16 @@ export const formatToNaira = (amount: number, dp?: number) => {
   }).format(amount);
 };
 
+import { parse, format } from 'date-fns';
+
+export function formatDate(dateString: string) {
+  // Parse the date string (MM/dd/yyyy format)
+  const parsedDate = parse(dateString, "MM/dd/yyyy", new Date());
+  
+  // Format the parsed date as "dd MMMM, yyyy"
+  return format(parsedDate, "do MMM, yyyy");
+}
+
 export const errorMessage = {
   "Description is required":
     "You must fill the category description field in order to create a category",

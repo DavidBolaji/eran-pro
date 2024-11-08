@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
-import { filterProduct } from "@/actions/get-products";
 import { useSearchParams } from "next/navigation";
 import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
 
@@ -12,8 +11,9 @@ const Pagination = React.forwardRef<
     totalPages: number;
     page: number;
     itemsPerPage: number;
+    onFilter: (form:FormData, params: URLSearchParams, path?: string) => void
   }
->(({ isMobile, loading, page, totalPages, itemsPerPage }, ref) => {
+>(({ isMobile, loading, page, totalPages, itemsPerPage, onFilter }, ref) => {
   const searchParams = useSearchParams();
 
   const handlePageSubmit =
@@ -21,7 +21,7 @@ const Pagination = React.forwardRef<
       e.preventDefault();
       const params = new URLSearchParams(searchParams.toString());
       params.set("page", newPage.toString());
-      filterProduct(new FormData(), params);
+      onFilter(new FormData(), params);
     };
 
   const getPageNumbers = () => {

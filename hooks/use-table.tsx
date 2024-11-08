@@ -1,4 +1,3 @@
-import { filterProduct } from "@/actions/get-products";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useInView } from "react-intersection-observer";
@@ -7,11 +6,13 @@ export const useTable = <T extends { id: string }>({
   initialItems,
   onLoadMore,
   onSearch,
+  onFilter
 }: {
   initialItems: T[];
   onLoadMore?: () => Promise<T[]>;
   onSort?: (column: keyof T, direction: "asc" | "desc") => void;
   onSearch?: (query: string) => void;
+  onFilter?: (form:FormData, params: URLSearchParams, path?: string) => void
 }) => {
   const searchParams = useSearchParams();
   // Use generic type T for items
@@ -64,11 +65,14 @@ export const useTable = <T extends { id: string }>({
     params.set("sort", column as string);
     params.set("sortOrder", direction);
 
-    if (path) {
-      filterProduct(new FormData(), params, path);
-    } else {
-      filterProduct(new FormData(), params);
+    if(onFilter) {
+      if (path) {
+        onFilter(new FormData(), params, path);
+      } else {
+       onFilter(new FormData(), params);
+      }
     }
+
 
   };
 

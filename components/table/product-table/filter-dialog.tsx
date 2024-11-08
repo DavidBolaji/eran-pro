@@ -1,33 +1,55 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { X } from "lucide-react";
-import React, { useRef } from "react";
-import { FilterCollapse } from "./filter-collapse";
-import { filterProduct, resetProduct } from "@/actions/get-products";
 import { useSearchParams } from "next/navigation";
+import React, { useRef, useState } from "react";
+import { DateRange } from "react-day-picker";
+import { FilterCollapse } from "./filter-collapse";
 import { Category } from "@prisma/client";
+import { X } from "lucide-react";
+import {} from 'date-fns'
 
 interface FilterDialogProps {
   open: boolean;
   onClose: () => void;
-  categories?: Pick<Category, "id" | "name">[]
+  categories?: Pick<Category, "id" | "name">[];
+  onFilter: (form: FormData, params: URLSearchParams, path?: string) => void;
+  calender?: boolean;
 }
 
-export default function FilterDialog({ open, onClose, categories }: FilterDialogProps) {
+export default function FilterDialog({
+  open,
+  onClose,
+  onFilter,
+  categories,
+  calender,
+}: FilterDialogProps) {
   const searchParams = useSearchParams();
   const btnRef = useRef<HTMLButtonElement | null>(null);
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  });
 
   const isChecked = (name: string, value: string) => {
     const paramValues = searchParams.get(name)?.split(",");
     return paramValues?.includes(value) || false;
   };
 
-  
+  const handleFilter = (formData: FormData) => {
+    if (date) {
+      formData.append("dateFrom", date.from?.toISOString() || "");
+      formData.append("dateTo", date.to?.toISOString() || "");
+    }
+    onFilter(formData, searchParams);
+  };
 
-  return open ? (
+  if (!open) return null;
+
+  return (
     <div className="flex items-start justify-center pt-12">
       <div className="bg-white rounded-lg shadow-lg px-6 w-[372px]">
         <div className="flex items-center pb-2 justify-between pt-6">
@@ -42,54 +64,71 @@ export default function FilterDialog({ open, onClose, categories }: FilterDialog
               key: "1",
               label: "Categories",
               children: (
-                <form
-                  action={(formData) => filterProduct(formData, searchParams)}
-                  className="pt-2"
-                >
-                  <div className="">
-                    <div className="">
-                      {categories && categories.map((category) => (
-                        <div
-                          key={category.id}
-                          className="flex items-center space-x-2 space-y-2"
+                <form action={handleFilter} className="pt-2">
+                  <div className="space-y-2">
+                    {categories?.map((category) => (
+                      <div
+                        key={category.id}
+                        className="flex items-center space-x-2"
+                      >
+                        <Checkbox
+                          id={category.name.toLowerCase()}
+                          name="Categories[]"
+                          value={category.name}
+                          defaultChecked={isChecked(`category`, category.name)}
+                        />
+                        <label
+                          htmlFor={category.name.toLowerCase()}
+                          className="text-sm leading-5 font-medium"
                         >
-                          <Checkbox
-                            className="mt-2"
-                            id={category.name.toLowerCase()}
-                            name="Categories[]"
-                            value={category.name}
-                            defaultChecked={isChecked(`category`, category.name)}
-                          />
-                          <label
-                            htmlFor={category.name.toLowerCase()}
-                            className="font-bold font-satoshi text-sm leading-5 black-100"
-                          >
-                            {category.name}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                          {category.name}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                   <button className="hidden" type="submit" ref={btnRef} />
                 </form>
               ),
             },
+            ...(calender
+              ? [
+                  {
+                    key: "2",
+                    label: "Last order date range",
+                    children: (
+                      <div className="-ml-4 scale-[0.95] translate-y-2">
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={date?.from}
+                        selected={date}
+                        
+                        onSelect={setDate}
+                        numberOfMonths={1}
+                        // fromYear={2000} // Set your desired start year here
+                        // toYear={2030} // Set your desired end year here
+                        // captionLayout="dropdown-buttons" // Enables dropdowns for month/year
+                        className="w-full max-w-lg" // Adjust width as needed
+                      />
+                      </div>
+                    ),
+                  },
+                ]
+              : []),
           ]}
         />
-        <div className=" my-6 rounded-b-lg flex items-center justify-between gap-2">
-          <form action={() => {
-            onClose()
-            resetProduct()
-            }}>
-            <Button
-              variant="outline"
-              size="sm"
-              type="submit"
-              className="rounded-full border-0 bg-black-600"
-            >
-              Reset
-            </Button>
-          </form>
+        <div className="my-6 rounded-b-lg flex items-center justify-between gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setDate(undefined);
+              onClose();
+            }}
+            className="rounded-full border-0 bg-black-600"
+          >
+            Reset
+          </Button>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -110,5 +149,5 @@ export default function FilterDialog({ open, onClose, categories }: FilterDialog
         </div>
       </div>
     </div>
-  ) : null;
+  );
 }

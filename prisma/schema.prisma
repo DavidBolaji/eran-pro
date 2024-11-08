@@ -31,6 +31,11 @@ enum STATUS {
   ARCHIVED
 }
 
+enum USERSTATUS {
+  ACTIVE
+  DEACTIVATED
+}
+
 enum UNIT {
   PER_KG
   PER_ITEM
@@ -133,6 +138,7 @@ model User {
   city     String
   state    String
   orders   Order[]
+  status   USERSTATUS @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

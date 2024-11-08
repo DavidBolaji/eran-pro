@@ -1,18 +1,18 @@
-// ProductTable.tsx
 "use client";
 
 import * as React from "react";
-import ProductTableHeader from "./product-table-header";
-import ProductTableRow from "./product-table-row";
-import Pagination from "../pagination";
 import { useTable } from "@/hooks/use-table";
 import { MainHeader } from "../main-header";
 import { Table, TableBody } from "@/components/ui/table";
-import { Product, ProductTableProps } from "./types";
-import { filterProduct } from "@/actions/get-products";
 
-export default function ProductTable({
-  initialProducts = [],
+import { filterCustomer } from "@/actions/get-customers";
+import CustomerTableHeader from "./customer-table-header";
+import { Customer, CustomerTableProps } from "./types";
+import Pagination from "../pagination";
+import CustomerTableRow from "./customer-table-row";
+
+export default function CustomerTable({
+  initialCustomers = [],
   onLoadMore,
   onSort,
   onSearch,
@@ -20,7 +20,7 @@ export default function ProductTable({
   page,
   itemsPerPage,
   categories
-}: ProductTableProps) {
+}: CustomerTableProps) {
   const {
     items,
     showFilters,
@@ -35,33 +35,34 @@ export default function ProductTable({
     selectedItems,
     isMobile,
     loading,
-  } = useTable<Product>({
-    initialItems: initialProducts,
+  } = useTable<Customer>({
+    initialItems: initialCustomers,
     onLoadMore,
     onSort,
     onSearch,
     onFilter(form, params, path) {
-      filterProduct(form, params, path)
+        filterCustomer(form, params, path)
     },
   });
 
   return (
     <div className="w-full">
       <MainHeader
-        title={"Product List"}
-        name={"Add Product"}
-        url={"/dashboard/products/add"}
+        title={"Customer List"}
+        name={"Add Customer"}
+        url={"/dashboard/customers/add"}
         setShowFilters={setShowFilters}
+        onFilter={filterCustomer}
         showFilters={showFilters}
-        onFilter={filterProduct}
         categories={categories}
         filter
+        calender
         search
         more
       />
       <div className="rounded-b-2xl border-t-0 bg-white overflow-hidden border border-[#DDEEE5]">
         <Table>
-          <ProductTableHeader
+          <CustomerTableHeader
             handleSort={handleSort}
             allChecked={allChecked}
             sortDirection={sortDirection}
@@ -69,10 +70,10 @@ export default function ProductTable({
             toggleSelectAll={toggleSelectAll}
           />
           <TableBody>
-            {items.map((product: Product) => (
-              <ProductTableRow
-                key={product.id}
-                product={product}
+            {items.map((customer: Customer) => (
+              <CustomerTableRow
+                key={customer.id}
+                customer={customer}
                 selectedItems={selectedItems}
                 toggleSelectItem={toggleSelectItem}
               />
@@ -88,7 +89,7 @@ export default function ProductTable({
         totalPages={totalPages ?? 0}
         page={page ?? 1}
         itemsPerPage={itemsPerPage ?? 10}
-        onFilter={filterProduct}
+        onFilter={filterCustomer}
       />
     </div>
   );

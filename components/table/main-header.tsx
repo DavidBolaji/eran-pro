@@ -19,6 +19,7 @@ import { useOverlay } from "@/hooks/use-overlay";
 import { useSearchParams } from "next/navigation";
 import { Category } from "@prisma/client";
 import { Grid } from "antd";
+
 const {useBreakpoint} = Grid;
 
 interface MainHeaderProps {
@@ -32,7 +33,8 @@ interface MainHeaderProps {
   name: string;
   title: string;
   categories?: Pick<Category, "id" | "name">[]
-
+  calender?: boolean 
+  onFilter: (form:FormData, params: URLSearchParams, path?: string) => void
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({
@@ -45,7 +47,9 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   url,
   name,
   title,
-  categories
+  categories,
+  calender = false,
+  onFilter
 }) => {
   const divRef = useRef<null | HTMLButtonElement>(null);
   const {toggleOverlay} = useOverlay()
@@ -99,6 +103,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                   open={showFilters}
                   onClose={closeFilter}
                   categories={categories}
+                  calender={calender}
+                  onFilter={onFilter}
                 />
               </div>
             </div>
