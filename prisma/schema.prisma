@@ -17,7 +17,7 @@ datasource db {
 enum OrderStatus {
   PENDING
   CANCELED
-  COMPLETED
+  DELIVERED
 }
 
 enum PromotionType {
@@ -39,6 +39,26 @@ enum USERSTATUS {
 enum UNIT {
   PER_KG
   PER_ITEM
+}
+
+model Address {
+  id      String  @id @default(uuid())
+  address String
+  country String
+  city    String
+  state   String
+  orderId String? @unique
+  active  Boolean
+  info    String?
+  order   Order?  @relation(fields: [orderId], references: [id])
+
+  userId String?
+  User   User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Category {
@@ -68,25 +88,25 @@ model Order {
   userId      String
   User        User        @relation(fields: [userId], references: [id])
   products    Product[]
-  address     String
-  country     String
-  city        String
-  state       String
   status      OrderStatus @default(PENDING)
-  info        String?
+  address     Address?
   paymentType String
+  promotionId String?
+  promotion   Promotion?  @relation(fields: [promotionId], references: [id])
+  price       Float
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@index([promotionId])
 }
 
 model Product {
   id          String      @id @default(uuid())
   name        String      @db.VarChar(50)
   description String      @db.VarChar(600)
-  img         String?      @db.VarChar(300)
+  img         String?     @db.VarChar(300)
   price       Float
   qty         Int         @default(0)
   stock       Boolean
@@ -94,7 +114,7 @@ model Product {
   status      STATUS      @default(ACTIVE)
   Order       Order[]
   promotion   Promotion[]
-  images     Image[]
+  images      Image[]
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
@@ -109,13 +129,14 @@ model Promotion {
   id            String        @id @default(uuid())
   name          String
   promotionType PromotionType
-  code          String
+  code          String        @unique
   categoryId    String?
   category      Category?     @relation(fields: [categoryId], references: [id]) // Relation to Category
   productId     String?
   product       Product?      @relation(fields: [productId], references: [id]) // Relation to Product
+  orders        Order[]
 
-  discount     Int
+  discount  Int
   startDate DateTime
   endDate   DateTime
 
@@ -127,18 +148,16 @@ model Promotion {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  fname    String
-  lname    String
-  email    String
-  password String?
-  phone    String
-  address  String
-  country  String
-  city     String
-  state    String
-  orders   Order[]
-  status   USERSTATUS @default(ACTIVE)
+  id           String     @id @default(uuid())
+  fname        String?
+  lname        String?
+  email        String     @unique
+  password     String?
+  phone        String?
+  pic          String?
+  orders       Order[]
+  status       USERSTATUS @default(ACTIVE)
+  orderAddress Address[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

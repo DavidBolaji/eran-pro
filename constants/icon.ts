@@ -8,8 +8,10 @@ import { CloseIcon } from "./icons/close";
 import { ExclamationIcon } from "./icons/exclamation";
 import { EyeIcon } from "./icons/eye";
 import { EyeOffIcon } from "./icons/eye-off";
+import { FacebookCircleIcon } from "./icons/facebook-circle";
 import { FileIcon } from "./icons/file";
 import { GiftIcon } from "./icons/gift";
+import { GoogleIcon } from "./icons/google";
 import { GridIcon } from "./icons/grid";
 import { KeyIcon } from "./icons/key";
 import { LoaderIcon } from "./icons/loader";
@@ -42,8 +44,10 @@ export const ICON = {
   EyeOffIcon,
   EyeIcon,
   FileIcon,
+  FacebookCircleIcon,
   GridIcon,
   GiftIcon,
+  GoogleIcon,
   KeyIcon,
   LogInIcon,
   LoaderIcon,

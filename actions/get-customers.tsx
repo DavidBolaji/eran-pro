@@ -1,16 +1,17 @@
 "use server";
 
 import db from "@/db/db";
-import { Category, Image, Prisma, Product, Promotion } from "@prisma/client";
+import { Address, Order, Prisma, Product, User } from "@prisma/client";
 import { redirect } from "next/navigation";
 
-export type ICustomer = Omit<
-  Product,
-  "order" | "updatedAt" | "createdAt" | "categoryId"
-> & {
-  promotion: Pick<Promotion, "name" | "discount">[]; // Note: promotion is an array
-  category: Pick<Category, "name" | "id">;
-  images: Pick<Image, "url">[];
+export type ICustomer = {
+  customer: (Omit<User, "password" | "createdAt" | "updatedAt" | "status"> & {
+    orders: (Pick<Order, "id" | "price"> & { address: Address | null } & {
+      products: Product[];
+    })[];
+  } & { orderAddress: Address[] }) | null;
+  totalOrders: number;
+  totalAmountSpent: number;
 };
 
 
@@ -36,7 +37,6 @@ export const getDashboardCustomers = async ({
   searchQuery,
 }: GetCustomersParams) => {
   const skip = (page - 1) * limit;
-
 
   const whereClause: Prisma.UserWhereInput = {
     orders: {
@@ -177,4 +177,38 @@ export const filterCustomer = (
 
 export const resetProduct = () => {
   redirect(`/dashboard/products`);
+};
+
+export const getDashboardCustomer = async (id: string): Promise<ICustomer> => {
+  const customer = await db.user.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      fname: true,
+      lname: true,
+      email: true,
+      phone: true,
+      orders: {
+        select: {
+          id: true,
+          price: true,
+          products: true,
+          address: true,
+        },
+      },
+      orderAddress: true,
+    },
+  });
+
+  const totalAmountSpent = customer?.orders.reduce((acc, cur) => {
+    return (acc += cur.price);
+  }, 0);
+
+  return {
+    totalOrders: customer?.orders.length ?? 0,
+    totalAmountSpent: totalAmountSpent ?? 0,
+    customer: customer ?? null,
+  };
 };

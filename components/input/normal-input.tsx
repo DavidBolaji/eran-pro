@@ -10,12 +10,14 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   leftIcon?: React.ReactNode;
   align?: number;
   naira?: boolean
+  y?: number
 }
 
 const NormalInput: React.FC<InputProps> = ({
   rightIcon,
   leftIcon,
   align = -15,
+  y = -10,
   naira = false,
   ...rest
 }) => {
@@ -28,10 +30,10 @@ const NormalInput: React.FC<InputProps> = ({
 
   // Optimize input style classes with classNames utility.
   const inputStyle = classNames(
-    "w-full pl-4 font-satoshi placeholder:font-medium placeholder:black-300 placeholder:leading-4 bg-transparent translate-y-1.5 h-12 flex items-center focus:outline-none",
+    "w-full pl-4 font-satoshi placeholder:font-medium placeholder:black-300 placeholder:leading-4 bg-transparent  h-12 flex items-center focus:outline-none",
     {
-      "pl-10": leftIcon,
-      "pl-3": !leftIcon,
+      "pl-8 -translate-0.5": leftIcon,
+      "pl-3 translate-y-1.5": !leftIcon,
     },
     {
       "pr-10": rightIcon,
@@ -59,7 +61,7 @@ const NormalInput: React.FC<InputProps> = ({
     <div className={`relative w-full border border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
       {/* Left Icon */}
       {leftIcon && (
-        <div className="absolute border left-3 top-1/2 transform -translate-y-1/2">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
           {leftIcon}
         </div>
       )}
@@ -80,10 +82,10 @@ const NormalInput: React.FC<InputProps> = ({
 
       {/* Floating Label - Position based on focus and value */}
       <motion.label
-        initial={{ y: 20, scale: 1 }}
+        initial={{ y: 0, scale: 1, x: 0 }}
         animate={{
-          y: isFocused || hasValue ? -10 : 0,
-          x: isFocused || hasValue ? align : 0,
+          y: isFocused || hasValue ? y : 0,
+          x: isFocused || hasValue ? align : leftIcon ? 10 : 0,
           scale: isFocused || hasValue ? 0.7 : 1,
         }}
         transition={{ type: "linear", stiffness: 200 }}

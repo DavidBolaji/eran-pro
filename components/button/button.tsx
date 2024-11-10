@@ -22,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
   const { className, ...props } = rest;
 
   const buttonClassnames = classNames(
-    "text-s2 text-center py-2 font-medium h-12 text-nowrap",
+    "font-satoshi text-s2 text-center py-2 font-medium h-12 text-nowrap",
     {
       "px-6": size === "lg",
       "px-3": size === "sm",
