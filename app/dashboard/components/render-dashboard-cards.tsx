@@ -2,31 +2,14 @@ import { Typography } from "@/components/typography/typography";
 import { formatToNaira } from "@/utils/helper";
 import React from "react";
 import FilterComponent from "./filter-component";
-import { ICON } from "@/constants/icon";
 
-const data = [
-  {
-    title: "Total revenue",
-    filter: "1 year",
-    amount: 20372550,
-    type: "cur",
-    icon: ICON.BarChartIcon,
-  },
-  {
-    title: "Pending orders",
-    filter: "Today",
-    amount: 17,
-    icon: ICON.LoaderIcon,
-  },
-  {
-    title: "Completed orders",
-    filter: "Today",
-    amount: 83,
-    icon: ICON.CheckCircleIcon,
-  },
-];
 
-export const RenderDashboardcards = () => {
+export const RenderDashboardcards:React.FC<{data: {
+  title: string
+  amount: number
+  type?: string
+  icon: React.ComponentType<{color?: string}>
+}[]}> = ({data}) => {
   return (
     <div className="grid grid-cols-9 gap-6">
       {data.map((el) => (

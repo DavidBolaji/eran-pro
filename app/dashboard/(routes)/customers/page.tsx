@@ -47,7 +47,7 @@ export default async function CustomerPage({
   return (
     <div>
       <CustomerTable
-        initialCustomers={dummyCustomers ?? data?.customers ?? []}
+        initialCustomers={data?.customers ?? dummyCustomers ?? []}
         totalPages={data?.totalPages}
         page={page}
         itemsPerPage={limit}

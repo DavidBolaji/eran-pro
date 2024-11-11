@@ -2,11 +2,12 @@
 
 
 
-import { ICustomer } from "@/actions/get-customers";
+import { IUser } from "@/actions/get-customers";
 import { CustomerTitleHeader } from "@/components/dashboard-header/customer-header";
+
 // import { useRouter } from "next/navigation";
 
-export default function ViewCustomer({customer}: ICustomer) {
+export default function ViewCustomer({customer}: {customer: IUser | null}) {
 
   return (
     <div className="container mx-auto mt-6 overflow-hidden">
@@ -17,10 +18,6 @@ export default function ViewCustomer({customer}: ICustomer) {
         addItem={() => {}}
       />
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Product Details */}
-
-      </div>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const usePath = () => {
   const pathname = usePathname();
+  const params = useParams();
+  const customerId = params?.customerId;
   const [locationCurrent, setLoc] = useState("");
 
   useEffect(() => {
@@ -16,9 +18,11 @@ const usePath = () => {
         ? "/dashboard/products"
         : pathname === "/dashboard/customers"
         ? "/dashboard/customers"
+        : pathname === `/dashboard/customers/${customerId}`
+        ? "/dashboard/customers"
         : pathname?.split("/")[pathname?.split("/").length - 1];
     setLoc(key);
-  }, [pathname]);
+  }, [pathname, customerId]);
 
   return { locationCurrent };
 };

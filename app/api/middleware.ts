@@ -8,9 +8,9 @@ export async function middleware(req: NextRequest) {
 
   // Define paths and allowed methods for the middleware
   const pathMethodMapping: Record<string, string[]> = {
-    "/api/user": ["GET", "PATCH", "DELETE"],
-    "/api/orders": ["GET"],
-    "/api/product": ["PUT"],
+    "/api/user/**": ["GET", "PATCH", "DELETE"],
+    "/api/orders/**": ["GET"],
+    "/api/product/**": ["PUT"],
   };
 
   // Check if the path requires a token based on HTTP method

@@ -1,3 +1,4 @@
+import { dashboardCard } from "@/utils/data";
 import { RenderDashboardcards } from "./components/render-dashboard-cards";
 import { RenderProductOrder } from "./components/render-product-order";
 import { RenderRevenueProduct } from "./components/render-revenue-product";
@@ -17,7 +18,7 @@ export default async function Dashboard({
 
   return (
     <div className="bg-grey-200">
-      <RenderDashboardcards />
+      <RenderDashboardcards data={dashboardCard} />
       <RenderRevenueProduct />
       <RenderProductOrder  />
     </div>

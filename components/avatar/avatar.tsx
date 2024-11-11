@@ -1,5 +1,6 @@
 import { UserIcon } from "@/constants/icons/user";
 import classNames from "classnames";
+import Image from "next/image";
 import React from "react";
 
 export interface AvatarProps {
@@ -26,7 +27,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   );
 
   return src ? (
-    <img src={src} className={avatarClassnames} alt={alt ?? "avatar"} />
+    <Image width={40} height={40} src={src} className={avatarClassnames} alt={alt ?? "avatar"} />
   ) : (
     <div className={avatarClassnames}>
       <UserIcon color="#ffffff" />

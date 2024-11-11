@@ -1,12 +1,15 @@
+"use client"
 import { Button } from "@/components/button/button";
 import { LoginForm } from "@/components/form/login-form";
 import { Typography } from "@/components/typography/typography";
 import { ICON } from "@/constants/icon";
+import { useUser } from "@/hooks/use-user";
 import { motion } from "framer-motion";
 import React from "react";
 
 
 export const LoginSectionMobile:React.FC<{registerPopup: () => void}> = ({registerPopup}) => {
+  const {googleLogin} = useUser()
   return (
     <motion.div
       key={"LOGIN_MODAL"}
@@ -37,7 +40,7 @@ export const LoginSectionMobile:React.FC<{registerPopup: () => void}> = ({regist
         >
           or sign in with
         </Typography>
-        <div>
+        <div onClick={googleLogin}>
           <ICON.GoogleIcon />
         </div>
         <div>

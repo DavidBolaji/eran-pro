@@ -21,6 +21,10 @@ export const useLoginModal = () => {
     }));
   };
 
+  const close = () => {
+    toggleModal(false, "LOGIN_MODAL")
+  }
+
   const { data: loginModal } = useQuery({
     queryKey: ["LOGIN_MODAL"],
     queryFn: () =>
@@ -30,5 +34,5 @@ export const useLoginModal = () => {
       },
     staleTime: Infinity,
   });
-  return { toggleModal, loginModal };
+  return { toggleModal, loginModal, close };
 };

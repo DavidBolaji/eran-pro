@@ -4,12 +4,14 @@ import db from "@/db/db";
 import { Address, Order, Prisma, Product, User } from "@prisma/client";
 import { redirect } from "next/navigation";
 
+export type IUser = (Omit<User, "password" | "createdAt" | "updatedAt" | "status"> & {
+  orders: (Pick<Order, "id" | "price"> & { address: Address | null } & {
+    products: Product[];
+  })[];
+} & { orderAddress: Address[] })
+
 export type ICustomer = {
-  customer: (Omit<User, "password" | "createdAt" | "updatedAt" | "status"> & {
-    orders: (Pick<Order, "id" | "price"> & { address: Address | null } & {
-      products: Product[];
-    })[];
-  } & { orderAddress: Address[] }) | null;
+  customer: IUser | null;
   totalOrders: number;
   totalAmountSpent: number;
 };
@@ -39,36 +41,50 @@ export const getDashboardCustomers = async ({
   const skip = (page - 1) * limit;
 
   const whereClause: Prisma.UserWhereInput = {
-    orders: {
-      some: {
-        products: {
+    OR: [
+      // Include users with orders matching the conditions
+      {
+        orders: {
           some: {
-            category: {
-              name: {
-                in: categories?.length ? categories : undefined,
+            products: {
+              some: {
+                category: {
+                  name: {
+                    in: categories?.length ? categories : undefined,
+                  },
+                },
               },
             },
+            createdAt:
+              startDate && endDate
+                ? { gte: startDate, lte: endDate }
+                : startDate
+                ? { gte: startDate }
+                : endDate
+                ? { lte: endDate }
+                : undefined,
           },
         },
-        createdAt:
-          startDate && endDate
-            ? { gte: startDate, lte: endDate }
-            : startDate
-            ? { gte: startDate }
-            : endDate
-            ? { lte: endDate }
-            : undefined,
       },
-    },
-    OR: searchQuery
-      ? [
-          { fname: { contains: searchQuery } },
-          { lname: { contains: searchQuery } },
-          { email: { contains: searchQuery } },
-          { phone: { contains: searchQuery } },
-        ]
-      : undefined,
+      // Include users without orders
+      {
+        orders: {
+          none: {},
+        },
+      },
+      // Search criteria across multiple fields
+      ...(searchQuery
+        ? [
+            { fname: { contains: searchQuery } },
+            { lname: { contains: searchQuery } },
+            { email: { contains: searchQuery } },
+            { phone: { contains: searchQuery } },
+          ]
+        : []),
+    ],
   };
+  
+  
 
   const orderBy: Prisma.UserOrderByWithRelationInput =
     sort === "totalOrders"
@@ -85,6 +101,7 @@ export const getDashboardCustomers = async ({
         lname: true,
         email: true,
         phone: true,
+        pic: true,
         orders: {
           select: {
             id: true,
@@ -190,6 +207,7 @@ export const getDashboardCustomer = async (id: string): Promise<ICustomer> => {
       lname: true,
       email: true,
       phone: true,
+      pic: true,
       orders: {
         select: {
           id: true,
@@ -212,3 +230,23 @@ export const getDashboardCustomer = async (id: string): Promise<ICustomer> => {
     customer: customer ?? null,
   };
 };
+
+
+export const selectCustomer = (formData: FormData) => {
+  const cusFilter = formData.get("Customer")
+  const nameFilter = formData.getAll("Tab")
+
+  console.log(cusFilter?.toString())
+
+  const params = new URLSearchParams();
+
+  if (nameFilter) {
+      params.append('tab', nameFilter.join(','));
+  }
+
+  if (params.toString()) {
+      redirect(`/dashboard/customers/${cusFilter?.toString()}?${params.toString()}`);
+  } else {
+      console.log('No filters applied');
+  }
+}

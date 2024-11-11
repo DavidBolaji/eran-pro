@@ -3,52 +3,35 @@ import { getDashboardCustomer } from "@/actions/get-customers";
 import { Crumb } from "@/components/crumb/crumb";
 
 import React from "react";
+import ViewCustomer from "../components/view-customer";
+import { CustomerComponent } from "../components/customer-component";
 
 export const revalidate = 0;
 
 interface CustomerPageSearchParams {
-  [key: string]: string;
+  params: { customerId: string };
+  searchParams: { [key: string]: string | undefined };
 }
 
 export default async function CustomerPage({
-  searchParams,
-}: {
-  searchParams: CustomerPageSearchParams;
-}) {
-  // const categories = searchParams.category?.split(",") || [];
-  const customerId = searchParams.customerId;
-  // const page = parseInt(searchParams.page) || 1;
-  // const limit = parseInt(searchParams.limit) || 10;
-  // const sort = searchParams.sort || "createdAt";
-  // const sortOrder = searchParams.sortOrder || "asc";
-  // const startDate = searchParams.startDate || "";
-  // const endDate = searchParams.endDate || "";
-  // const searchQuery = searchParams.searchQuery || "";
-
-  // Fetch customer data and category list
-  // const customerRequest = getDashboardCustomers({
-  //   categories: categories.map((el) => el.toLowerCase()),
-  //   page,
-  //   limit,
-  //   sort,
-  //   sortOrder,
-  //   startDate,
-  //   endDate,
-  //   searchQuery,
-  // });
+  params,
+  searchParams
+}: CustomerPageSearchParams) {
+  const customerId = params.customerId;
   const customerRequest = getDashboardCustomer(customerId);
+  const custormerName = searchParams?.tab;
 
   const categoryRequest = getCategories();
 
   // Await both requests
-  const [customer] = await Promise.all([
+  const [customer, categories] = await Promise.all([
     customerRequest,
     categoryRequest,
   ]);
 
   return (
     <div>
-       <div className="py-10 lg:px-0 px-4">
+       <div className=" lg:px-0 px-4">
         <Crumb
           crumbData={[
             {
@@ -66,7 +49,13 @@ export default async function CustomerPage({
           ]}
         />
       </div>
-     
+      <ViewCustomer customer={customer?.customer}  />
+      <CustomerComponent
+        categories={categories}
+        customerName={custormerName ? custormerName : "Details"}
+        customer={customer.customer}
+      />
+
     </div>
   );
 }

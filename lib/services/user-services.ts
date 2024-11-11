@@ -6,6 +6,14 @@ export const getUserByEmail = async (email: string) => {
       where: {
         email: email as string,
       },
+      include: {
+        orders: {
+          include: {
+            products: true,
+          },
+        },
+        orderAddress: true,
+      },
     });
     return user;
   } catch (e) {

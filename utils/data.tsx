@@ -1,3 +1,4 @@
+import { ICON } from "@/constants/icon";
 import { FacebookIcon } from "@/constants/icons/facebook";
 import { InstagramIcon } from "@/constants/icons/instagram";
 import { LinkedInIcon } from "@/constants/icons/linkedin";
@@ -192,7 +193,6 @@ export const collapseData2: ICollapseData[] = [
 
 export const countries: { name: string; country_code: string }[] = [
   { name: "Nigeria", country_code: "NG" },
-  
 ];
 
 export const states: { [key: string]: { name: string; state_code: string }[] } =
@@ -237,7 +237,7 @@ export const states: { [key: string]: { name: string; state_code: string }[] } =
     ],
   };
 
-export const cities: any = {
+export const cities = {
   "Abia State": [
     "Aba",
     "Amaigbo",
@@ -726,3 +726,51 @@ export const cities: any = {
     "Abua–Odual",
   ],
 };
+
+export const dashboardCard = [
+  {
+    title: "Total revenue",
+    filter: "1 year",
+    amount: 20372550,
+    type: "cur",
+    icon: ICON.BarChartIcon,
+  },
+  {
+    title: "Pending orders",
+    filter: "Today",
+    amount: 17,
+    icon: ICON.LoaderIcon,
+  },
+  {
+    title: "Completed orders",
+    filter: "Today",
+    amount: 83,
+    icon: ICON.CheckCircleIcon,
+  },
+];
+
+export const renderCustomerCard = (data: {
+  totalOrders: number;
+  totalProcessing: number;
+  totalAmount: number;
+}) => [
+  {
+    title: "Total number of orders",
+    filter: "All Time",
+    amount: data.totalOrders,
+    icon: ICON.BarChartIcon,
+  },
+  {
+    title: "Orders in progress",
+    filter: "All Time",
+    amount: data.totalProcessing,
+    icon: ICON.LoaderIcon,
+  },
+  {
+    title: "Total Amount Spent",
+    filter: "All Time",
+    amount: data.totalAmount,
+    type: "cur",
+    icon: ICON.CheckCircleIcon,
+  },
+];

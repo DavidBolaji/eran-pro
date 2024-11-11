@@ -10,7 +10,7 @@ import React from "react";
 const { useBreakpoint } = Grid;
 export const LogedIn = () => {
   const screen = useBreakpoint();
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn, user } = useUser();
   return (
     isLoggedIn() && (
       <div className="flex items-center gap-4">
@@ -23,7 +23,11 @@ export const LogedIn = () => {
         >
           Order History
         </Button>
-        <Avatar size="sm" className="md:w-14 md:h-14 w-10 h-10" />
+        {user?.pic ? (
+          <Avatar size="sm" src={user?.pic} className="md:w-14 md:h-14 w-10 h-10" />
+        ) : (
+          <Avatar size="sm" className="md:w-14 md:h-14 w-10 h-10" />
+        )}
       </div>
     )
   );

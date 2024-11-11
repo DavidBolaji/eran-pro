@@ -2,11 +2,13 @@ import { Button } from "@/components/button/button";
 import { LoginForm } from "@/components/form/login-form";
 import { Typography } from "@/components/typography/typography";
 import { ICON } from "@/constants/icon";
+import { useUser } from "@/hooks/use-user";
 import { motion } from "framer-motion";
 import React from "react";
 
 
 export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopup}) => {
+  const {googleLogin, googleSignUP} = useUser()
   return (
     <motion.div
       key={"LOGIN_MODAL"}
@@ -37,10 +39,10 @@ export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopu
         >
           or sign in with
         </Typography>
-        <div>
+        <div onClick={googleLogin}>
           <ICON.GoogleIcon />
         </div>
-        <div>
+        <div onClick={googleSignUP}>
           <ICON.FacebookCircleIcon />
         </div>
       </div>

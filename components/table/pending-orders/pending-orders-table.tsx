@@ -35,6 +35,7 @@ export default function PendingOrdersTable({
         title={"Pending Orders"}
         name={"Create New Order"}
         url={"/dashboard/orders/add"}
+        onFilter={() => {}}
       />
       <div className="rounded-b-2xl border-t-0 bg-white overflow-hidden border border-[#DDEEE5]">
         <Table>
