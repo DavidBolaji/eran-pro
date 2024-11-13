@@ -1,4 +1,4 @@
-// normal-input.tsx
+"use client"
 
 import React, { useState, FocusEvent, InputHTMLAttributes } from "react";
 import { motion } from "framer-motion";
@@ -22,7 +22,7 @@ const NormalInput: React.FC<InputProps> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(false);
+  const [hasValue, setHasValue] = useState(!!rest.value);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { className, placeholder, onBlur, ...props } = rest;
@@ -43,7 +43,7 @@ const NormalInput: React.FC<InputProps> = ({
       "ml-8 ": naira,
     },
     {
-      "placeholder:text-transparent": isFocused || hasValue,
+      "placeholder:text-transparent": hasValue || isFocused,
     },
     className
   );
@@ -82,11 +82,12 @@ const NormalInput: React.FC<InputProps> = ({
 
       {/* Floating Label - Position based on focus and value */}
       <motion.label
+        key={props.name}
         initial={{ y: 0, scale: 1, x: 0 }}
         animate={{
-          y: isFocused || hasValue ? y : 0,
-          x: isFocused || hasValue ? align : leftIcon ? 10 : 0,
-          scale: isFocused || hasValue ? 0.7 : 1,
+          y: (hasValue || isFocused) ? y : 0,
+          x: ( hasValue || isFocused) ? align : leftIcon ? 10 : 0,
+          scale: (isFocused || hasValue) ? 0.7 : 1,
         }}
         transition={{ type: "linear", stiffness: 200 }}
         className={`absolute ${

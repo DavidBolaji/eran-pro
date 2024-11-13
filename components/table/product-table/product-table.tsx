@@ -46,7 +46,7 @@ export default function ProductTable({
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full scrollbar-hide min-w-[1000px]">
       <MainHeader
         title={"Product List"}
         name={"Add Product"}
@@ -59,8 +59,8 @@ export default function ProductTable({
         search
         more
       />
-      <div className="rounded-b-2xl border-t-0 bg-white overflow-hidden border border-[#DDEEE5]">
-        <Table>
+      <div className="rounded-b-2xl border-t-0 bg-white scrollbar-hide  border border-[#DDEEE5]">
+        <Table className=''>
           <ProductTableHeader
             handleSort={handleSort}
             allChecked={allChecked}

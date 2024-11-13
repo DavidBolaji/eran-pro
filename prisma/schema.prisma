@@ -94,12 +94,26 @@ model Order {
   promotionId String?
   promotion   Promotion?  @relation(fields: [promotionId], references: [id])
   price       Float
+  ProductOrder ProductOrder[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([promotionId])
+}
+
+model ProductOrder {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  weight    Float   // Stores the weight of each product in an order
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
 }
 
 model Product {
@@ -115,6 +129,7 @@ model Product {
   Order       Order[]
   promotion   Promotion[]
   images      Image[]
+  ProductOrder ProductOrder[]
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])

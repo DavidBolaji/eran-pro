@@ -1,41 +1,34 @@
-// ProductTableHeader.tsx
-import React from "react";
-import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Product } from "./types";
-import { CheckboxMinus } from "@/components/ui/checkboxminus";
+// PendingOrdersTableHeader.tsx
+import React from 'react'
+import { TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { CustomerOrders } from './types'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
-interface ProductTableHeaderProps {
-  allChecked: boolean;
-  handleSort: (column: keyof Product) => void;
-  toggleSelectAll: () => void;
+
+interface PendingOrdersTableHeaderProps {
+  handleSort: (column: keyof CustomerOrders, path?: string) => void;
   sortDirection: "asc" | "desc";
-  sortColumn: keyof Product | null;
+  sortColumn: keyof CustomerOrders | null;
 }
 
 const headerList = [
   { key: "name", title: "Product name", hasSort: true },
-  { key: "category", title: "Category", hasSort: true },
-  { key: "price", title: "Price", hasSort: true },
-  { key: "qty", title: "Stock", hasSort: true },
-  { key: "promotion", title: "Promotion", hasSort: true },
+  { key: "orderNo", title: "Order No", hasSort: true },
+  { key: "amount", title: "Amount", hasSort: true },
+  { key: "crearedAt", title: "Order date", hasSort: true },
+  { key: "paymentType", title: "Payment Type", hasSort: true },
   { key: "status", title: "Status", hasSort: true },
   { key: "actions", title: "", hasSort: false },
 ];
 
-export default function ProductTableHeader({
-  allChecked,
-  toggleSelectAll,
+export default function CustomerOrdersTableHeader({
   handleSort,
   sortDirection,
   sortColumn,
-}: ProductTableHeaderProps) {
+}: PendingOrdersTableHeaderProps) {
   return (
     <TableHeader>
       <TableRow>
-        <TableHead className="pl-6 h-full py-3 flex items-center">
-          <CheckboxMinus checked={allChecked} onCheckedChange={toggleSelectAll} />
-        </TableHead>
         {headerList.map((header) =>
           header.hasSort ? (
             <TableHead
@@ -43,7 +36,7 @@ export default function ProductTableHeader({
               key={header.title}
             >
               <button
-                onClick={() => handleSort(header.key as keyof Product)}
+                onClick={() => handleSort(header.key as keyof CustomerOrders, '/dashboard')}
                 className="flex items-center gap-1"
               >
                 {header.title}

@@ -19,8 +19,8 @@ export default function FormikNormalInput({ placeholder, naira, ...rest }: Formi
 
   return (
     <NormalInput
-      {...rest}
-      {...field}
+    {...field}
+    {...rest}
       naira={naira}
       onBlur={handleBlur}
       placeholder={placeholder}

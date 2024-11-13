@@ -26,7 +26,7 @@ const SelectInput: React.FC<SelectProps> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(false);
+  const [hasValue, setHasValue] = useState(!!rest.value);
   const selectRef = useRef<HTMLSelectElement | null>(null);
 
   const { className, onBlur, onChange, ...props } = rest;
@@ -107,7 +107,7 @@ const SelectInput: React.FC<SelectProps> = ({
         {...props}
       >
         <option value="">{/* Empty option for placeholder */}</option>
-        {options.map((option) => (
+        {options?.map((option) => (
           <option
             className="text-black"
             key={option.value}

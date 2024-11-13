@@ -1,5 +1,5 @@
 import React from "react";
-import { Crumb } from "@/components/crumb/crumb";
+// import { Crumb } from "@/components/crumb/crumb";
 import { RenderCart } from "./components/render-cart";
 import { RenderSummary } from "./components/render-summary";
 

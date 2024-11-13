@@ -9,6 +9,7 @@ import PendingordersTableRow from './pending-orders-table-row'
 import { Table, TableBody } from '@/components/ui/table'
 import { useTable } from '@/hooks/use-table'
 import { MainHeader } from '../main-header'
+import { Empty } from 'antd'
 
 
 export default function PendingOrdersTable({
@@ -30,7 +31,7 @@ export default function PendingOrdersTable({
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full scrollbar-hide lg:min-w-0 min-w-[1000px]">
       <MainHeader
         title={"Pending Orders"}
         name={"Create New Order"}
@@ -53,6 +54,9 @@ export default function PendingOrdersTable({
             ))}
           </TableBody>
         </Table>
+        {items.length < 1 && <div className="py-8">
+          <Empty />
+        </div>}
       </div>
     </div>
   );

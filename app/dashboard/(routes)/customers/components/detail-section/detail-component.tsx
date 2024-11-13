@@ -7,7 +7,7 @@ import { CustomerDeliveryDetail } from "./customer-delivery-detail";
 import { Typography } from "@/components/typography/typography";
 import { MeatCard } from "@/app/dashboard/components/side-cards";
 import { Empty } from "antd";
-import { EmptyCart } from "@/components/empty/empty-cart";
+
 
 export const DetailComponent = async ({
   customerId,
@@ -52,10 +52,10 @@ export const DetailComponent = async ({
   const orderAddress = customer?.orderAddress.filter((add) => add.active)[0];
 
   return (
-    <div className="lg:mt-6">
+    <div className="mt-6">
       <RenderDashboardcards data={data} />
       <div className="grid grid-cols-10 gap-x-6">
-        <div className="col-span-6">
+        <div className="lg:col-span-6 col-span-10">
           <CustomerDetailDisplay
             user={{
               fname: customer?.fname as string,
@@ -74,7 +74,7 @@ export const DetailComponent = async ({
             }}
           />
         </div>
-        <div className="col-span-4 p-6 mt-6 bg-white rounded-2xl max-h-[552px]">
+        <div className="lg:col-span-4 col-span-10 p-6 mt-6 bg-white rounded-2xl max-h-[552px]">
           <Typography
             as="p"
             size="s1"

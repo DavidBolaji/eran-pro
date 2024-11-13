@@ -1,10 +1,11 @@
 'use client'
-import { Axios } from '@/request/request'
 import { useState } from 'react'
+import { useAxios } from './use-axios';
 
 const useAddress = () => {
   const [states, setStates] = useState<{ value: string; key: string }[]>([])
   const [city, setCity] = useState<{ value: string; key: string }[]>([])
+  const Axios = useAxios()
 
   const fetchState = async (country:string) => {
     try {
@@ -14,6 +15,7 @@ const useAddress = () => {
         value: e.name,
       }))
       setStates([...format])
+      return format;
     } catch (error: any) {
       console.log(error?.message)
     }
@@ -29,6 +31,7 @@ const useAddress = () => {
       }))
 
       setCity([...format])
+      return format
     } catch (error) {
       console.log((error as Error).message)
     }

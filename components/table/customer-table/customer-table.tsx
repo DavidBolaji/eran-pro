@@ -10,6 +10,7 @@ import CustomerTableHeader from "./customer-table-header";
 import { Customer, CustomerTableProps } from "./types";
 import Pagination from "../pagination";
 import CustomerTableRow from "./customer-table-row";
+import { Empty } from "antd";
 
 export default function CustomerTable({
   initialCustomers = [],
@@ -46,7 +47,7 @@ export default function CustomerTable({
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full scrollbar-hide">
       <MainHeader
         title={"Customer List"}
         name={"Add Customer"}
@@ -80,6 +81,9 @@ export default function CustomerTable({
             ))}
           </TableBody>
         </Table>
+        {items.length < 1 && <div className="py-8">
+          <Empty />
+        </div>}
       </div>
 
       <Pagination

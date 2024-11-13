@@ -20,6 +20,8 @@ const usePath = () => {
         ? "/dashboard/customers"
         : pathname === `/dashboard/customers/${customerId}`
         ? "/dashboard/customers"
+        : pathname === `/dashboard/customers/${customerId}/edit`
+        ? "/dashboard/customers"
         : pathname?.split("/")[pathname?.split("/").length - 1];
     setLoc(key);
   }, [pathname, customerId]);

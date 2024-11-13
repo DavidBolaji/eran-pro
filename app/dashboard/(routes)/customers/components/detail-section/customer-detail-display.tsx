@@ -9,7 +9,7 @@ export const CustomerDetailDisplay: React.FC<{
       <Typography as="p" size="s1" align="left" className="mb-[14px] black-100">
         Customer Details
       </Typography>
-      <div className="grid grid-cols-12">
+      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4">
         <div className="col-span-6">
           <Typography
             as="p"
@@ -47,7 +47,7 @@ export const CustomerDetailDisplay: React.FC<{
           </Typography>
         </div>
       </div>
-      <div className="grid grid-cols-12">
+      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4">
         <div className="col-span-6">
           <Typography
             as="p"

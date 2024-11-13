@@ -29,8 +29,10 @@ interface MainHeaderProps {
   handleSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setShowFilters?: Dispatch<SetStateAction<boolean>>;
   showFilters?: boolean;
-  url: string;
-  name: string;
+  payment?: boolean;
+  status?: boolean;
+  url?: string;
+  name?: string;
   title: string;
   categories?: Pick<Category, "id" | "name">[]
   calender?: boolean 
@@ -42,6 +44,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   filter = false,
   more = false,
   showFilters = false,
+  payment = false,
+  status = false,
   handleSearch,
   setShowFilters,
   url,
@@ -98,13 +102,15 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                   {searchParams.get('category')?.split(",")?.length ?? 0}
                 </Badge>
               </ShadButton>
-              <div className="absolute top-0 z-10">
+              <div className={`absolute top-0 ${status ? "-right-1/4 -translate-x-8" : ""} z-10`}>
                 <FilterDialog
                   open={showFilters}
                   onClose={closeFilter}
                   categories={categories}
                   calender={calender}
                   onFilter={onFilter}
+                  payment={payment}
+                  status={status}
                 />
               </div>
             </div>
@@ -121,14 +127,14 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
             </Select>
           )}
 
-          <Button
+          {name && <Button
             className="h-9 flex items-center justify-center"
             size="lg"
             color="dark"
             type="button"
           >
             <Link
-              href={url}
+              href={url ?? "#"}
               className="text-white hover:text-white flex gap-2 items-center"
             >
               {screen.lg ? name: null}
@@ -136,7 +142,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                 <Plus className="h-4 w-4" color="white" />
               </span>
             </Link>
-          </Button>
+          </Button>}
         </div>
         {search && (
             <div className="relative px-6 lg:min-w-[154px] md:hidden block mt-5 w-full">

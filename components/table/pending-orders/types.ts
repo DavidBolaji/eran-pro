@@ -1,14 +1,17 @@
-import { Image, Product } from "@prisma/client";
+import { Image } from "@prisma/client";
 
 export interface PendingOrders {
   id: string;
-  name: string;
-  product?: Product & {images: Image[]}[];
-  user: {
+  products: {
     name: string;
-    phone: string;
+    images: Image[];
+  }[];
+  User: {
+    fname: string | null;
+    lname: string | null;
+    phone: string | null;
   };
-  createdAt: string;
+  createdAt: Date;
 }
 
 export interface PendingOrdersTableProps {

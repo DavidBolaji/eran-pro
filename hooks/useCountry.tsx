@@ -1,9 +1,10 @@
 'use client'
-import { Axios } from '@/request/request'
+
 import { useEffect, useState } from 'react'
+import { useAxios } from './use-axios'
 
 const useCountry = () => {
-
+  const Axios = useAxios()
   const [countries, setCountries] = useState<{ value: string; label: string }[]>([])
   const [states, setStates] = useState<{ value: string; label: string }[]>([])
 

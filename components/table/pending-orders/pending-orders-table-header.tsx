@@ -30,7 +30,7 @@ export default function PendingOrdersTableHeader({
         {headerList.map((header) =>
           header.hasSort ? (
             <TableHead
-              className="pl-6 py-3 black-300 font-bold text-sm"
+              className="pl-6 py-3 black-300 font-bold text-sm text-nowrap"
               key={header.title}
             >
               <button

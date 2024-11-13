@@ -13,7 +13,7 @@ export const RenderDashboardcards:React.FC<{data: {
   return (
     <div className="grid grid-cols-9 gap-6">
       {data.map((el) => (
-        <div key={el.title} className="h-40 rounded-2xl bg-white border border-[#DDEEE5] col-span-3 p-6">
+        <div key={el.title} className="h-40 rounded-2xl bg-white border border-[#DDEEE5] lg:col-span-3 col-span-9 p-6">
           <div className="flex justify-between mb-2">
             <div className="w-10 h-10 bg-lemon rounded-lg flex items-center justify-center">{<el.icon color="white" />}</div>
             <div className="">

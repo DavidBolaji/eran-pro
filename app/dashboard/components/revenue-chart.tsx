@@ -29,6 +29,7 @@ const data = [
   { month: "Dec", revenue: 1050 },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomizedDot = (props: any) => {
   const { cx, cy, chartHeight } = props;
 
@@ -56,18 +57,20 @@ const CustomizedDot = (props: any) => {
 
 export default function RevenueChart() {
   const [filter, setFilter] = useState("This Year");
-  const chartRef = useRef<any>(null);
+  const chartRef = useRef(null);
   const [chartHeight, setChartHeight] = useState(0);
 
   useEffect(() => {
     if (chartRef.current) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       const height = chartRef.current.offsetHeight;
       setChartHeight(height);
     }
   }, []);
 
   return (
-    <div className="col-span-8">
+    <div className="lg:col-span-8 col-span-12">
       <Card className="w-full h-full">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg font-bold font-satoshi leading-6">

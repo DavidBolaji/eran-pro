@@ -8,7 +8,7 @@ export const SideCards: React.FC<{
   body: ReactNode;
 }> = ({ title, filter, body }) => {
   return (
-    <div className="w-full bg-white min-h-[500px] overflow-y-auto border border-[#DDEEE5] rounded-2xl p-6">
+    <div className="w-full bg-white max-h-[500px] overflow-y-auto border border-[#DDEEE5] rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <Typography as="h6" size="s1" align="left">{title}</Typography>
         <div>{filter}</div>

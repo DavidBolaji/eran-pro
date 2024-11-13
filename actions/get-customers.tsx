@@ -5,7 +5,7 @@ import { Address, Order, Prisma, Product, User } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export type IUser = (Omit<User, "password" | "createdAt" | "updatedAt" | "status"> & {
-  orders: (Pick<Order, "id" | "price"> & { address: Address | null } & {
+  orders: (Pick<Order, "id" | "price"| "createdAt" | "paymentType" | "status"> & { address: Address | null } & {
     products: Product[];
   })[];
 } & { orderAddress: Address[] })
@@ -192,6 +192,54 @@ export const filterCustomer = (
   }
 };
 
+export const filterCustomerOrder = (
+  formData: FormData,
+  currentParams: URLSearchParams,
+  path?: string
+) => {
+  const params = new URLSearchParams(currentParams);
+  const prodFilter = formData.getAll("Payment[]");
+  const page = formData.get("page") as string; // Cast to string if necessary
+  const sort = (formData.get("sort") as string) || params.get("sort") || "name"; // Default to "name"
+  const sortOrder =
+    (formData.get("sortOrder") as string) || params.get("sortOrder") || "asc";
+
+  // Handle page and category filters as before
+  const hasSelectedFilters = prodFilter.length > 0;
+  const currentCategoryFilters = params.getAll("category");
+
+  if (!hasSelectedFilters && page) {
+    params.set("page", page);
+  }
+
+  if (hasSelectedFilters) {
+    if (
+      JSON.stringify(Array.from(prodFilter)) !==
+      JSON.stringify(Array.from(currentCategoryFilters))
+    ) {
+      params.delete("category");
+      params.append("category", prodFilter.join(","));
+      params.set("page", "1");
+    } else {
+      params.set("page", page ? page.toString() : "1");
+    }
+  }
+
+  // Set the sorting fields in the URL parameters
+  if (sort) params.set("sort", sort);
+  if (sortOrder) params.set("sortOrder", sortOrder);
+
+  if (params.toString()) {
+    if (path) {
+      redirect(`${path}?${params.toString()}`);
+    } else {
+      redirect(`/dashboard/customers?${params.toString()}`);
+    }
+  } else {
+    console.log("No filters applied");
+  }
+};
+
 export const resetProduct = () => {
   redirect(`/dashboard/products`);
 };
@@ -214,6 +262,9 @@ export const getDashboardCustomer = async (id: string): Promise<ICustomer> => {
           price: true,
           products: true,
           address: true,
+          createdAt: true,
+          paymentType: true,
+          status: true
         },
       },
       orderAddress: true,
