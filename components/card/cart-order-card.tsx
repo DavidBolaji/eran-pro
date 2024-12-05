@@ -7,30 +7,38 @@ import { formatToNaira } from "@/utils/helper";
 import Image from "next/image";
 import { CartDeleteButton } from "../button/cart-delete-button";
 import classNames from "classnames";
+import { endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
 
 export const CartOrderCard: React.FC<{
   product: IProduct & { weight: number };
   border?: boolean;
-  light?: boolean
-}> = ({ product, border = false, light = false }) => {
-  const cartOrderStyles = classNames("w-full h-[152px] p-4 flex mt-1 justify-between items-center rounded-xl", 
+  light?: boolean;
+  remove?: boolean
+}> = ({ product, border = false, light = false, remove = false }) => {
+  const cartOrderStyles = classNames("w-full p-4 flex mt-1 justify-between items-center rounded-xl", 
     {
       "border border-[#DDEEE5]": border
     },
     {
       "bg-white": light
+    },
+    {
+      "h-[152px]":!remove 
+    },
+    {
+      "h-[60px]":remove 
     }
   )
   return (
     <div className={cartOrderStyles}>
       <div className="flex items-center gap-x-4">
-        <div className="bg-white w-[120px] h-[120px] rounded-xl relative">
+        <div className={`rounded-xl relative ${!remove ? "h-[120px] w-[120px]": "h-[80px] w-[120px] -ml-10" } `}>
           <Image
             priority
             src={product?.images[0]?.url ?? ""}
             fill
             alt={product.name}
-            className="object-contain w-full h-full rounded-xl absolute"
+            className="object-contain p-3 w-full h-full rounded-xl absolute"
           />
         </div>
         <div>
@@ -38,12 +46,20 @@ export const CartOrderCard: React.FC<{
             {product.name}
           </Typography>
           <Typography as="h6" size="h6" align="left" className="pb-2 font-bold leading-7">
-            {formatToNaira(product.price)}
+          {product?.promotion?.length &&
+            isBefore(new Date(product?.promotion[0].startDate), endOfToday()) &&
+            isAfter(new Date(product?.promotion[0].endDate), startOfToday())
+              ? ` ₦${(
+                  (1 - product.promotion[0]?.discount / 100) *
+                  product.price
+                ).toLocaleString()}`
+              : `${formatToNaira(product.price)}`}
+            {/* {formatToNaira(product.price)} */}
           </Typography>
-          <Stepper weight={product.weight} product={product} />
+          {!remove && <Stepper weight={product.weight} product={product} />}
         </div>
       </div>
-      <CartDeleteButton productId={product.id} />
+      {!remove && <CartDeleteButton productId={product.id} />}
     </div>
   );
 };

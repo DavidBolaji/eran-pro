@@ -21,7 +21,7 @@ export const SideCards: React.FC<{
 export const MeatCard: React.FC<{
   img: string;
   title: string;
-  order: number;
+  order: number | string;
 }> = ({ img, title, order }) => {
   return (
     <div className="flex h-[60px] gap-4">

@@ -13,7 +13,7 @@ export const ProductButton:React.FC<{product: IProduct & { weight: number }}> = 
 
   const handleAdd = () => {
     const qty = queryClient.getQueryData(["CART_QTY"]);
-    addProduct({...product, weight: qty as number ?? 0.5});
+    addProduct({...product, weight: qty as number ?? product.unit === "PER_KG" ? 0.5: 1.0});
   };
 
   return (

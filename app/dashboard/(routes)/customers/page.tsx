@@ -1,7 +1,6 @@
 import { getCategories } from "@/actions/get-categories";
 import { getDashboardCustomers } from "@/actions/get-customers";
 import CustomerTable from "@/components/table/customer-table/customer-table";
-import { dummyCustomers } from "@/components/table/customer-table/customer-table-data";
 import React from "react";
 
 export const revalidate = 0;
@@ -15,15 +14,18 @@ export default async function CustomerPage({
 }: {
   searchParams: CustomerPageSearchParams;
 }) {
+
   const categories = searchParams.category?.split(",") || [];
   const page = parseInt(searchParams.page) || 1;
-  const limit = parseInt(searchParams.limit) || 10;
+  const limit = parseInt(searchParams.limit) || 7;
   const sort = searchParams.sort || "createdAt";
   const sortOrder = searchParams.sortOrder || "asc";
-  const startDate = searchParams.startDate || "";
-  const endDate = searchParams.endDate || "";
+  const startDate = searchParams.dateFrom || "";
+  const endDate = searchParams.dateTo || "";
   const searchQuery = searchParams.searchQuery || "";
 
+  console.log('[START_DATE]', startDate)
+  console.log('[END_DATE]', endDate)
   // Fetch customer data and category list
   const customerRequest = getDashboardCustomers({
     categories: categories.map((el) => el.toLowerCase()),
@@ -45,9 +47,9 @@ export default async function CustomerPage({
   ]);
 
   return (
-    <div>
+    <div className="p-4">
       <CustomerTable
-        initialCustomers={data?.customers ?? dummyCustomers ?? []}
+        initialCustomers={data?.customers ?? []}
         totalPages={data?.totalPages}
         page={page}
         itemsPerPage={limit}

@@ -7,7 +7,7 @@ import { useCartData } from "@/hooks/use-cart-data";
 import { IProduct } from "@/actions/get-products";
 import { useRouter } from "next/navigation";
 
-export const CardButton: React.FC<{ product: IProduct }> = ({ product }) => {
+export const CardButton: React.FC<{ product: IProduct & {weight?: number} }> = ({ product }) => {
   const router = useRouter();
   const { addProduct } = useCartData();
 
@@ -16,7 +16,7 @@ export const CardButton: React.FC<{ product: IProduct }> = ({ product }) => {
   }, [product, router]);
 
   const handleAdd = () => {
-    addProduct(product);
+    addProduct(product as unknown as IProduct & {weight: number});
   };
 
   const navigate = () => {

@@ -3,6 +3,7 @@ import { FacebookIcon } from "@/constants/icons/facebook";
 import { InstagramIcon } from "@/constants/icons/instagram";
 import { LinkedInIcon } from "@/constants/icons/linkedin";
 import { TwitterIcon } from "@/constants/icons/twitter";
+import { ReactNode } from "react";
 
 export const footerNav = [
   {
@@ -128,7 +129,7 @@ export const footerNav = [
 
 export type ICollapseData = {
   key: string;
-  label: string;
+  label: string | ReactNode;
   children: React.ReactNode;
 };
 
@@ -727,24 +728,24 @@ export const cities = {
   ],
 };
 
-export const dashboardCard = [
+export const dashboardCard = (data: {amount: number, pendingOrders: number, completedOrders: number}) => [
   {
     title: "Total revenue",
     filter: "1 year",
-    amount: 20372550,
+    amount: data.amount,
     type: "cur",
     icon: ICON.BarChartIcon,
   },
   {
     title: "Pending orders",
     filter: "Today",
-    amount: 17,
+    amount: data.pendingOrders,
     icon: ICON.LoaderIcon,
   },
   {
     title: "Completed orders",
     filter: "Today",
-    amount: 83,
+    amount: data.completedOrders,
     icon: ICON.CheckCircleIcon,
   },
 ];
@@ -772,5 +773,55 @@ export const renderCustomerCard = (data: {
     amount: data.totalAmount,
     type: "cur",
     icon: ICON.CheckCircleIcon,
+  },
+];
+
+export const renderOrderCard = (data: {
+  totalPending: number;
+  totalCompleted: number;
+  totalCanceled: number;
+}) => [
+  {
+    title: "Pending orders",
+    filter: "All Time",
+    amount: data.totalPending,
+    icon: ICON.LoaderIcon,
+  },
+  {
+    title: "Completed orders",
+    filter: "All Time",
+    amount: data.totalCompleted,
+    icon: ICON.CheckCircleIcon,
+  },
+  {
+    title: "Cancelled orders",
+    filter: "All Time",
+    amount: data.totalCanceled,
+    icon: ICON.CloseIcon,
+  },
+];
+
+export const renderPromotionCard = (data: {
+  activePromotion: number;
+  allPromotion: number;
+  cancelledPromotion: number;
+}) => [
+  {
+    title: "Active promotions",
+    filter: "All Time",
+    amount: data.activePromotion,
+    icon: ICON.LoaderIcon,
+  },
+  {
+    title: "All promotions",
+    filter: "All Time",
+    amount: data.allPromotion,
+    icon: ICON.CheckCircleIcon,
+  },
+  {
+    title: "Cancelled promotions",
+    filter: "All Time",
+    amount: data.cancelledPromotion,
+    icon: ICON.CloseIcon,
   },
 ];

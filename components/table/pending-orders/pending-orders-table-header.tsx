@@ -13,9 +13,9 @@ interface PendingOrdersTableHeaderProps {
 
 const headerList = [
   { key: "name", title: "Product name", hasSort: true },
-  { key: "customer", title: "Customer", hasSort: true },
+  { key: "fname", title: "Customer", hasSort: true },
   { key: "phone", title: "Phone no", hasSort: true },
-  { key: "order", title: "Order date", hasSort: true },
+  { key: "createdAt", title: "Order date", hasSort: true },
   { key: "actions", title: "", hasSort: false },
 ];
 
@@ -34,7 +34,7 @@ export default function PendingOrdersTableHeader({
               key={header.title}
             >
               <button
-                onClick={() => handleSort(header.key as keyof PendingOrders, '/dashboard')}
+                onClick={() => handleSort(header.key as keyof PendingOrders)}
                 className="flex items-center gap-1"
               >
                 {header.title}

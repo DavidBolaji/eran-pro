@@ -9,12 +9,19 @@ interface ICustomerComponent {
   customerName: string;
   categories: Pick<Category, "id" | "name">[];
   customer: IUser | null;
+  searchParams: { [key: string]: string | undefined };
+  totalPages: number
 }
 
 export const CustomerComponent: React.FC<ICustomerComponent> = ({
   customerName,
   customer,
+  searchParams,
+  totalPages
 }) => {
+  const page = parseInt(searchParams?.page as string) || 1;
+  const limit = parseInt(searchParams?.limit as string) || 7;
+
   return (
     <div className="">
       <div className="md:my-0 my-6 ml-0.5 lg:px-0 overflow-x-scroll scrollbar-hide">
@@ -29,7 +36,13 @@ export const CustomerComponent: React.FC<ICustomerComponent> = ({
       {customerName === "Details" ? (
         <DetailComponent customerId={customer?.id as string} />
       ) : (
-        <CustomerOrdersTable initialOrders={customer?.orders ?? []} />
+        <CustomerOrdersTable
+          id={customer?.id as string}
+          initialOrders={customer?.orders ?? []}
+          page={page}
+          itemsPerPage={limit}
+          totalPages={totalPages}
+        />
       )}
     </div>
   );

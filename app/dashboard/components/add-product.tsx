@@ -13,18 +13,19 @@ import { ICON } from "@/constants/icon";
 import { ProductInentoryForm } from "@/components/form/add-product/product-inventory-form";
 import { useCategoryDrawer } from "@/hooks/use-category-drawer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Axios } from "@/request/request";
 import {
   allProductSchema,
 } from "@/components/form/add-product/product-validation";
 import { errorMessage } from "@/utils/helper";
 import { useNotification } from "@/hooks/use-notification";
+import { useAxios } from "@/hooks/use-axios";
 // import { useRouter } from "next/navigation";
 
 export default function AddProduct() {
   const { toggleDrawer } = useCategoryDrawer();
   const { toggleNotification } = useNotification();
   const queryClient = useQueryClient();
+  const Axios = useAxios()
 
   // const router = useRouter()
   const { mutate } = useMutation({

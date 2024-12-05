@@ -2,12 +2,14 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Product } from "@prisma/client";
 import { IProduct } from "@/actions/get-products";
+import { endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
 
 export const useCartData = () => {
   const queryClient = useQueryClient();
 
   const addProduct = (product: IProduct & { weight: number }) => {
-    queryClient.setQueryData(["CART_QTY"], 0.5);
+    const stepValue = product.unit === "PER_KG" ? 0.5 : 1;
+    queryClient.setQueryData(["CART_QTY"], stepValue);
     queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
       const exists = prev.length;
       const exists2 = prev?.filter((el) => el.id === product.id);
@@ -18,7 +20,7 @@ export const useCartData = () => {
           if (el.id === product.id) {
             return {
               ...product,
-              weight: product.weight ? product.weight : 0.5,
+              weight: product.weight ? product.weight : stepValue,
             };
           } else {
             return el;
@@ -29,13 +31,13 @@ export const useCartData = () => {
       if (!exists) {
         const productData = {
           ...product,
-          weight: product.weight ? product.weight : 0.5,
+          weight: product.weight ? product.weight : stepValue,
         };
         return [productData];
       }
       return [
         ...prev,
-        { ...product, weight: product.weight ? product.weight : 0.5 },
+        { ...product, weight: product.weight ? product.weight : stepValue },
       ];
     });
   };
@@ -48,8 +50,18 @@ export const useCartData = () => {
   };
 
   const calculateTotal = () => {
+
     return cartData?.reduce((acc, prod) => {
-      return (acc += prod.price);
+      
+      const stepValue = prod.unit === "PER_KG" ? 0.5 : 1;
+      if (
+        prod?.promotion?.length &&
+        isBefore(new Date(prod?.promotion[0].startDate), endOfToday()) &&
+        isAfter(new Date(prod?.promotion[0].endDate), startOfToday())
+      ) {
+        return (acc += ((1 - prod.promotion[0]?.discount / 100) * prod.price * prod.weight) / stepValue);
+      }
+      return (acc += (prod.price * prod.weight) / stepValue);
     }, 0);
   };
 

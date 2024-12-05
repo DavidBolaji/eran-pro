@@ -14,9 +14,13 @@ export default async function ProductPage({
 }: {
   searchParams: ProductOageSearchParams;
 }) {
-  const categories = searchParams.category?.split(",") || [];
+  const categories = Array.isArray(searchParams.category)
+  ? searchParams.category
+  : searchParams.category
+  ? [searchParams.category]
+  : []; // Ensure categories is always an array
   const page = parseInt(searchParams.page) || 1;
-  const limit = parseInt(searchParams.limit) || 10;
+  const limit = parseInt(searchParams.limit) || 7;
   const sort = searchParams.sort || "createdAt"; 
   const sortOrder = searchParams.sortOrder || "asc"; 
   
@@ -36,7 +40,7 @@ export default async function ProductPage({
 
 
   return (
-    <div>
+    <div className="p-4">
       <ProductTable
         initialProducts={data?.products ?? []}
         totalPages={data?.totalPages}

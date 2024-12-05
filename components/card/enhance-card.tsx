@@ -36,11 +36,11 @@ export const EnhanceCard = () => {
 
       <Image
         className="absolute right-[33px] bottom-[22px] md:block hidden"
-        src={Images.Big}
+        src={Images?.Black}
         alt="right circle"
         width={216}
         height={216}
-        priority
+
       />
       <Image
         className="absolute z-10 right-[61px] bottom-[50px] md:block hidden"
@@ -48,11 +48,10 @@ export const EnhanceCard = () => {
         alt="right circle"
         width={160}
         height={160}
-        priority
       />
       <Image
         className="absolute right-[132px] top-[51px] md:block hidden"
-        src={Images.Big}
+        src={Images.Black}
         alt="right circle"
         width={142}
         height={142}

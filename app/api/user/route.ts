@@ -1,8 +1,9 @@
 import db from "@/db/db";
-import { getUserByEmail } from "@/lib/services/user-services";
-import { NextResponse } from "next/server";
+import { generateTokens, getUserByEmail } from "@/lib/services/user-services";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { authMiddleware } from "../middleware";
+import { Address } from "@prisma/client";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,25 +15,27 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function GET(req: Request) {
+async function handler(userId: string) {
   try {
-    // Retrieve the userId from the request headers
-    const userId = req.headers.get("user-id");
-
-    if (!userId) {
-      return NextResponse.json(
-        { message: "Unauthorized: User ID not found" },
-        { status: 401 }
-      );
-    }
-
     // Fetch user data based on the userId
     const user = await db.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
+        id: true,
+        fname: true,
+        lname: true,
+        pic: true,
+        email: true,
+        phone: true,
         orders: {
-          include: {
-            products: true,
+          select: {
+            products: {
+              select: {
+                name: true,
+                price: true,
+                images: true,
+              },
+            },
           },
         },
         orderAddress: true,
@@ -51,6 +54,12 @@ export async function GET(req: Request) {
     console.error("Error creating product:", error);
     return NextResponse.json({ message: "Internal error" }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  return authMiddleware(req, async (userId) => {
+    return handler(userId);
+  });
 }
 
 export async function POST(req: Request) {
@@ -77,19 +86,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // Generate access and refresh tokens
-    const accessToken = jwt.sign(
-      { id: user.id },
-      process.env.NEXT_PUBLIC_NEXTAUTH_SECRET!,
-      { expiresIn: "5m" } // Access token expiration time
-    );
-
-    const refreshToken = jwt.sign(
-      { id: user.id },
-      process.env.NEXT_PUBLIC_NEXTAUTH_SECRET_TWO!,
-      { expiresIn: "7d" } // Refresh token expiration time
-    );
-
+    const { accessToken, refreshToken } = await generateTokens(user.id);
     // Prepare the response with cookies for access and refresh tokens
     const response = NextResponse.json({
       message: "User created successfully",
@@ -98,7 +95,7 @@ export async function POST(req: Request) {
     // Set access token as a cookie
     response.cookies.set("token", accessToken, {
       httpOnly: true,
-      maxAge: 5 * 60, // 5 minutes
+      maxAge: 7 * 24 * 60 * 60, // 1 hour
       path: "/",
       sameSite: "strict",
       secure: process.env.NEXT_PUBLIC_SECURE === "true",
@@ -122,30 +119,103 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PATCH(req: Request) {
+export async function updateHandler(userId: string, req: NextRequest) {
   try {
-    const userId = req.headers.get("user-id");
+    const { fname, lname, phone, pic, address, orderAddress } =
+      await req.json();
+    const newDefault =
+      address?.filter((add: Address) => !add?.id && add.active) ?? [];
+    const prev = address?.filter((add: Address) => add.id) ?? [];
+    const allNewAddress = address?.filter((add: Address) => !add?.id) ?? [];
 
-    const { fname, lname, phone, pic } = await req.json();
+    if (prev) {
+      await Promise.all(
+        prev.map(
+          async ({
+            id,
+            country,
+            city,
+            state,
+            info,
+            address,
+            active,
+          }: Address) => {
+            return db.address.update({
+              where: {
+                id,
+              },
+              data: {
+                address,
+                country,
+                city,
+                state,
+                info,
+                active,
+              },
+            });
+          }
+        )
+      );
+    }
+
+    if (!orderAddress?.length && address?.length) {
+      if (newDefault?.length) {
+        await db.address.updateMany({
+          where: { userId },
+          data: { active: false },
+        });
+      }
+
+      await db.address.createMany({
+        data: address.map((address: Address) => ({
+          address: address.address,
+          city: address.city,
+          state: address.state,
+          country: address.country,
+          info: address?.info?.length ? address.info : undefined,
+          active: address.active,
+          userId,
+        })),
+      });
+    }
+
+    if (orderAddress?.length && address?.length) {
+      if (newDefault?.length) {
+        await db.address.updateMany({
+          where: { userId },
+          data: { active: false },
+        });
+      }
+
+      await db.address.createMany({
+        data: allNewAddress.map((address: Address) => ({
+          address: address.address,
+          city: address.city,
+          state: address.state,
+          country: address.country,
+          info: address?.info?.length ? address.info : undefined,
+          active: address.active,
+          userId,
+        })),
+      });
+    }
+
     await db.user.update({
       where: {
         id: userId as string,
       },
       data: {
-        fname,
+        fname: fname,
         lname,
         phone,
-        pic,
+        pic: pic ?? undefined,
       },
     });
 
     // Prepare the response with cookies for access and refresh tokens
-    const response = NextResponse.json(
-      {
-        message: "User updated successfully",
-      },
-      { status: 204 }
-    );
+    const response = NextResponse.json({
+      message: "User updated successfully",
+    });
 
     // Set access token as a cookie
 
@@ -154,4 +224,10 @@ export async function PATCH(req: Request) {
     console.error("Error creating user:", error);
     return NextResponse.json({ message: "Internal error" }, { status: 500 });
   }
+}
+
+export async function PATCH(req: NextRequest) {
+  return authMiddleware(req, async (userId) => {
+    return updateHandler(userId, req);
+  });
 }

@@ -21,8 +21,10 @@ const NormalInput: React.FC<InputProps> = ({
   naira = false,
   ...rest
 }) => {
+  
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(!!rest.value);
+  // alert(rest.type)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { className, placeholder, onBlur, ...props } = rest;
@@ -30,10 +32,10 @@ const NormalInput: React.FC<InputProps> = ({
 
   // Optimize input style classes with classNames utility.
   const inputStyle = classNames(
-    "w-full pl-4 font-satoshi placeholder:font-medium placeholder:black-300 placeholder:leading-4 bg-transparent  h-12 flex items-center focus:outline-none",
+    "w-full h-12 pl-4 font-satoshi placeholder:font-medium placeholder:black-300 placeholder:leading-4 bg-transparent flex items-center focus:outline-none",
     {
       "pl-8 -translate-0.5": leftIcon,
-      "pl-3 translate-y-1.5": !leftIcon,
+      "pl-3": !leftIcon,
     },
     {
       "pr-10": rightIcon,
@@ -58,7 +60,7 @@ const NormalInput: React.FC<InputProps> = ({
   };
 
   return (
-    <div className={`relative w-full border border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
+    <div className={`relative h-12 w-full overflow-hidden border border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -80,26 +82,43 @@ const NormalInput: React.FC<InputProps> = ({
         {...props}
       />
 
-      {/* Floating Label - Position based on focus and value */}
-      <motion.label
-        key={props.name}
-        initial={{ y: 0, scale: 1, x: 0 }}
-        animate={{
-          y: (hasValue || isFocused) ? y : 0,
-          x: ( hasValue || isFocused) ? align : leftIcon ? 10 : 0,
-          scale: (isFocused || hasValue) ? 0.7 : 1,
-        }}
-        transition={{ type: "linear", stiffness: 200 }}
-        className={`absolute ${
-          leftIcon ? "left-6" : "left-3"
-        } top-3 black-300 text-sm pointer-events-none  ${
-          isFocused || hasValue ? "text-base" : "text-sm"
-        } ${
-          naira ? "pl-10" : "text-sm"
-        }`}
-      >
-        {placeholder} {props.required && "*"}
-      </motion.label>
+      {/* Floating Label */}
+      {rest.type !== "date" && rest.type !== "time" ? (
+        <motion.label
+          key={props.name}
+          initial={{ y: 0, scale: 1, x: 0 }}
+          animate={{
+            y: hasValue || isFocused ? y : 0,
+            x: hasValue || isFocused ? align : leftIcon ? 10 : 0,
+            scale: isFocused || hasValue ? 0.7 : 1,
+          }}
+          transition={{ type: "linear", stiffness: 200 }}
+          className={`absolute ${
+            leftIcon ? "left-6" : "left-3"
+          } top-3 black-300 text-sm pointer-events-none ${
+            isFocused || hasValue ? "text-[16px]" : "text-sm"
+          } ${naira ? "pl-10" : "text-sm"}`}
+        >
+          {placeholder} {props.required && "*"}
+        </motion.label>
+      ): <motion.label
+      key={props.name}
+      initial={{ y: 0, scale: 1, x: 0 }}
+      animate={{
+        y: y ? y : 0,
+        x: align ? align : leftIcon ? 10 : 0,
+        scale: 0.7,
+      }}
+      transition={{ type: "linear", stiffness: 200 }}
+      className={`absolute ${
+        leftIcon ? "left-6" : "left-3"
+      } top-3 black-300 text-sm pointer-events-none ${
+        isFocused || hasValue ? "text-[16px]" : "text-sm"
+      } ${naira ? "pl-10" : "text-sm"}`}
+    >
+      {placeholder} {props.required && "*"}
+    </motion.label> }
+      
 
       {/* Right Icon */}
       {rightIcon && (

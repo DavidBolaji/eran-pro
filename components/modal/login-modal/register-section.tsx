@@ -1,13 +1,17 @@
+"use client";
 import { Button } from "@/components/button/button";
 import { RegisterForm } from "@/components/form/register-form";
 import { Typography } from "@/components/typography/typography";
 import { ICON } from "@/constants/icon";
+import { useUser } from "@/hooks/use-user";
+
 import { motion } from "framer-motion";
 import React from "react";
 
 export const RegisterSection: React.FC<{ loginPopup: () => void }> = ({
   loginPopup,
 }) => {
+  const { googleSignUP } = useUser();
   return (
     <motion.div
       key={"REGISTER_MODAL"}
@@ -38,12 +42,12 @@ export const RegisterSection: React.FC<{ loginPopup: () => void }> = ({
         >
           or sign up with
         </Typography>
-        <div>
+        <div onClick={googleSignUP}>
           <ICON.GoogleIcon />
         </div>
-        <div>
+        {/* <div>
           <ICON.FacebookCircleIcon />
-        </div>
+        </div> */}
       </div>
       <Button
         size="lg"

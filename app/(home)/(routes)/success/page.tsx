@@ -1,4 +1,5 @@
 import { Button } from "@/components/button/button";
+import { ClearCart } from "@/components/clear-cart";
 import { Typography } from "@/components/typography/typography";
 import Link from "next/link";
 import React from "react";
@@ -6,6 +7,7 @@ import React from "react";
 export default async function SuccessPage() {
   return (
     <div className="pt-20">
+      <ClearCart />
       <Typography
         as="h4"
         size="h4"

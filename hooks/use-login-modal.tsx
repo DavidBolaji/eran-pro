@@ -6,7 +6,7 @@ export const useLoginModal = () => {
 
   if (!queryClient.getQueryData(["LOGIN_MODAL"])) {
     queryClient.setQueryData(["LOGIN_MODAL"], {
-      shown: true,
+      shown: false,
       key: "LOGIN_MODAL",
     });
   }

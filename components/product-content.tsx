@@ -24,7 +24,7 @@ export const ProductContent: React.FC<{
         </Button>
       ))}
       <div className="my-6">
-        <span className="font-medium text-base black-100 leading-5 inline-block max-w-[558px]">
+        <span className="font-medium text-[16px] black-100 leading-5 inline-block max-w-[558px]">
           {tab === "descriptions" && product.description}
         </span>
       </div>

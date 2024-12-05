@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, FocusEvent, useRef } from "react";
+import React, { ChangeEvent, FocusEvent, useEffect, useRef } from "react";
 import FormikNormalInput from "../input/formik-normal-input";
 import { Field, FieldArray, Form, Formik } from "formik";
 import { Button } from "../button/button";
@@ -21,7 +21,9 @@ import FormikRadioInput from "../input/formik-radio-input";
 import FormikSelectInput from "../input/formik-select-input";
 import useCountry from "@/hooks/useCountry";
 import useAddress from "@/hooks/useAddress";
-export const validationSchema = Yup.object().shape({
+import { useQueryClient } from "@tanstack/react-query";
+import { UserUploadComponent } from "@/app/(home)/(routes)/orders/components/user-upload-component";
+export const editCustomerSchema = Yup.object().shape({
   email: Yup.string()
     .matches(
       /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
@@ -31,6 +33,7 @@ export const validationSchema = Yup.object().shape({
   fname: Yup.string().required("First name is required"),
   lname: Yup.string().required("Last name is required"),
   phone: Yup.string().required("Phone is required"),
+  pic: Yup.string().notRequired(),
   address: Yup.array().of(
     Yup.object().shape({
       country: Yup.string().required("City is required"),
@@ -41,17 +44,31 @@ export const validationSchema = Yup.object().shape({
       active: Yup.boolean().required(),
     })
   ),
+  orderAddress: Yup.array().optional()
 });
 
 const options = [{ name: true, value: true, label: "Set as default" }];
 
 export const EditCustomerForm: React.FC<{
   user: IUser | null;
-  address: Address[];
+  address: Address[] | null;
 }> = ({ user, address }) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const { countries } = useCountry();
-  const { fetchCity, states, fetchState } = useAddress();
+  const { fetchCity, states } = useAddress();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (user) {
+      
+      const userCopy = {...user};
+
+      delete (userCopy as { orders?: unknown }).orders
+  
+      // Update the query data in the query client
+      queryClient.setQueryData(['EDIT_CUSTOMER'], userCopy);
+    }
+  }, [user, queryClient]);
 
   return (
     <Formik
@@ -68,7 +85,29 @@ export const EditCustomerForm: React.FC<{
           : [],
       }}
       onSubmit={() => {}}
+      validate={(values) => {
+        const errors = {};
+        queryClient.setQueryData(['EDIT_CUSTOMER'], (old: IUser | undefined) => {
+          if (old) {
+            return {
+              ...old,
+              ...values,
+              address: [...values.address], // Ensure the latest address array is used
+              userId: user?.id,
+            };
+          }
+      
+          return {
+            ...values,
+            userId: user?.id,
+          };
+        });
+      
+        return errors
+      }}
+      validateOnChange
       enableReinitialize
+      key={user?.id}
     >
       {({ values, setFieldValue, handleBlur, setFieldTouched }) => (
         <Form className="w-full">
@@ -102,6 +141,9 @@ export const EditCustomerForm: React.FC<{
               />
             </div>
           </div>
+          <div className="bg-white mt-6 px-4 lg:hidden block py-6 rounded-2xl">
+            <UserUploadComponent view />
+          </div>
           <div className="bg-white mt-6 py-6 px-4 rounded-2xl space-y-4">
             <div className="flex lg:flex-row flex-col justify-between items-start lg:items-center">
               <Typography
@@ -128,121 +170,129 @@ export const EditCustomerForm: React.FC<{
             <FieldArray name="address">
               {({ push, remove }) => (
                 <>
-                  {values.address.map((_, ind) => (
-                    <div
-                      key={ind}
-                      className="relative bg-grey-200 p-4 rounded-2xl space-y-6"
-                    >
-                      <div className="flex mb-[14px] justify-between items-center">
-                        <Typography
-                          as="p"
-                          size="s1"
-                          align="left"
-                          className="black-100"
-                        >
-                          Delivery address {ind + 1}
-                        </Typography>
+                  {values.address.map((_, ind) => {
+                    return (
+                      <div
+                        key={ind}
+                        className="relative bg-grey-200 p-4 rounded-2xl space-y-6"
+                      >
+                        <div className="flex mb-[14px] justify-between items-center">
+                          <Typography
+                            as="p"
+                            size="s1"
+                            align="left"
+                            className="black-100"
+                          >
+                            Delivery address {ind + 1}
+                          </Typography>
 
-                        <span
-                          className="cursor-pointer"
-                          onClick={() => remove(ind)}
-                        >
-                          <ICON.TrashIcon color="#E83B3B" />
-                        </span>
-                      </div>
-                      <Field
-                        name={`address[${ind}].country`}
-                        options={countries ?? []}
-                        as={FormikSelectInput}
-                        placeholder={"Country"}
-                        align={-5}
-                        onChange={async (e: ChangeEvent<HTMLSelectElement>) => {
-                          const country = e.target.value;
-                          setFieldValue(`address[${ind}].country`, country);
-                          setFieldValue(`address[${ind}].state`, "");
-                          setFieldValue(`address[${ind}].city`, "");
-                          fetchState(country);
-                        }}
-                        onBlur={(e: ChangeEvent<HTMLSelectElement>) => {
-                          handleBlur(e);
-                          setFieldTouched(`address[${ind}].country`);
-                        }}
-                      />
-                      <Field
-                        name={`address[${ind}].address`}
-                        as={FormikNormalInput}
-                        placeholder="House number and street name"
-                        align={-27}
-                      />
-                      <div className="flex items-center justify-between gap-x-4">
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => remove(ind)}
+                          >
+                            <ICON.TrashIcon color="#E83B3B" />
+                          </span>
+                        </div>
                         <Field
-                          name={`address[${ind}].state`}
+                          name={`address[${ind}].country`}
+                          options={countries ?? []}
+                          defaultValue={values.address[ind].country}
                           as={FormikSelectInput}
-                          placeholder="State"
-                          align={-3}
-                          options={states ?? []}
+                          placeholder={"Country"}
+                          align={-5}
                           onChange={async (
                             e: ChangeEvent<HTMLSelectElement>
                           ) => {
-                            const state = e.target.value;
-                            setFieldValue(`address[${ind}].state`, state);
-
-                            const city = await fetchCity(state);
-                            setFieldValue(`address[${ind}].cityOption`, city);
+                            const country = e.target.value;
+                            setFieldValue(`address[${ind}].country`, country);
+                            setFieldValue(`address[${ind}].state`, "");
+                            setFieldValue(`address[${ind}].city`, "");
+                            // fetchState(country);
                           }}
-                          onBlur={(e: FocusEvent<HTMLSelectElement>) => {
+                          onBlur={(e: ChangeEvent<HTMLSelectElement>) => {
                             handleBlur(e);
-                            setFieldTouched(`address[${ind}].state`);
+                            setFieldTouched(`address[${ind}].country`);
                           }}
                         />
-
                         <Field
-                          name={`address[${ind}].city`}
-                          align={-9}
-                          options={values?.address[ind]?.cityOption ?? []}
-                          as={FormikSelectInput}
-                          placeholder={"Town / City"}
-                          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                            setFieldValue(
-                              `address[${ind}].city`,
-                              e.target.value
-                            );
-                          }}
-                          onBlur={(e: FocusEvent<HTMLSelectElement>) => {
-                            handleBlur(e);
-                            setFieldTouched(`address[${ind}].city`);
-                          }}
+                          name={`address[${ind}].address`}
+                          as={FormikNormalInput}
+                          placeholder="House number and street name"
+                          align={-27}
+                          y={-15}
                         />
-                      </div>
-                      <Field
-                        name={`address[${ind}].info`}
-                        as={TextAreaInput}
-                        placeholder="Additional information about the delivery"
-                        rows={3}
-                        align={-41}
-                      />
-                      <div className="flex justify-end">
-                        <Field
-                          name={`address[${ind}].active`}
-                          as={FormikRadioInput}
-                          defaultValue={values.address[ind].active}
-                          value={values.address[ind].active}
-                          options={options.map((option) => ({
-                            ...option,
-                            id: `${option.value}-${ind}`,
-                            name: `address[${ind}].active`,
-                          }))}
-                          onChange={() => {
-                            // Set the current address as active and reset others
+                        <div className="flex items-center justify-between gap-x-4">
+                          <Field
+                            name={`address[${ind}].state`}
+                            as={FormikSelectInput}
+                            placeholder="State"
+                            defaultValue={values.address[ind].state}
+                            align={-3}
+                            options={states ?? []}
+                            onChange={async (
+                              e: ChangeEvent<HTMLSelectElement>
+                            ) => {
+                              const state = e.target.value;
+                              setFieldValue(`address[${ind}].state`, state);
 
-                            values.address.forEach((_, i) =>
-                              setFieldValue(`address[${i}].active`, i === ind)
-                            );
-                          }}
+                              const city = await fetchCity(state);
+                              setFieldValue(`address[${ind}].cityOption`, city);
+                            }}
+                            onBlur={(e: FocusEvent<HTMLSelectElement>) => {
+                              handleBlur(e);
+                              setFieldTouched(`address[${ind}].state`);
+                            }}
+                          />
+
+                          <Field
+                            name={`address[${ind}].city`}
+                            align={-9}
+                            options={values?.address[ind]?.cityOption ?? []}
+                            as={FormikSelectInput}
+                            placeholder={"Town / City"}
+                            defaultValue={values.address[ind].city}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                              setFieldValue(
+                                `address[${ind}].city`,
+                                e.target.value
+                              );
+                            }}
+                            onBlur={(e: FocusEvent<HTMLSelectElement>) => {
+                              handleBlur(e);
+                              setFieldTouched(`address[${ind}].city`);
+                            }}
+                          />
+                        </div>
+                        <Field
+                          name={`address[${ind}].info`}
+                          as={TextAreaInput}
+                          placeholder="Additional information about the delivery"
+                          rows={3}
+                          align={-41}
                         />
+                        <div className="flex justify-end">
+                          <Field
+                            name={`address[${ind}].active`}
+                            as={FormikRadioInput}
+                            defaultValue={values.address[ind].active}
+                            value={values.address[ind].active}
+                            options={options.map((option) => ({
+                              ...option,
+                              id: `${option.value}-${ind}`,
+                              name: `address[${ind}].active`,
+                            }))}
+                            onChange={() => {
+                              // Set the current address as active and reset others
+
+                              values.address.forEach((_, i) =>
+                                setFieldValue(`address[${i}].active`, i === ind)
+                              );
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                   <button
                     className="hidden"
@@ -265,20 +315,22 @@ export const EditCustomerForm: React.FC<{
                 </>
               )}
             </FieldArray>
-            {values.address.length > 0 && <div className="flex items-center justify-center w-full">
-              <Button
-                className=" flex items-center justify-center"
-                size="lg"
-                color="light"
-                type="button"
-                onClick={() => btnRef.current?.click()}
-              >
-                <span className="border border-black rounded-full h-5 w-5 flex items-center justify-center">
-                  <Plus className="h-4 w-4" color="black" />
-                </span>
-                <span className="ml-2">Add Delivery Address</span>
-              </Button>
-            </div>}
+            {values.address.length > 0 && (
+              <div className="flex items-center justify-center w-full">
+                <Button
+                  className=" flex items-center justify-center"
+                  size="lg"
+                  color="light"
+                  type="button"
+                  onClick={() => btnRef.current?.click()}
+                >
+                  <span className="border border-black rounded-full h-5 w-5 flex items-center justify-center">
+                    <Plus className="h-4 w-4" color="black" />
+                  </span>
+                  <span className="ml-2">Add Delivery Address</span>
+                </Button>
+              </div>
+            )}
           </div>
         </Form>
       )}

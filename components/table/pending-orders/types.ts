@@ -3,6 +3,7 @@ import { Image } from "@prisma/client";
 export interface PendingOrders {
   id: string;
   products: {
+    id: string;
     name: string;
     images: Image[];
   }[];
@@ -10,12 +11,13 @@ export interface PendingOrders {
     fname: string | null;
     lname: string | null;
     phone: string | null;
-  };
+    pic: string | null
+  } | null;
   createdAt: Date;
 }
 
 export interface PendingOrdersTableProps {
-  initialOrders?: PendingOrders[];
+  initialOrders?: PendingOrders[] | [];
   onLoadMore?: () => Promise<PendingOrders[]>;
   onSort?: (column: keyof PendingOrders, direction: "asc" | "desc") => void;
   onSearch?: (query: string) => void;

@@ -6,8 +6,9 @@ import { useQueryClient } from "@tanstack/react-query";
 export const DashboardTitleHeader: React.FC<{
   title: string;
   discardKey: string;
+  btnText?: string
   addItem: () => void;
-}> = ({ title, discardKey, addItem }) => {
+}> = ({ title, discardKey, addItem, btnText }) => {
   const queryClient = useQueryClient();
   const discard = () => {
     queryClient.setQueryData([discardKey], null);
@@ -25,7 +26,7 @@ export const DashboardTitleHeader: React.FC<{
           Discard Changes
         </Button>
         <Button size="lg" color="dark" className="h-9" onClick={add}>
-          Add Product
+          {btnText ? btnText: "Add Product" }
         </Button>
       </div>
     </div>

@@ -3,9 +3,13 @@ import { Typography } from "../typography/typography";
 import { IProduct } from "@/actions/get-products";
 import Image from "next/image";
 import { CardButton } from "../button/card-button";
-
+import { endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
+const priceHash = {
+  PER_KG: "price / kg",
+  PER_ITEM: "price / item",
+};
 export const ProductCard: React.FC<{
-  product: IProduct;
+  product: IProduct & { weight?: number };
 }> = ({ product }) => {
   const isOnSale = product.status === "ACTIVE";
   return (
@@ -43,16 +47,34 @@ export const ProductCard: React.FC<{
             align="left"
             className="inline-block black-300 font-light mr-2 black-300"
           >
-            price / kg
+            {priceHash[product.unit]}
           </Typography>
-
+          {product?.promotion?.length &&
+          isBefore(new Date(product?.promotion[0].startDate), endOfToday()) &&
+          isAfter(new Date(product?.promotion[0].endDate), startOfToday()) ? (
+            <Typography
+              as="h6"
+              size="h6"
+              align="left"
+              className="inline-block black-300 mr-2 black-100 line-through lin"
+            >
+              ₦{product.price.toLocaleString()}
+            </Typography>
+          ) : null}
           <Typography
             as="h6"
             size="h6"
             align="left"
             className="inline-block black-100 mr-2 black-100"
           >
-            ₦{product.price.toLocaleString()}
+            {product?.promotion?.length &&
+            isBefore(new Date(product?.promotion[0].startDate), endOfToday()) &&
+            isAfter(new Date(product?.promotion[0].endDate), startOfToday())
+              ? ` ₦${(
+                  (1 - product.promotion[0]?.discount / 100) *
+                  product.price
+                ).toLocaleString()}`
+              : `₦${product.price.toLocaleString()}`}
           </Typography>
         </div>
         <div className="flex mt-4 gap-x-3">
@@ -62,16 +84,3 @@ export const ProductCard: React.FC<{
     </div>
   );
 };
-
-{
-  /* {product.oldPrice && (
-          <Typography
-            as="h6"
-            size="h6"
-            align="left"
-            className="inline-block black-300 mr-2"
-          >
-            ₦{product.oldPrice.toLocaleString()}
-          </Typography>
-        )} */
-}

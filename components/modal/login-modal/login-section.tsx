@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/button/button";
 import { LoginForm } from "@/components/form/login-form";
 import { Typography } from "@/components/typography/typography";
@@ -8,7 +9,7 @@ import React from "react";
 
 
 export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopup}) => {
-  const {googleLogin, googleSignUP} = useUser()
+  const {googleLogin} = useUser()
   return (
     <motion.div
       key={"LOGIN_MODAL"}
@@ -42,9 +43,9 @@ export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopu
         <div onClick={googleLogin}>
           <ICON.GoogleIcon />
         </div>
-        <div onClick={googleSignUP}>
+        {/* <div onClick={googleSignUP}>
           <ICON.FacebookCircleIcon />
-        </div>
+        </div> */}
       </div>
       <Button
         size="lg"

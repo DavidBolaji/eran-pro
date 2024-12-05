@@ -5,8 +5,27 @@ import { Typography } from "@/components/typography/typography";
 import PendingOrdersTable from "@/components/table/pending-orders/pending-orders-table";
 import db from "@/db/db";
 import { Empty } from "antd";
+import { Prisma } from "@prisma/client";
 
-export const RenderProductOrder = async () => {
+export const RenderProductOrder: React.FC<{
+  sort: string;
+  sortOrder: string;
+}> = async ({ sort, sortOrder }) => {
+  const orderBy:Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[] | undefined =
+    sort === "fname"
+      ? {
+          User: {
+            fname: sortOrder as Prisma.SortOrder,
+          },
+        } :
+    sort === "phone"
+      ? {
+          User: {
+            phone: sortOrder as Prisma.SortOrder,
+          },
+        }
+      : { [sort]: sortOrder as Prisma.SortOrder };
+
   const pendingOrders = await db.order.findMany({
     where: {
       status: "PENDING",
@@ -15,6 +34,7 @@ export const RenderProductOrder = async () => {
       id: true,
       products: {
         select: {
+          id: true,
           name: true,
           images: true,
         },
@@ -24,10 +44,13 @@ export const RenderProductOrder = async () => {
           fname: true,
           lname: true,
           phone: true,
+          pic: true,
         },
       },
       createdAt: true,
     },
+    orderBy,
+    take: 8,
   });
 
   const popularWeights = await db.productOrder.groupBy({

@@ -15,13 +15,42 @@ interface CustomerPageSearchParams {
 
 export default async function CustomerPage({
   params,
-  searchParams
+  searchParams,
 }: CustomerPageSearchParams) {
   const customerId = params.customerId;
-  const customerRequest = getDashboardCustomer(customerId);
-  const custormerName = searchParams?.tab;
+  const sort = searchParams.sort || "createdAt";
+  const sortOrder = searchParams.sortOrder || "asc";
+  // Ensure category is always an array
+  const category =
+    typeof searchParams.payment === "string"
+      ? [searchParams.payment]
+      : Array.isArray(searchParams.payment)
+      ? searchParams.payment
+      : [];
 
+      console.log('[CAT]', category)
+
+  // Ensure status is always an array
+  const status =
+    typeof searchParams.status === "string"
+      ? [searchParams.status]
+      : Array.isArray(searchParams.status)
+      ? searchParams.status
+      : [];
+
+  const customerRequest = getDashboardCustomer(
+    customerId,
+    sort,
+    sortOrder as "asc" | "desc",
+    {
+      category,
+      status,
+    }
+  );
+
+  const custormerName = searchParams?.tab;
   const categoryRequest = getCategories();
+  console.log('[TAB]', custormerName)
 
   // Await both requests
   const [customer, categories] = await Promise.all([
@@ -29,9 +58,10 @@ export default async function CustomerPage({
     categoryRequest,
   ]);
 
+
   return (
-    <div>
-       <div className=" lg:px-0 px-4">
+    <div className="p-4">
+      <div>
         <Crumb
           crumbData={[
             {
@@ -49,13 +79,15 @@ export default async function CustomerPage({
           ]}
         />
       </div>
-      <ViewCustomer customer={customer?.customer}  />
+      
+      <ViewCustomer customer={customer?.customer} />
       <CustomerComponent
         categories={categories}
         customerName={custormerName ? custormerName : "Details"}
         customer={customer.customer}
+        searchParams={searchParams}
+        totalPages={customer.totalItems}
       />
-
     </div>
   );
 }

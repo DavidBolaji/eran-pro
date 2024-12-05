@@ -6,6 +6,7 @@ import Image from "next/image";
 import { formatToNaira } from "@/utils/helper";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface CustomerOrdersTableRowProps {
   orders: CustomerOrders;
@@ -19,7 +20,7 @@ export default function CustomerordersTableRow({
        <TableCell className="pl-6 py-3">
         <div className="flex items-center gap-3">
           <Image
-            src={orders.products[0].img ?? ""}
+            src={orders.products[0].images[0].url ?? ""}
             alt={orders.products[0].name}
             width={40}
             height={40}
@@ -28,11 +29,11 @@ export default function CustomerordersTableRow({
           <span className="font-bold text-sm  black-100">{orders.products[0].name}</span>
         </div>
       </TableCell>
-      <TableCell className="pl-6 py-3">{orders.id}</TableCell>
-      <TableCell className="pl-6 py-3">{formatToNaira(orders.price)}</TableCell>
-      <TableCell className="pl-6 py-3">{orders.createdAt.toString()}</TableCell>
-      <TableCell className="pl-6 py-3">{orders.paymentType}</TableCell>
-      <TableCell className="pl-6 py-3 font-bold text-sm black-100">
+      <TableCell className="pl-6 py-3 font-satoshi black-100 font-bold text-sm underline">{orders?.orderId}</TableCell>
+      <TableCell className="pl-6 py-3 font-satoshi black-100 font-bold text-sm">{formatToNaira(orders.price)}</TableCell>
+      <TableCell className="pl-6 py-3 font-satoshi black-100 font-bold text-sm">{format(orders.createdAt, "MMM dd, yyyy")}</TableCell>
+      <TableCell className="pl-6 py-3 font-satoshi black-100 font-bold text-sm">{orders.paymentType}</TableCell>
+      <TableCell className="pl-6 py-3 font-satoshi black-100 font-bold text-sm">
         <Badge variant="outline" className={cn("capitalize rounded-full")}>
           {orders.status.toLowerCase()}
         </Badge>

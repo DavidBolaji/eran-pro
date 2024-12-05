@@ -4,8 +4,29 @@ import React, { useState } from "react";
 import FormikNormalInput from "../input/formik-normal-input";
 import { ICON } from "@/constants/icon";
 import { Button } from "../button/button";
+import * as Yup from "yup";
+import { useNotification } from "@/hooks/use-notification";
+import { useUser } from "@/hooks/use-user";
+import { useLoginModal } from "@/hooks/use-login-modal";
+
+export const RegisterValidation = Yup.object({
+  password: Yup.string().required("Password is required"),
+  confirm_password: Yup.string()
+    .oneOf([Yup.ref("password"), undefined], "Passwords must match")
+    .required("Confirm Password is required"),
+});
+
+interface IRegister {
+  email: string;
+  password: string;
+  confirm_password: string;
+}
 
 export const RegisterForm = () => {
+  const { toggleNotification } = useNotification();
+  const {toggleModal} = useLoginModal()
+  const { register } = useUser();
+
   const [type, setType] = useState<"password" | "text">("password");
   const [type2, setType2] = useState<"password" | "text">("password");
   const togglePassword = () => {
@@ -17,6 +38,22 @@ export const RegisterForm = () => {
     setType2("password");
   };
 
+  const onSubmit = (values: IRegister) => {
+    RegisterValidation.validate(values)
+      .then(() => {
+        register({ email: values.email, password: values.password });
+      })
+      .catch((reason) => {
+        toggleNotification({
+          type: "error",
+          title: "Validation Error",
+          message: reason.message,
+          show: true,
+        });
+        toggleModal(false, "LOGIN_MODAL")
+      });
+  };
+
   return (
     <Formik
       initialValues={{
@@ -24,7 +61,7 @@ export const RegisterForm = () => {
         password: "",
         confirm_password: "",
       }}
-      onSubmit={() => {}}
+      onSubmit={onSubmit}
     >
       {({}) => (
         <Form className="space-y-6 lg:w-[328px] w-full mx-auto pb-6 border-b">
@@ -52,7 +89,6 @@ export const RegisterForm = () => {
                 )}
               </div>
             }
-            iconL={ICON.MailIcon}
             align={-2}
             y={-14}
           />
@@ -75,7 +111,7 @@ export const RegisterForm = () => {
             align={-8}
             y={-14}
           />
-          <Button size="lg" color="dark" type="button" className="w-full">
+          <Button size="lg" color="dark" type="submit" className="w-full">
             Create An Account
           </Button>
         </Form>

@@ -1,9 +1,11 @@
-import { Address, Product } from "@prisma/client";
+import { CustomerProduct } from "@/actions/get-customers";
+import { Address } from "@prisma/client";
 
 export interface CustomerOrders {
   id: string;
   price: number,
-  products: Product[],
+  orderId: string,
+  products: CustomerProduct[],
   address: Address | null,
   createdAt: Date,
   paymentType: string,
@@ -11,6 +13,7 @@ export interface CustomerOrders {
 }
 
 export interface CustomerOrdersTableProps {
+  id: string;
   initialOrders?: CustomerOrders[];
   onLoadMore?: () => Promise<CustomerOrders[]>;
   onSort?: (column: keyof CustomerOrders, direction: "asc" | "desc") => void;

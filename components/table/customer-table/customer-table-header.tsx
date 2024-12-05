@@ -14,7 +14,7 @@ interface CustomerTableHeaderProps {
 }
 
 const headerList = [
-  { key: "name", title: "Customer name", hasSort: true },
+  { key: "fname", title: "Customer name", hasSort: true },
   { key: "email", title: "Email", hasSort: true },
   { key: "phone", title: "Phone no", hasSort: true },
   { key: "totalOrders", title: "Total orders", hasSort: true },

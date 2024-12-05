@@ -5,7 +5,9 @@ import React from "react";
 import { CustomerDetailDisplay } from "./customer-detail-display";
 import { CustomerDeliveryDetail } from "./customer-delivery-detail";
 import { Typography } from "@/components/typography/typography";
-import { MeatCard } from "@/app/dashboard/components/side-cards";
+
+import { CartCheckoutCard } from "@/components/card/cart-checkout-card";
+import { IProduct } from "@/actions/get-products";
 import { Empty } from "antd";
 
 
@@ -24,13 +26,29 @@ export const DetailComponent = async ({
       fname: true,
       lname: true,
       orders: {
-        include: {
+        select: {
+          id: true,
+          price: true,
           products: {
-            include: {
-              images: true
-            }
-          }
-        }
+            select: {
+              id: true,
+              images: true,
+              name: true,
+              price: true,
+              ProductOrder: {
+                select: {
+                  orderId: true,
+                  weight: true,
+                },
+              },
+            },
+          },
+          address: true,
+          createdAt: true,
+          paymentType: true,
+          status: true,
+          orderId: true,
+        },
       },
       orderAddress: true,
     },
@@ -83,17 +101,28 @@ export const DetailComponent = async ({
           >
             Order History
           </Typography>
-          <div className="space-y-3">
-              {customer?.orders?.map((data) => (
-                <MeatCard
-                  key={data.id}
-                  title={data.products[0].name}
-                  img={data.products[0].images[0].url as string}
-                  order={153}
-                />
-              ))}
-              {!customer?.orders.length && <Empty />}
-            </div>
+          <div className="space-y-3 mb-8">
+            {customer?.orders?.map((order) =>
+              order.products.map((product) => {
+                // Find the corresponding weight from the ProductOrder relation
+                const productOrder = product.ProductOrder.find(
+                  (po) => order.id === po.orderId
+                );
+                return (
+                  <CartCheckoutCard
+                    key={product.id}
+                    product={
+                      product as unknown as IProduct & { weight: number }
+                    }
+                    weight={productOrder?.weight ?? 0} // Pass the weight to the component
+                    black
+                  />
+                );
+              })
+            )}
+
+            {!customer?.orders.length && <Empty />}
+          </div>
         </div>
       </div>
     </div>

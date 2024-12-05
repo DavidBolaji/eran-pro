@@ -4,6 +4,10 @@ import { Field, useFormikContext } from "formik";
 import React, { ChangeEvent, FocusEvent } from "react";
 import FormikNormalInput from "../formik-normal-input";
 import FormikSelectInput from "../formik-select-input";
+import { Grid } from "antd";
+import FormikTextAreaInput from "../formik-textarea-input";
+
+const { useBreakpoint } = Grid;
 
 const LocationComponent: React.FC<{
   city: string;
@@ -20,18 +24,15 @@ const LocationComponent: React.FC<{
   disabled = false,
   align,
 }) => {
-  const { countries, setStates } = useCountry();
-  const { city, fetchCity, setCity, states, fetchState } = useAddress();
-  const {
-    handleBlur,
-    handleChange,
-    setFieldValue,
-    setFieldTouched,
-  } = useFormikContext();
+  const { countries } = useCountry();
+  const { city, fetchCity, states } = useAddress();
+  const { lg } = useBreakpoint();
+  const { handleBlur, handleChange, setFieldValue, setFieldTouched } =
+    useFormikContext();
 
   return (
     <>
-      <div className="grid grid-cols-10 pb-6 gap-x-6">
+      <div className="grid grid-cols-10 lg:pb-6 gap-x-6">
         <div className="col-span-5">
           <Field
             name={country}
@@ -40,10 +41,7 @@ const LocationComponent: React.FC<{
             placeholder={"Select Country"}
             onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
-              setCity([]);
-              setStates([]);
-              fetchState(e.target.value);
-              setFieldValue(sName!, "");
+              setFieldValue(sName, "");
               setFieldValue(country, e.target.value);
             }}
             onBlur={(e: ChangeEvent<HTMLSelectElement>) => {
@@ -63,10 +61,8 @@ const LocationComponent: React.FC<{
             placeholder={"Select state"}
             onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
-              setCity([]);
               setFieldValue(cName!, "");
               fetchCity(e.target.value);
-
               setFieldValue(sName, e.target.value);
             }}
             onBlur={(e: FocusEvent<HTMLSelectElement>) => {
@@ -78,7 +74,7 @@ const LocationComponent: React.FC<{
           />
         </div>
       </div>
-      <div className="grid grid-cols-10 pb-6 gap-x-6">
+      <div className="grid lg:grid-cols-10 grid-cols-5 pb-6 gap-x-6">
         <div className="col-span-5">
           <Field
             name={cName}
@@ -98,10 +94,10 @@ const LocationComponent: React.FC<{
           />
         </div>
 
-        <div className="col-span-5">
+        <div className="col-span-5 lg:mt-0 mt-6">
           <Field
             name={address}
-            as={FormikNormalInput}
+            as={lg ? FormikNormalInput : FormikTextAreaInput}
             placeholder={"House number and street name"}
             onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               handleChange(e);
@@ -109,6 +105,8 @@ const LocationComponent: React.FC<{
             onBlur={(e: FocusEvent<HTMLSelectElement>) => {
               handleBlur(e);
             }}
+            align={lg ? -25 : -30}
+            rows={-2}
           />
         </div>
       </div>

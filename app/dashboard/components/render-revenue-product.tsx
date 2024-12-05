@@ -4,10 +4,11 @@ import { MeatCard, SideCards } from "./side-cards";
 import FilterComponent from "./filter-component";
 import db from "@/db/db";
 import { Empty } from "antd";
+import { getMonthlyRevenue } from "@/actions/get-orders";
 
 export const RenderRevenueProduct = async () => {
   // Fetch products grouped by order count in descending order
-  const popularProductsData = await db.productOrder.groupBy({
+  const productOrderResult = db.productOrder.groupBy({
     by: ["productId"],
     _count: {
       productId: true,
@@ -19,6 +20,10 @@ export const RenderRevenueProduct = async () => {
     },
     take: 5,
   });
+
+  const result = getMonthlyRevenue()
+
+  const [popularProductsData, monthlyRevenue] = await Promise.all([productOrderResult, result])
 
   // Map products to include product details like name and image
   const popularProducts = await Promise.all(
@@ -37,7 +42,7 @@ export const RenderRevenueProduct = async () => {
 
   return (
     <div className="grid grid-cols-12 gap-x-6 mt-6">
-      <RevenueChart />
+      <RevenueChart monthlyRevenue={monthlyRevenue} />
       <div className="lg:col-span-4 col-span-12 lg:mt-0 mt-6">
         <SideCards
           title="Popular products"

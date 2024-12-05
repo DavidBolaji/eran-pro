@@ -12,6 +12,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
 }) => {
   const [value, setValue] = useState(weight);
   const queryClient = useQueryClient();
+  const stepValue = product.unit === "PER_KG" ? 0.5 : 1;
 
   useEffect(()=> {
     setValue(weight)
@@ -23,7 +24,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
       queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
         const newData = prev?.map((el) => {
           if (el?.id === product.id) {
-            return { ...el, weight: prevValue + 0.5 };
+            return { ...el, weight: prevValue + stepValue };
           } else {
             return el;
           }
@@ -32,7 +33,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
       });
       return prevValue + 0.5;
     });
-  }, [product, queryClient]);
+  }, [product, queryClient, stepValue]);
 
   
   const decrement = useCallback(() => {
@@ -40,7 +41,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
       queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
         const newData = prev.map((el) => {
           if (el.id === product.id) {
-            return { ...el, weight: Math.max(0, prevValue - 0.5) };
+            return { ...el, weight: Math.max(0, prevValue - stepValue) };
           } else {
             return el;
           }
@@ -48,15 +49,15 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
         return newData;
       });
 
-      return Math.max(0, prevValue - 0.5);
+      return Math.max(0, prevValue - stepValue);
     });
-  }, [product, queryClient]);
+  }, [product, queryClient, stepValue]);
 
   return (
     <div className="flex items-center justify-center w-[140px] h-12 border border-gray-800 rounded-full font-bold text-gray-800 px-1">
       <button
         onClick={decrement}
-        disabled={value <= 0.5}
+        disabled={value <= stepValue}
         className="w-10 h-10 flex items-center justify-center text-xl disabled:text-gray-400 disabled:cursor-not-allowed"
       >
         <MinusIcon />

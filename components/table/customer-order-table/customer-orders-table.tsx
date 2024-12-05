@@ -12,23 +12,41 @@ import CustomerOrdersTableHeader from "./customer-orders-table-header";
 import CustomerordersTableRow from "./customer-orders-table-row";
 import { filterCustomerOrder } from "@/actions/get-customers";
 import { Empty } from "antd";
+import Pagination from "../pagination";
 
 export default function CustomerOrdersTable({
   initialOrders,
   onLoadMore,
   onSort,
   onSearch,
+  totalPages,
+  page,
+  itemsPerPage,
+  id,
 }: CustomerOrdersTableProps) {
-  const { items, handleSort, sortColumn, sortDirection, showFilters, setShowFilters } =
-    useTable<CustomerOrders>({
-      initialItems: initialOrders as CustomerOrders[],
-      onLoadMore,
-      onSort,
-      onSearch,
-      onFilter(form, params, path) {
-        filterCustomerOrder(form, params, path);
-      },
-    });
+  const {
+    items,
+    handleSort,
+    sortColumn,
+    sortDirection,
+    showFilters,
+    setShowFilters,
+    isMobile,
+    ref,
+    loading
+  } = useTable<CustomerOrders>({
+    initialItems: initialOrders as CustomerOrders[],
+    onLoadMore,
+    onSort,
+    onSearch,
+    onFilter(form, params) {
+      filterCustomerOrder(
+        form,
+        params,
+        `/dashboard/customers/${id}?tab=Order+History`
+      );
+    },
+  });
 
   return (
     <div className="w-full mt-6 scrollbar-hide min-w-[1000px]">
@@ -36,7 +54,13 @@ export default function CustomerOrdersTable({
         title={"Orders History"}
         setShowFilters={setShowFilters}
         showFilters={showFilters}
-        onFilter={filterCustomerOrder}
+        onFilter={(form, params) =>
+          filterCustomerOrder(
+            form,
+            params,
+            `/dashboard/customers/${id}?tab=Order+History`
+          )
+        }
         filter
         payment
         status
@@ -54,10 +78,21 @@ export default function CustomerOrdersTable({
             ))}
           </TableBody>
         </Table>
-        {items.length < 1 && <div className="py-8">
-          <Empty />
-        </div>}
+        {items.length < 1 && (
+          <div className="py-8">
+            <Empty />
+          </div>
+        )}
       </div>
+      <Pagination
+        ref={ref}
+        isMobile={isMobile}
+        loading={loading}
+        totalPages={totalPages ?? 0}
+        page={page ?? 1}
+        itemsPerPage={itemsPerPage ?? 10}
+        onFilter={filterCustomerOrder}
+      />
     </div>
   );
 }

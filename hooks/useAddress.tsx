@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAxios } from './use-axios';
 
 const useAddress = () => {
@@ -7,19 +7,36 @@ const useAddress = () => {
   const [city, setCity] = useState<{ value: string; key: string }[]>([])
   const Axios = useAxios()
 
-  const fetchState = async (country:string) => {
-    try {
-      const req = await Axios.post('/location/states', {country})
-      const format = req.data.data.map((e: any) => ({
-        label: e.name,
-        value: e.name,
-      }))
-      setStates([...format])
-      return format;
-    } catch (error: any) {
-      console.log(error?.message)
+  useEffect(() => {
+    const fetchState = async () => {
+      try {
+        const req = await Axios.post('/location/states', {country: "Nigeria"})
+        const format = req.data.data.map((e: any) => ({
+          label: e.name,
+          value: e.name,
+        }))
+        setStates([...format])
+        return format;
+      } catch (error: any) {
+        console.log(error?.message)
+      }
     }
-  }
+    fetchState()
+  }, [])
+
+  // const fetchState = async (country:string) => {
+  //   try {
+  //     const req = await Axios.post('/location/states', {country})
+  //     const format = req.data.data.map((e: any) => ({
+  //       label: e.name,
+  //       value: e.name,
+  //     }))
+  //     setStates([...format])
+  //     return format;
+  //   } catch (error: any) {
+  //     console.log(error?.message)
+  //   }
+  // }
 
   const fetchCity = async (state: string) => {
     
@@ -42,7 +59,6 @@ const useAddress = () => {
     states,
     city,
     fetchCity,
-    fetchState,
     setCity
   }
 }

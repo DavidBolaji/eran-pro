@@ -8,7 +8,7 @@ import { useNotification } from "@/hooks/use-notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { ICreateProduct } from "@/actions/get-products";
 
-const isAllowedFileType = (fileType: string) =>
+export const isAllowedFileType = (fileType: string) =>
   ["image/jpeg", "image/png"].includes(fileType);
 
 export const UploadImageForm = () => {

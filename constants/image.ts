@@ -11,12 +11,14 @@ import Black from "./images/black.png";
 import LeftMeat from "./images/left-meat.png";
 import CenterMeat from "./images/center-meat.png";
 import BottomMeat from "./images/bottom-meat.png";
+import Circle from "./images/circle.png";
 
 export const Images = {
   BlackLogo,
   Black,
   BottomMeat,
   CenterMeat,
+  Circle,
   Right,
   Bottom,
   Bottom2,

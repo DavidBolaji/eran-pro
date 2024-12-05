@@ -10,6 +10,7 @@ import { ShoppingComponent } from "@/components/sections/shopping-component";
 
 import { Typography } from "@/components/typography/typography";
 import { Wrapper } from "@/components/wrapper/wrapper";
+
 export const revalidate = 0;
 
 interface HomeSearchParams {

@@ -32,7 +32,6 @@ export const useAxios = () => {
         const prevRequest = error?.config;
 
         if (error?.response?.status === 401) {
-          queryClient.setQueryData(['USER'], null);
           return Promise.reject(error);
         } else if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;

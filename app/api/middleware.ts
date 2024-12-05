@@ -1,44 +1,51 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
+import { verifyAuth } from "../../lib/services/user-services";
 
-// Middleware to verify token based on specified paths and methods
-export async function middleware(req: NextRequest) {
+export async function getUserIdFromToken(
+  req: NextRequest
+): Promise<string | null> {
+  // Get the pathname without query string
   const token = req.cookies.get("token")?.value;
 
-  // Define paths and allowed methods for the middleware
-  const pathMethodMapping: Record<string, string[]> = {
-    "/api/user/**": ["GET", "PATCH", "DELETE"],
-    "/api/orders/**": ["GET"],
-    "/api/product/**": ["PUT"],
-  };
-
-  // Check if the path requires a token based on HTTP method
-  const path = req.nextUrl.pathname;
-  const allowedMethods = pathMethodMapping[path];
-
-  if (allowedMethods && allowedMethods.includes(req.method)) {
+  try {
     if (!token) {
-      return NextResponse.json({ message: "Unauthorized: Token is missing" }, { status: 401 });
+      throw new Error("Token not found");
     }
+    const verifiedToken = await verifyAuth(token);
 
-    try {
-      const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_NEXTAUTH_SECRET!);
-      const userId = (decoded as { id: string }).id;
-
-      // Attach userId to the request headers so it can be accessed in route handlers
-      req.headers.set("user-id", userId);
-      return NextResponse.next();
-    } catch (error) {
-      return NextResponse.json({ error: (error as Error).message }, { status: 401 });
-    }
+    return verifiedToken?.id as string;
+  } catch (error) {
+    console.error(
+      "Error extracting user ID from token:",
+      (error as Error).message
+    );
+    return null;
   }
-
-  // Allow requests that don't match the specified paths and methods
-  return NextResponse.next();
 }
 
-// Apply middleware to the specified routes using matcher
-export const config = {
-  matcher: ["/api/user/:path*", "/api/orders/:path*", "/api/product/:path*"],
-};
+/**
+ * Middleware to validate token and attach user ID to the request context.
+ * @param req - The NextRequest object
+ * @param next - The next handler function
+ * @returns Response if unauthorized; otherwise, calls next handler.
+ */
+export async function authMiddleware(
+  req: NextRequest,
+  next: (userId: string) => Promise<NextResponse>
+) {
+  try {
+    const userId = await getUserIdFromToken(req);
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    return await next(userId);
+  } catch (error) {
+    console.error("Error in authMiddleware:", (error as Error).message);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

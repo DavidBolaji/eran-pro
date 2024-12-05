@@ -14,20 +14,20 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { formatToNaira } from "@/utils/helper";
 
-const data = [
-  { month: "Jan", revenue: 500 },
-  { month: "Feb", revenue: 1000 },
-  { month: "Mar", revenue: 750 },
-  { month: "Apr", revenue: 1200 },
-  { month: "May", revenue: 900 },
-  { month: "Jun", revenue: 1400 },
-  { month: "Jul", revenue: 1100 },
-  { month: "Aug", revenue: 789 },
-  { month: "Sep", revenue: 1000 },
-  { month: "Oct", revenue: 1300 },
-  { month: "Nov", revenue: 950 },
-  { month: "Dec", revenue: 1050 },
-];
+// const data = [
+//   { month: "Jan", revenue: 500 },
+//   { month: "Feb", revenue: 1000 },
+//   { month: "Mar", revenue: 750 },
+//   { month: "Apr", revenue: 1200 },
+//   { month: "May", revenue: 900 },
+//   { month: "Jun", revenue: 1400 },
+//   { month: "Jul", revenue: 1100 },
+//   { month: "Aug", revenue: 789 },
+//   { month: "Sep", revenue: 1000 },
+//   { month: "Oct", revenue: 1300 },
+//   { month: "Nov", revenue: 950 },
+//   { month: "Dec", revenue: 1050 },
+// ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomizedDot = (props: any) => {
@@ -55,7 +55,7 @@ const CustomizedDot = (props: any) => {
   );
 };
 
-export default function RevenueChart() {
+export default function RevenueChart({monthlyRevenue}:{monthlyRevenue: {month: string, revenue: number}[]}) {
   const [filter, setFilter] = useState("This Year");
   const chartRef = useRef(null);
   const [chartHeight, setChartHeight] = useState(0);
@@ -90,7 +90,7 @@ export default function RevenueChart() {
         <CardContent className="h-[400px]" ref={chartRef}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
-              data={data}
+              data={monthlyRevenue}
               margin={{ top: 15, right: 10, left: 10, bottom: 0 }}
             >
               <XAxis

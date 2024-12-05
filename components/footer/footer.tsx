@@ -44,7 +44,7 @@ export const Footer = () => {
                     align="left"
                     size="s2"
                     as="p"
-                    className="text-base font-light leading-5 pb-4 black-100"
+                    className="text-[16px] font-light leading-5 pb-4 black-100"
                   >
                     {nav.name}
                   </Typography>

@@ -43,9 +43,9 @@ export const LoginSectionMobile:React.FC<{registerPopup: () => void}> = ({regist
         <div onClick={googleLogin}>
           <ICON.GoogleIcon />
         </div>
-        <div>
+        {/* <div>
           <ICON.FacebookCircleIcon />
-        </div>
+        </div> */}
       </div>
       <Button
         size="lg"

@@ -43,7 +43,7 @@ export const RenderSummary = () => {
             align="left"
             size="s1"
             as="p"
-            className="black-300 font-normal text-base leading-5"
+            className="black-300 font-normal text-[16px] leading-5"
           >
             Delivering to Ibadan
           </Typography>

@@ -1,7 +1,6 @@
 import db from "@/db/db";
-import { getUserByEmail } from "@/lib/services/user-services";
+import { generateTokens, getUserByEmail } from "@/lib/services/user-services";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,12 +34,8 @@ export async function POST(req: Request) {
       });
     }
 
-    // Generate an access token with no expiration
-    const accessToken = jwt.sign(
-      { id: user?.id },
-      process.env.NEXT_PUBLIC_NEXTAUTH_SECRET!,
-      { expiresIn: "9999 years" } // Setting to a very long expiration time
-    );
+    const {accessToken, refreshToken} = await generateTokens(user?.id as string)
+   
 
     // Prepare the response with cookies for access and refresh tokens
     const response = NextResponse.json({
@@ -51,7 +46,17 @@ export async function POST(req: Request) {
     // Set access token as a cookie with a long duration
     response.cookies.set("token", accessToken, {
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 365 * 9999, // Close to "never" expiration
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
+      sameSite: "strict",
+      secure: process.env.NEXT_PUBLIC_SECURE === "true",
+      domain: process.env.NEXT_PUBLIC_DOMAIN,
+    });
+
+     // Set refresh token as a cookie
+     response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60, // 7 days
       path: "/",
       sameSite: "strict",
       secure: process.env.NEXT_PUBLIC_SECURE === "true",

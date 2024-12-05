@@ -1,21 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 
 const paymentOptions = [
   {
+    key: "Debit card",
     name: "PAYSTACK (Debit Card)",
   },
   {
-    name: "FLUTTERWAVE (Debit Card)",
-  },
-  {
+    key: "Pay on delivery",
     name: "Complete payment on delivery",
     subtitle: "At least 25% of the total amount must be paid now",
   },
 ];
 
 export const PaymentMethod = () => {
+  const queryClient = useQueryClient();
   const [selected, setSelected] = useState("PAYSTACK (Debit Card)");
+
+
+  useEffect(() => {
+    const paymentFlow = paymentOptions.find(el => el.name === selected);
+    queryClient.setQueryData(['PAYMENT_FLOW'], paymentFlow?.key)
+  }, [selected, queryClient])
 
   return (
     <div className="space-y-4">
@@ -48,7 +55,7 @@ export const PaymentMethod = () => {
 
           {/* Label and Subtitle */}
           <div className="mt-1">
-            <div className="text-white text-base font-medium leading-5">
+            <div className="text-white text-[16px] font-medium leading-5">
               {option.name}
             </div>
             {option.subtitle && (

@@ -3,6 +3,8 @@ import { RenderSummaryCheckout } from "./components/render-summary-checkout";
 import { BillingForm } from "@/components/form/billing-form";
 import { Typography } from "@/components/typography/typography";
 
+export const revalidate = 0;
+
 const ChectOutage = () => {
   return (
     <div className="pb-20 ">

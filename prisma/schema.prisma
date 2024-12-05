@@ -85,8 +85,13 @@ model Image {
 
 model Order {
   id          String      @id @default(uuid())
-  userId      String
-  User        User        @relation(fields: [userId], references: [id])
+  userId      String?
+  orderId     String      @unique
+  fname       String?
+  lname       String?
+  phone       String?
+  email       String?
+  User        User?        @relation(fields: [userId], references: [id])
   products    Product[]
   status      OrderStatus @default(PENDING)
   address     Address?
@@ -100,6 +105,7 @@ model Order {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@index([orderId])
   @@index([promotionId])
 }
 
@@ -107,7 +113,7 @@ model ProductOrder {
   id        String  @id @default(uuid())
   orderId   String
   productId String
-  weight    Float   // Stores the weight of each product in an order
+  weight    Float  
 
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -144,7 +150,7 @@ model Promotion {
   id            String        @id @default(uuid())
   name          String
   promotionType PromotionType
-  code          String        @unique
+  code          String        
   categoryId    String?
   category      Category?     @relation(fields: [categoryId], references: [id]) // Relation to Category
   productId     String?

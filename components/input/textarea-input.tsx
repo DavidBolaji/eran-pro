@@ -15,7 +15,7 @@ const TextAreaInput: React.FC<InputProps> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(false);
+  const [hasValue, setHasValue] = useState(!!rest.value);
 
   const { className, onBlur, ...prop } = rest;
   prop.required = prop.required ? prop.required : false
@@ -48,7 +48,7 @@ const TextAreaInput: React.FC<InputProps> = ({
   );
 
   return (
-    <div className="relative w-full border pb-5 border-[#C8E0D2] bg-grey-200 rounded-2xl">
+    <div className={`relative w-full border pb-5 border-[#C8E0D2] bg-grey-200 rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -76,7 +76,7 @@ const TextAreaInput: React.FC<InputProps> = ({
         className={`absolute left-${
           leftIcon ? 20 : 3
         } top-3 black-300 text-nowrap pointer-events-none black-300 font-medium ${
-          isFocused || hasValue ? "text-base" : "text-sm"
+          isFocused || hasValue ? "text-[16px]" : "text-sm"
         }`}
       >
         {prop.placeholder} {prop.required && "*"}

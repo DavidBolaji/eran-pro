@@ -23,6 +23,24 @@ body > * {
   width: 500px !important; /* or any width you prefer */
 }
 
+.ant-dropdown-placement-bottomLeft {
+  min-width: 150px !important;
+}
+
+/* Custom styles for NProgress */
+#nprogress .bar {
+  background: #7DBA00 !important; /* Blue color */
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #7DBA00, 0 0 5px #7DBA00 !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #7DBA00 !important;
+  border-left-color: #7DBA00 !important;
+}
+
 /* Black color classes */
 .black-100 { color: #23342A; }
 .black-200 { color: #516158; }

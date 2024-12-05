@@ -25,8 +25,8 @@ export default async function CustomerEditPage({
   ]);
 
   return (
-    <div>
-      <div className=" lg:px-0 px-4">
+    <div className="p-4">
+      <div>
         <Crumb
           crumbData={[
             {

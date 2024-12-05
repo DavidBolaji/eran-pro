@@ -1,4 +1,3 @@
-// ProductTable.tsx
 'use client'
 
 import * as React from 'react'
@@ -10,6 +9,7 @@ import { Table, TableBody } from '@/components/ui/table'
 import { useTable } from '@/hooks/use-table'
 import { MainHeader } from '../main-header'
 import { Empty } from 'antd'
+import { filterPendingOrders } from '@/actions/get-orders'
 
 
 export default function PendingOrdersTable({
@@ -28,6 +28,9 @@ export default function PendingOrdersTable({
     onLoadMore,
     onSort,
     onSearch,
+    onFilter(form, params) {
+      filterPendingOrders(form, params)
+  },
   });
 
   return (

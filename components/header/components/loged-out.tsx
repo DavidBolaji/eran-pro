@@ -8,7 +8,7 @@ import { useUser } from "@/hooks/use-user";
 import { CartButton } from "@/components/button/cart-button";
 
 export const LogedOut = () => {
-  const { isLoggedIn } = useUser();
+  const { user } = useUser();
   const { toggleModal } = useLoginModal();
 
   const loginPopup = () => {
@@ -20,7 +20,7 @@ export const LogedOut = () => {
   };
 
   return (
-    !isLoggedIn() && (
+    !user && (
       <div className="flex items-center gap-4">
         <CartButton />
         <Button size="lg" iconL={LogInIcon} color="light" onClick={loginPopup}>

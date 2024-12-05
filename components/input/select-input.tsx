@@ -88,8 +88,9 @@ const SelectInput: React.FC<SelectProps> = ({
     className
   );
 
+
   return (
-    <div className="relative overflow-hidden h-12 group w-full border pr-2 border-[#C8E0D2] bg-grey-200 rounded-2xl">
+    <div className={`relative overflow-hidden h-12 group w-full border pr-2 border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -104,9 +105,11 @@ const SelectInput: React.FC<SelectProps> = ({
         onBlur={handleBlur}
         onChange={handleChange}  // Handle option selection
         className={selectStyle}
-        {...props}
+        defaultValue={rest.defaultValue}
+       
       >
         <option value="">{/* Empty option for placeholder */}</option>
+        {!isFocused && hasValue && <option value={rest.value} selected>{rest.value}</option>}
         {options?.map((option) => (
           <option
             className="text-black"
@@ -131,7 +134,7 @@ const SelectInput: React.FC<SelectProps> = ({
         className={`absolute black-300 font-medium ${
           leftIcon ? "left-6" : "left-3"
         } -top-2 text-nowrap text-sm pointer-events-none  ${
-          isFocused || hasValue ? "text-base" : "text-sm"
+          isFocused || hasValue ? "text-[16px]" : "text-sm"
         }`}
       >
         {placeholder} {props.required && "*"}

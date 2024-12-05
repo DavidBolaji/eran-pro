@@ -6,7 +6,7 @@ const FilterComponent = () => {
   const [selectedOption, setSelectedOption] = useState('1 Year');
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSelect = (option: any) => {
+  const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
   };

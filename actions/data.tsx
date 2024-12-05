@@ -23,6 +23,8 @@ export const productQuery = {
       select: {
         name: true,
         discount: true,
+        startDate: true,
+        endDate: true
       },
     },
   };

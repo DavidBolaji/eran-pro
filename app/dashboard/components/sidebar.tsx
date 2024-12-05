@@ -39,14 +39,6 @@ const items: MenuItem[] = [
     </div>
   ),
   getItem("Customers", "/dashboard/customers", <ICON.UsersIcon />),
-  getItem("Analytics", "/dashboard/analytics", <ICON.PieChartIcon />),
-  getItem(
-    "Notifications",
-    "/dashboard/notifications",
-    <div className="-ml-1">
-      <ICON.BellIcon />
-    </div>
-  ),
   getItem("Promotions", "/dashboard/promotions", <ICON.GiftIcon />),
   getItem("Content", "/dashboard/content", <ICON.FileIcon />),
 ];
