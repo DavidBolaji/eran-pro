@@ -8,10 +8,10 @@ import { useNotification } from "./use-notification";
 import { useSignIn, useSignUp, useSession } from "@clerk/nextjs";
 import { Address, Image, Product, User } from "@prisma/client";
 import { useLoginModal } from "./use-login-modal";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IUser } from "@/actions/get-customers";
 
-type UserType = Omit<
+export type UserType = Omit<
   User,
   "password" | "createdAt" | "updatedAt" | "status"
 > & {
@@ -31,6 +31,7 @@ export const useUser = () => {
   const { signUp } = useSignUp();
   const { isSignedIn, session } = useSession();
   const router = usePathname();
+  const route = useRouter();
 
   // Fetch user data
   const {
@@ -53,11 +54,17 @@ export const useUser = () => {
     [refetch]
   );
 
+  useEffect(() => {
+    if (user && user?.role === "ADMIN" && router === "/dashboard") {
+      route.push("/dashboard/home");
+    }
+  }, [user, router, route]);
+
   // Logout functionality
   const logout = useCallback(
     async (showNotification = true) => {
       try {
-        if (isSignedIn) await session.end();
+        // if (isSignedIn) await session.end();
         await Axios.post("/user/logout");
         queryClient.setQueryData(["USER"], null);
         debouncedRefetch(); // Use debounced version
@@ -75,7 +82,7 @@ export const useUser = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isSignedIn, session, queryClient, debouncedRefetch, toggleNotification]
+    [queryClient, debouncedRefetch, toggleNotification]
   );
 
   // Handle login with email/password
@@ -103,6 +110,36 @@ export const useUser = () => {
       });
     },
     onSettled: () => toggleModal(false, "LOGIN_MODAL"),
+  });
+
+
+  // Handle login with email/password
+  const adminLogin = useMutation({
+    mutationKey: ["ADMIN_LOGIN"],
+    mutationFn: async (data: { email: string; password: string }) => {
+      const response = await Axios.post("/user/login/admin", data);
+      return response.data.user;
+    },
+    onSuccess: async () => {
+     
+      toggleNotification({
+        show: true,
+        type: "success",
+        title: "Login Successful",
+        message: "User has successfully logged in",
+      });
+      // await new Promise(resolve => setTimeout(resolve, 1000))
+      await debouncedRefetch(); // Use debounced version
+      
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toggleNotification({
+        show: true,
+        type: "error",
+        title: "Login Error",
+        message: error.response?.data?.message || "Something went wrong",
+      });
+    },
   });
 
   // Handle registration
@@ -195,7 +232,8 @@ export const useUser = () => {
     login.isPending ||
     register.isPending ||
     update.isPending ||
-    createOrRegister.isPending;
+    createOrRegister.isPending ||
+    adminLogin.isPending;
 
   useEffect(() => {
     if (isSignedIn) {
@@ -217,7 +255,7 @@ export const useUser = () => {
   // Auto logout on 401 error
   useEffect(() => {
     if (error instanceof AxiosError && error.response?.status === 401) {
-      logout(false);
+      // logout(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
@@ -232,6 +270,7 @@ export const useUser = () => {
     logout,
     login: login.mutate,
     register: register.mutate,
+    adminLogin: adminLogin.mutate,
     update: update.mutate,
     isLoggedIn,
     googleLogin: () => handleGoogleAuth("login"),

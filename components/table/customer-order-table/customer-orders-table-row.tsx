@@ -7,6 +7,7 @@ import { formatToNaira } from "@/utils/helper";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import Link from "next/link";
 
 interface CustomerOrdersTableRowProps {
   orders: CustomerOrders;
@@ -39,6 +40,7 @@ export default function CustomerordersTableRow({
         </Badge>
       </TableCell>
       <TableCell className="pl-6 py-3">
+        <Link href={`/dashboard/orders/${orders?.id}`}>
         <Button
           size="sm"
           color="light"
@@ -46,6 +48,7 @@ export default function CustomerordersTableRow({
         >
           view
         </Button>
+        </Link>
       </TableCell>
     </TableRow>
   );

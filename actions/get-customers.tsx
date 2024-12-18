@@ -29,7 +29,7 @@ export interface IOrder {
 
 export type IUser = Omit<
   User,
-  "password" | "createdAt" | "updatedAt" | "status"
+  "password" | "createdAt" | "updatedAt" | "status" | "role"
 > & IOrder & { orderAddress: Address[] };
 
 export type ICustomer = {
@@ -63,8 +63,9 @@ export const getDashboardCustomers = async ({
   const skip = (page - 1) * limit;
 
   const whereClause: Prisma.UserWhereInput = {
+    AND: [
     // Filter users by orders containing products in specified categories (if provided)
-    ...(categories?.length && {
+    ...(categories?.length ? [{
       orders: {
         some: {
           products: {
@@ -76,11 +77,11 @@ export const getDashboardCustomers = async ({
           },
         },
       },
-    }),
+    }]: []),
   
     // Filter users by orders created within the date range (if provided)
     ...(startDate || endDate
-      ? {
+      ? [{
           orders: {
             some: {
               createdAt:
@@ -91,18 +92,17 @@ export const getDashboardCustomers = async ({
                   : { lte: endDate },
             },
           },
-        }
-      : {}),
+        }]
+      : []),
   
     // Add search query filter across multiple fields (if provided)
-    ...(searchQuery && {
+    ...(searchQuery ? [{
       OR: [
         { fname: { contains: searchQuery } },
-        { lname: { contains: searchQuery } },
         { email: { contains: searchQuery } },
-        { phone: { contains: searchQuery } },
       ],
-    }),
+    }] : []),
+  ]
   };
   
 
@@ -122,6 +122,7 @@ export const getDashboardCustomers = async ({
         email: true,
         phone: true,
         pic: true,
+        
         orders: {
           select: {
             id: true,
@@ -184,6 +185,7 @@ export const filterCustomer = (
   const dateTo = formData.get("dateTo") as string;
 
   const hasSelectedFilters = prodFilter.length > 0;
+  const searchQuery = params.get("searchQuery") as string;
 
   // Handle date range filters
   if (dateFrom) {
@@ -228,6 +230,14 @@ export const filterCustomer = (
     params.delete("sortOrder");
   }
 
+    // Handle search query
+    if (searchQuery) {
+      params.set("searchQuery", searchQuery);
+    } else {
+      params.delete("searchQuery");
+    }
+  
+
   // Check if there are any parameters left
   const newQuery = params.toString();
   if (newQuery) {
@@ -250,8 +260,8 @@ export const filterCustomerOrder = (
   path?: string
 ) => {
   // Extract base path and query string from the provided path
-  const [basePath, existingQueryString] = path?.split("?") || ["/dashboard/customers", ""];
-  const params = new URLSearchParams(existingQueryString || currentParams.toString());
+  // const [basePath, existingQueryString] = path?.split("?") || ["/dashboard/customers", ""];
+  const params = new URLSearchParams(currentParams);
 
   // Extract filters from the formData
   const paymentFilters = formData.getAll("Payment[]").filter(item => typeof item === "string") as string[];
@@ -281,10 +291,12 @@ export const filterCustomerOrder = (
   params.set("sortOrder", sortOrder);
 
   // Generate the final query string
+   // Generate the final query string
   const queryString = params.toString();
+  const destinationPath = path ? path : "/dashboard/customers";
 
   // Redirect to the new URL with updated parameters
-  redirect(queryString ? `${basePath}?${queryString}` : basePath);
+  redirect(queryString ? `${destinationPath}?${queryString}` : destinationPath);
 };
 
 
@@ -300,9 +312,6 @@ export const getDashboardCustomer = async (
 ): Promise<ICustomer> => {
   const { category = [], status = [] } = filters;
 
-  console.log('[CATEGORY]', category)
-  console.log('[STATUS]', status)
-
   // Build Prisma query filters for orders
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const orderFilters: any = {};
@@ -316,7 +325,13 @@ export const getDashboardCustomer = async (
   }
 
   // Fetch the customer with applied filters and sorting
-  const totalItems = await db.order.count({ where: orderFilters });
+  const totalItem = await db.order.count({
+    where: {
+      userId: id, // Add a condition to count orders only for the specific user
+      ...orderFilters, // Apply the provided order filters
+    },
+  });
+ 
   const customer = await db.user.findUnique({
     where: {
       id,
@@ -381,7 +396,7 @@ export const getDashboardCustomer = async (
   }
 
   const totalAmountSpent = customer.orders.reduce((acc, cur) => acc + cur.price, 0);
-
+  const totalItems = Math.ceil(totalItem / 7);
   return {
     totalOrders: customer.orders.length,
     totalAmountSpent,

@@ -24,9 +24,11 @@ export const HeroRightCard = () => {
         From whole chicken to gizzard to briskets and cow tail, we&apos;ve got
         all your favourites.
       </Typography>
-      <Button className="bg-black-600 black-100" size="lg" color="light">
-        Explore Categories
-      </Button>
+      <a className="" href="#orders">
+        <Button className="bg-black-600 black-100" size="lg" color="light">
+          Explore Categories
+        </Button>
+      </a>
       <Image
         className="absolute right-0 top-8"
         src={Images.Right2}

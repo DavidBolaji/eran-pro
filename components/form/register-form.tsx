@@ -1,5 +1,5 @@
 "use client";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
 import FormikNormalInput from "../input/formik-normal-input";
 import { ICON } from "@/constants/icon";
@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { useNotification } from "@/hooks/use-notification";
 import { useUser } from "@/hooks/use-user";
 import { useLoginModal } from "@/hooks/use-login-modal";
+import { Spinner } from "../spinner";
 
 export const RegisterValidation = Yup.object({
   password: Yup.string().required("Password is required"),
@@ -24,7 +25,7 @@ interface IRegister {
 
 export const RegisterForm = () => {
   const { toggleNotification } = useNotification();
-  const {toggleModal} = useLoginModal()
+  const { toggleModal } = useLoginModal();
   const { register } = useUser();
 
   const [type, setType] = useState<"password" | "text">("password");
@@ -33,12 +34,18 @@ export const RegisterForm = () => {
     if (type === "password") return setType("text");
     setType("password");
   };
+
   const togglePassword2 = () => {
-    if (type === "password") return setType2("text");
+    if (type2 === "password") return setType2("text");
     setType2("password");
   };
 
-  const onSubmit = (values: IRegister) => {
+  const onSubmit = async (
+    values: IRegister,
+    { setSubmitting }: FormikHelpers<IRegister>
+  ) => {
+    setSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 1000))
     RegisterValidation.validate(values)
       .then(() => {
         register({ email: values.email, password: values.password });
@@ -50,8 +57,9 @@ export const RegisterForm = () => {
           message: reason.message,
           show: true,
         });
-        toggleModal(false, "LOGIN_MODAL")
-      });
+        toggleModal(false, "LOGIN_MODAL");
+      })
+      .finally(() => setSubmitting(false));
   };
 
   return (
@@ -62,9 +70,12 @@ export const RegisterForm = () => {
         confirm_password: "",
       }}
       onSubmit={onSubmit}
+      enableReinitialize
+      validateOnChange
+      
     >
-      {({}) => (
-        <Form className="space-y-6 lg:w-[328px] w-full mx-auto pb-6 border-b">
+      {({ isSubmitting }) => (
+        <Form className="space-y-6 lg:w-[328px] w-full mx-auto pb-6">
           <Field
             as={FormikNormalInput}
             name="email"
@@ -111,8 +122,14 @@ export const RegisterForm = () => {
             align={-8}
             y={-14}
           />
-          <Button size="lg" color="dark" type="submit" className="w-full">
-            Create An Account
+          <Button
+            size="lg"
+            color={isSubmitting ? "light" : "dark"}
+            type="submit"
+            className={`w-full`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <Spinner /> : "Create An Account"}
           </Button>
         </Form>
       )}

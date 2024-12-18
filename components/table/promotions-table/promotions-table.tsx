@@ -8,22 +8,22 @@ import { useTable } from "@/hooks/use-table";
 import { MainHeader } from "../main-header";
 import { Table, TableBody } from "@/components/ui/table";
 import {  PromotionTableProps, Promotion } from "./types";
-import { filterOrder } from "@/actions/get-orders";
 import PromotionsTableHeader from "./promotions-table-header";
 import PromotionTableRow from "./promotions-table-row";
 import { Empty } from "antd";
+import { filterPromotions } from "@/actions/get-promotions";
+import { useDeleteModal } from "@/hooks/use-delete-modal";
 
 export default function PromotionsTable({
   initialPromotions = [],
   onLoadMore,
   onSort,
-  onSearch,
   totalPages,
   page,
   itemsPerPage,
   // categories
 }: PromotionTableProps) {
-  
+  const {toggleModal} = useDeleteModal()
   const {
     items,
     showFilters,
@@ -38,13 +38,20 @@ export default function PromotionsTable({
     selectedItems,
     isMobile,
     loading,
+    deleteMultiple,
+    handleSearch
   } = useTable<Promotion>({
     initialItems: initialPromotions,
     onLoadMore,
     onSort,
-    onSearch,
+    onSearch: (form, params) => {
+      filterPromotions(form, params)
+    },
     onFilter(form, params) {
-      filterOrder(form, params, "/dashboard/promotions")
+      filterPromotions(form, params)
+    },
+    async onDeleteMany(data) {
+      toggleModal(true, "DELETE_PROMOTIONS", data)
     },
   });
 
@@ -52,17 +59,22 @@ export default function PromotionsTable({
     <div className="w-full scrollbar-hide min-w-[1000px]">
       <MainHeader
         title={"Promotions"}
-        name={"Create New Promotion"}
+        name={"Create Promotion"}
         url={"/dashboard/promotions/add"}
         setShowFilters={setShowFilters}
         showFilters={showFilters}
-        onFilter={(form, params) => filterOrder(form, params, `/dashboard/orders`)}
+        onFilter={filterPromotions}
         filter
         calender
-        // categories={categories}
+        handleSearch={handleSearch}
+        placeholder="Search promotions by name or code"
+        action={deleteMultiple}
         search
         more
+        pType
+        pStatus
       />
+
       <div className="rounded-b-2xl border-t-0 bg-white scrollbar-hide  border border-[#DDEEE5]">
         <Table className=''>
           <PromotionsTableHeader
@@ -95,7 +107,7 @@ export default function PromotionsTable({
         totalPages={totalPages ?? 0}
         page={page ?? 1}
         itemsPerPage={itemsPerPage ?? 10}
-        onFilter={(form, params) => filterOrder(form, params, "/dashboard/orders")}
+        onFilter={filterPromotions}
       />
     </div>
   );

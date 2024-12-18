@@ -27,8 +27,8 @@ export const CustomerComponent: React.FC<ICustomerComponent> = ({
       <div className="md:my-0 my-6 ml-0.5 lg:px-0 overflow-x-scroll scrollbar-hide">
         <SelectedCustomerButtons
           customers={[
-            { name: "Details", id: "details", key: customer!.id },
-            { name: "Order History", id: "order", key: customer!.id },
+            { name: "Details", id: "details", key: customer?.id },
+            { name: "Order History", id: "order", key: customer?.id },
           ]}
           initialCustomerName={customerName}
         />

@@ -22,7 +22,7 @@ export default function PromotionTableRow({
   const router = useRouter();
   return (
     <TableRow className={selectedItems.has(promotion.id) ? "bg-black-600" : ""}>
-      <TableCell className="pl-6 py-3 flex mt-2 items-end h-full">
+      <TableCell className="pl-6 py-3 flex items-end h-full">
         <Checkbox
           checked={selectedItems.has(promotion.id)}
           onCheckedChange={() => toggleSelectItem(promotion.id)}
@@ -46,9 +46,9 @@ export default function PromotionTableRow({
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
         <Badge variant="outline" className={cn("capitalize rounded-full")}>
-          {isBefore(new Date(promotion.startDate), endOfToday()) &&
-          isAfter(new Date(promotion.endDate), startOfToday())
-            ? "Active"
+        { promotion.status ? "Active" : !(isBefore(new Date(promotion.startDate), endOfToday()) &&
+          isAfter(new Date(promotion.endDate), startOfToday()))
+            ? "Completed"
             : "Cancelled"}
         </Badge>
       </TableCell>

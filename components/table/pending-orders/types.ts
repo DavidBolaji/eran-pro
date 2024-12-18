@@ -2,6 +2,10 @@ import { Image } from "@prisma/client";
 
 export interface PendingOrders {
   id: string;
+  email: string;
+  fname: string;
+  lname: string;
+  phone: string;
   products: {
     id: string;
     name: string;

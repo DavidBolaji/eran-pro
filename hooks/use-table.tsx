@@ -1,23 +1,32 @@
-"use client"
+"use client";
 
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
+function debounce<T extends (...args: any[]) => void>(func: T, wait: number): T {
+  let timeout: NodeJS.Timeout | null = null;
+  return function (this: any, ...args: Parameters<T>) {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  } as T;
+}
+
 export const useTable = <T extends { id: string }>({
   initialItems,
   onLoadMore,
   onSearch,
-  onFilter
+  onFilter,
+  onDeleteMany
 }: {
   initialItems: T[];
   onLoadMore?: () => Promise<T[]>;
   onSort?: (column: keyof T, direction: "asc" | "desc") => void;
-  onSearch?: (query: string) => void;
-  onFilter?: (form:FormData, params: URLSearchParams, path?: string) => void
+  onSearch?: (form: FormData, params: URLSearchParams) => void;
+  onFilter?: (form: FormData, params: URLSearchParams, path?: string) => void;
+  onDeleteMany?: (data: Set<string>) => void;
 }) => {
   const searchParams = useSearchParams();
-  // Use generic type T for items
   const [items, setItems] = React.useState<T[]>(initialItems);
   const [sortColumn, setSortColumn] = React.useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">(
@@ -36,7 +45,6 @@ export const useTable = <T extends { id: string }>({
     if (inView && !loading && onLoadMore) {
       loadMore();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView, loading, onLoadMore]);
 
   React.useEffect(() => {
@@ -59,7 +67,7 @@ export const useTable = <T extends { id: string }>({
       sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
     setSortColumn(column);
     setSortDirection(direction);
-    // Create a new URLSearchParams instance and add sort params
+
     const params = new URLSearchParams(
       searchParams as unknown as Record<string, string>
     );
@@ -67,21 +75,34 @@ export const useTable = <T extends { id: string }>({
     params.set("sort", column as string);
     params.set("sortOrder", direction);
 
-    if(onFilter) {
+    if (onFilter) {
       if (path) {
         onFilter(new FormData(), params, path);
       } else {
-       onFilter(new FormData(), params);
+        onFilter(new FormData(), params);
       }
     }
-
-
   };
 
+  
+  const handleSearchDebounced = debounce(
+    (value: string) => {
+
+      const params = new URLSearchParams(
+        searchParams as unknown as Record<string, string>
+      );
+      const formData = new FormData();
+      params.set("searchQuery", value);
+
+      if (onSearch) {
+        onSearch(formData, params);
+      }
+    },
+    300 // Adjust the delay as needed
+  );
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onSearch) {
-      onSearch(e.target.value);
-    }
+    handleSearchDebounced(e.target.value);
   };
 
   const toggleSelectAll = () => {
@@ -104,6 +125,12 @@ export const useTable = <T extends { id: string }>({
     });
   };
 
+  const deleteMultiple = () => {
+    if (onDeleteMany) {
+      onDeleteMany(selectedItems);
+    }
+  };
+
   const allChecked = selectedItems.size === items.length;
 
   return {
@@ -121,5 +148,6 @@ export const useTable = <T extends { id: string }>({
     allChecked,
     sortColumn,
     loading,
+    deleteMultiple
   };
 };

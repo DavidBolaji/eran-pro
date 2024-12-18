@@ -1,5 +1,5 @@
 "use client";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import React, { useState } from "react";
 import FormikNormalInput from "../input/formik-normal-input";
 import { ICON } from "@/constants/icon";
@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { useNotification } from "@/hooks/use-notification";
 
 import { useLoginModal } from "@/hooks/use-login-modal";
+import { Spinner } from "../spinner";
 
 const LoginValidation = Yup.object().shape({
   email: Yup.string()
@@ -30,7 +31,12 @@ export const LoginForm = () => {
     setType("password");
   };
 
-  const onSubmit = (values: { email: string; password: string }) => {
+  const onSubmit = async (
+    values: { email: string; password: string },
+    { setSubmitting }: FormikHelpers<{ email: string; password: string }>
+  ) => {
+    setSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 1000))
     LoginValidation.validate(values)
       .then(() => {
         login({ email: values.email, password: values.password });
@@ -43,7 +49,9 @@ export const LoginForm = () => {
           show: true,
         });
         toggleModal(false, "LOGIN_MODAL");
-      });
+      }).finally(() => {
+        setSubmitting(false);
+      });;
   };
 
   return (
@@ -53,9 +61,11 @@ export const LoginForm = () => {
         password: "",
       }}
       onSubmit={onSubmit}
+      validateOnChange
+      enableReinitialize
     >
-      {({}) => (
-        <Form className="space-y-6 lg:w-[328px] w-full mx-auto pb-6 border-b">
+      {({ isSubmitting }) => (
+        <Form className="space-y-6 lg:w-[328px] w-full mx-auto pb-6">
           <Field
             as={FormikNormalInput}
             name="email"
@@ -83,8 +93,13 @@ export const LoginForm = () => {
             align={-2}
             y={-14}
           />
-          <Button size="lg" color="dark" type="submit" className="w-full">
-            Login To Your Account
+          <Button
+            size="lg"
+            color={isSubmitting ? "light" : "dark"}
+            type="submit"
+            className="w-full"
+          >
+            {isSubmitting ? <Spinner /> : "Login To Your Account"}
           </Button>
         </Form>
       )}

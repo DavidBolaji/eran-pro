@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 interface GetOrdersParams {
   categories?: string[];
+  status?: string[];
   page?: number;
   limit?: number;
   sort?: string; // default sorting field
@@ -116,7 +117,10 @@ export const filterOrder = (
     (formData.get("sortOrder") as string) || params.get("sortOrder") || "asc";
   const startDate = formData.get("dateFrom") as string;
   const endDate = formData.get("dateTo") as string;
-  const searchQuery = formData.get("searchQuery") as string;
+  const searchQuery = params.get("searchQuery") as string;
+  const status = formData
+    .getAll("Status[]")
+    .filter((item) => typeof item === "string") as string[];
 
   // Handle categories - Add or remove based on selection
   params.delete("category");
@@ -125,9 +129,25 @@ export const filterOrder = (
     params.set("page", "1"); // Reset to page 1 if categories change
   }
 
+  params.delete("status");
+  if (status.length > 0) {
+    status.forEach((status) => params.append("status", status));
+    params.set("page", "1"); // Reset to page 1 if categories change
+  }
+
   // Handle page - Maintain page if unchanged, reset to 1 otherwise
   if (
     categories.length === 0 &&
+    startDate === undefined &&
+    endDate === undefined &&
+    !searchQuery
+  ) {
+    params.delete("page"); // Remove if no filters are applied
+  } else {
+    params.set("page", page);
+  }
+  if (
+    status.length === 0 &&
     startDate === undefined &&
     endDate === undefined &&
     !searchQuery
@@ -170,6 +190,7 @@ export const filterOrder = (
 
 export const getDashboardOrder = async ({
   categories,
+  status,
   page = 1,
   limit = 7,
   sort = "createdAt", // default sorting field
@@ -197,16 +218,22 @@ export const getDashboardOrder = async ({
       },
     }),
 
+    ...(status?.length && {
+      status: {
+        in: status as []
+      },
+    }),
+
     // Filter users by orders created within the date range (if provided)
     ...(startDate || endDate
       ? {
-          createdAt:
-            startDate && endDate
-              ? { gte: startDate, lte: endDate }
-              : startDate
+        createdAt:
+          startDate && endDate
+            ? { gte: startDate, lte: endDate }
+            : startDate
               ? { gte: startDate }
               : { lte: endDate },
-        }
+      }
       : {}),
 
     // Add search query filter across multiple fields (if provided)
@@ -222,8 +249,8 @@ export const getDashboardOrder = async ({
     sort === "fname"
       ? { User: { fname: sortOrder as Prisma.SortOrder } }
       : sort === "phone"
-      ? { User: { phone: sortOrder as Prisma.SortOrder } }
-      : { [sort]: sortOrder as Prisma.SortOrder };
+        ? { User: { phone: sortOrder as Prisma.SortOrder } }
+        : { [sort]: sortOrder as Prisma.SortOrder };
 
   try {
     const totalItems = await db.order.count({ where: whereClause });
@@ -232,6 +259,11 @@ export const getDashboardOrder = async ({
       select: {
         id: true,
         orderId: true,
+        email: true,
+        fname: true,
+        lname: true,
+        phone: true,
+        address: true,
         products: {
           select: {
             id: true,
@@ -283,6 +315,10 @@ export const getSingleOrder = async (id: string) => {
       },
       select: {
         id: true,
+        email: true,
+        fname: true,
+        lname: true,
+        phone: true,
         orderId: true,
         products: {
           select: {
@@ -292,10 +328,14 @@ export const getSingleOrder = async (id: string) => {
             unit: true,
             price: true,
             ProductOrder: {
+              where: {orderId: id},
               select: {
                 orderId: true,
                 productId: true,
                 weight: true,
+                discount: true,
+                promotionId: true,
+                code: true
               },
             },
           },
@@ -308,6 +348,7 @@ export const getSingleOrder = async (id: string) => {
             fname: true,
             lname: true,
             phone: true,
+            email: true
           },
         },
         createdAt: true,
@@ -319,3 +360,13 @@ export const getSingleOrder = async (id: string) => {
     console.log((error as Error).message);
   }
 };
+
+export const deleteOrders = async (data: Set<string>) => {
+  await db.order.deleteMany({
+    where: {
+      id: {
+        in: Array.from(data)
+      }
+    }
+  })
+}

@@ -1,6 +1,7 @@
 "use client";
 import { IUser } from "@/actions/get-customers";
-import { editCustomerSchema } from "@/components/form/edit-customer-form";
+import { editCustomerSchema } from "@/components/form/validation";
+
 import { useNotification } from "@/hooks/use-notification";
 import { useUser } from "@/hooks/use-user";
 import { useQueryClient } from "@tanstack/react-query";

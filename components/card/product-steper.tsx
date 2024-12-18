@@ -6,13 +6,13 @@ import { Product } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback,  useEffect,  useState } from "react";
 
-const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
+const Stepper: React.FC<{ weight: number; product: IProduct | null }> = ({
   weight,
   product,
 }) => {
   const [value, setValue] = useState(weight);
   const queryClient = useQueryClient();
-  const stepValue = product.unit === "PER_KG" ? 0.5 : 1;
+  const stepValue = product?.unit === "PER_KG" ? 0.5 : 1;
 
   useEffect(()=> {
     setValue(weight)
@@ -23,7 +23,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
     setValue((prevValue) => {
       queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
         const newData = prev?.map((el) => {
-          if (el?.id === product.id) {
+          if (el?.id === product?.id) {
             return { ...el, weight: prevValue + stepValue };
           } else {
             return el;
@@ -40,7 +40,7 @@ const Stepper: React.FC<{ weight: number; product: IProduct }> = ({
     setValue((prevValue) => {
       queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
         const newData = prev.map((el) => {
-          if (el.id === product.id) {
+          if (el.id === product?.id) {
             return { ...el, weight: Math.max(0, prevValue - stepValue) };
           } else {
             return el;

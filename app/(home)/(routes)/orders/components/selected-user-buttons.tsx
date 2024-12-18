@@ -14,11 +14,13 @@ interface Customer {
 interface Props {
   customers: Customer[];
   initialCustomerName: string;
+  onTabChange?: (customerName: string) => void;
 }
 
 export const SelectedUserButtons: React.FC<Props> = ({
   customers,
   initialCustomerName,
+  onTabChange,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState(initialCustomerName);
 
@@ -28,6 +30,9 @@ export const SelectedUserButtons: React.FC<Props> = ({
   ) => {
     e.preventDefault();
     setSelectedCategory(customer.name);
+    
+    // Notify parent component about tab change
+    onTabChange?.(customer.name);
 
     // Submit the form to trigger server-side action
     const formData = new FormData(e.currentTarget);

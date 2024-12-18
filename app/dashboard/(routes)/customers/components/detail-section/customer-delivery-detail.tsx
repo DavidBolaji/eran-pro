@@ -9,13 +9,13 @@ export const CustomerDeliveryDetail: React.FC<{
       <Typography as="p" size="s1" align="left" className="mb-[14px] black-100">
         Delivery Details
       </Typography>
-      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4">
+      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4 mb-2">
         <div className="col-span-6">
           <Typography
             as="p"
             size="s2"
             align="left"
-            className="mb-2 black-300"
+            className="black-300"
           >
             Country
           </Typography>
@@ -33,7 +33,7 @@ export const CustomerDeliveryDetail: React.FC<{
             as="p"
             size="s2"
             align="left"
-            className="mb-2 black-300"
+            className="black-300"
           >
             State
           </Typography>
@@ -47,13 +47,13 @@ export const CustomerDeliveryDetail: React.FC<{
           </Typography>
         </div>
       </div>
-      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4">
+      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4 mb-2">
         <div className="col-span-6">
           <Typography
             as="p"
             size="s2"
             align="left"
-            className="mb-2 black-300"
+            className="black-300"
           >
             House number and street name
           </Typography>
@@ -71,7 +71,7 @@ export const CustomerDeliveryDetail: React.FC<{
             as="p"
             size="s2"
             align="left"
-            className="mb-2 black-300"
+            className="black-300"
           >
             Town/City
           </Typography>

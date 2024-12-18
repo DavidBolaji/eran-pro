@@ -29,7 +29,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Dashboard", "/dashboard", <ICON.GridIcon />),
+  getItem("Dashboard", "/dashboard/home", <ICON.GridIcon />),
   getItem("Products", "/dashboard/products", <ICON.TagIcon />),
   getItem(
     "Orders",

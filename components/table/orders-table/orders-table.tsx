@@ -11,17 +11,19 @@ import { Order, OrderTableProps } from "./types";
 import { filterOrder } from "@/actions/get-orders";
 import OrderTableHeader from "./orders-table-header";
 import OrderTableRow from "./orders-table-row";
+import { Empty } from "antd";
+import { useDeleteModal } from "@/hooks/use-delete-modal";
 
 export default function OrderTable({
   initialProducts = [],
   onLoadMore,
   onSort,
-  onSearch,
   totalPages,
   page,
   itemsPerPage,
   categories
 }: OrderTableProps) {
+  const {toggleModal} = useDeleteModal()
   const {
     items,
     showFilters,
@@ -36,13 +38,20 @@ export default function OrderTable({
     selectedItems,
     isMobile,
     loading,
+    deleteMultiple,
+    handleSearch
   } = useTable<Order>({
     initialItems: initialProducts,
     onLoadMore,
     onSort,
-    onSearch,
+    onSearch(form, params) {
+      filterOrder(form, params)
+    },
     onFilter(form, params) {
       filterOrder(form, params, "/dashboard/orders")
+    },
+    async onDeleteMany(data) {
+      toggleModal(true, "DELETE_ORDERS", data)
     },
   });
 
@@ -52,13 +61,16 @@ export default function OrderTable({
         title={"Orders"}
         name={"Create New Order"}
         url={"/dashboard/orders/add"}
+        placeholder="Search by order number and customer name"
         setShowFilters={setShowFilters}
         showFilters={showFilters}
         onFilter={(form, params) => filterOrder(form, params, `/dashboard/orders`)}
+        handleSearch={handleSearch}
         filter
         calender
-        categories={categories}
+        action={deleteMultiple}
         search
+        status
         more
       />
       <div className="rounded-b-2xl border-t-0 bg-white scrollbar-hide  border border-[#DDEEE5]">
@@ -81,6 +93,9 @@ export default function OrderTable({
             ))}
           </TableBody>
         </Table>
+        {items?.length < 1 && <div className="py-8">
+          <Empty />
+        </div>}
       </div>
 
       <Pagination

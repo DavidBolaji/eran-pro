@@ -15,7 +15,12 @@ export default async function CustomerPage({
   searchParams: CustomerPageSearchParams;
 }) {
 
-  const categories = searchParams.category?.split(",") || [];
+  // const categories = searchParams.category?.split(",") || [];
+  const categories = Array.isArray(searchParams.category)
+  ? searchParams.category
+  : searchParams.category
+  ? [searchParams.category]
+  : []; 
   const page = parseInt(searchParams.page) || 1;
   const limit = parseInt(searchParams.limit) || 7;
   const sort = searchParams.sort || "createdAt";
@@ -24,8 +29,6 @@ export default async function CustomerPage({
   const endDate = searchParams.dateTo || "";
   const searchQuery = searchParams.searchQuery || "";
 
-  console.log('[START_DATE]', startDate)
-  console.log('[END_DATE]', endDate)
   // Fetch customer data and category list
   const customerRequest = getDashboardCustomers({
     categories: categories.map((el) => el.toLowerCase()),

@@ -16,7 +16,6 @@ export default function CustomerTable({
   initialCustomers = [],
   onLoadMore,
   onSort,
-  onSearch,
   totalPages,
   page,
   itemsPerPage,
@@ -31,6 +30,7 @@ export default function CustomerTable({
     handleSort,
     sortColumn,
     sortDirection,
+    handleSearch,
     toggleSelectAll,
     toggleSelectItem,
     selectedItems,
@@ -40,7 +40,9 @@ export default function CustomerTable({
     initialItems: initialCustomers,
     onLoadMore,
     onSort,
-    onSearch,
+    onSearch: (form, params) => {
+      filterCustomer(form, params)
+    },
     onFilter(form, params, path) {
         filterCustomer(form, params, path)
     },
@@ -50,16 +52,15 @@ export default function CustomerTable({
     <div className="w-full scrollbar-hide">
       <MainHeader
         title={"Customer List"}
-        name={"Add Customer"}
-        url={"/dashboard/customers/add"}
         setShowFilters={setShowFilters}
         onFilter={filterCustomer}
         showFilters={showFilters}
+        placeholder="Search customer by name and email"
         categories={categories}
+        handleSearch={handleSearch}
         filter
         calender
         search
-        more
       />
       <div className="rounded-b-2xl border-t-0 bg-white overflow-hidden border border-[#DDEEE5]">
         <Table>

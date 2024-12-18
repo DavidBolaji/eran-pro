@@ -93,7 +93,7 @@ export const BillingForm = () => {
             country={"country"}
             address={"address"}
             align={-12}
-            align2={-4}
+            align2={-33}
           />
           <Typography as="h6" size="h6" align="left" className="black-100">
             Additional Information

@@ -50,6 +50,7 @@ const LocationComponent: React.FC<{
             }}
             disabled={disabled}
             align={align}
+            y={7}
           />
         </div>
 
@@ -71,6 +72,7 @@ const LocationComponent: React.FC<{
             }}
             disabled={disabled}
             align={align}
+            y={7}
           />
         </div>
       </div>
@@ -91,6 +93,7 @@ const LocationComponent: React.FC<{
               setFieldTouched(cName!);
             }}
             align={align}
+            y={7}
           />
         </div>
 
@@ -107,6 +110,7 @@ const LocationComponent: React.FC<{
             }}
             align={lg ? -25 : -30}
             rows={-2}
+            y={-14}
           />
         </div>
       </div>

@@ -8,17 +8,20 @@ import React from "react";
 import { Product } from "./types";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ProductTableRowProps {
   product: Product;
   selectedItems: Set<string>;
   toggleSelectItem: (id: string) => void;
+  deleteOne?: (data: Set<string>) => void;
 }
 
 export default function ProductTableRow({
   product,
   selectedItems,
   toggleSelectItem,
+  deleteOne
 }: ProductTableRowProps) {
 
   return (
@@ -60,13 +63,19 @@ export default function ProductTableRow({
       </TableCell>
       <TableCell className="py-3">
         <div className="flex">
-          <Button variant={'ghost'}>
+          {/* <Button variant={'ghost'}>
             <Eye className="w-4 h-4 black-100" />
-          </Button>
+          </Button> */}
+          <Link href={`/dashboard/products/edit/${product?.id}`}>
           <Button variant={'ghost'}>
-            <Edit className="w-4 h-4 black-100" />
+            <Edit className="w-4 h-4 black-100" /> 
           </Button>
-          <Button variant={'ghost'}>
+          </Link>
+          <Button variant={'ghost'} onClick={() => {
+            if(deleteOne) {
+              deleteOne(new Set([product.id]))
+            }
+          }}>
             <Trash2 className="w-4 h-4 black-100" />
           </Button>
         </div>

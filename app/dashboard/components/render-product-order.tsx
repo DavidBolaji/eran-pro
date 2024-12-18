@@ -1,3 +1,4 @@
+
 import React from "react";
 import { SideCards } from "./side-cards";
 import FilterComponent from "./filter-component";
@@ -7,10 +8,10 @@ import db from "@/db/db";
 import { Empty } from "antd";
 import { Prisma } from "@prisma/client";
 
-export const RenderProductOrder: React.FC<{
+export const RenderProductOrder = async ({ sort, sortOrder }: {
   sort: string;
   sortOrder: string;
-}> = async ({ sort, sortOrder }) => {
+}) => {
   const orderBy:Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[] | undefined =
     sort === "fname"
       ? {
@@ -32,6 +33,10 @@ export const RenderProductOrder: React.FC<{
     },
     select: {
       id: true,
+      email: true,
+      fname: true,
+      lname: true,
+      phone:true,
       products: {
         select: {
           id: true,

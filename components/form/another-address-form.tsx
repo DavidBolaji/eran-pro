@@ -8,11 +8,12 @@ import FormikTextAreaInput from "../input/formik-textarea-input";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Checkbox } from "../ui/checkbox";
-export const initialIValLogedIn = {
-  email: "",
-  phone: "",
-  fname: "",
-  lname: "",
+import { UserType, useUser } from "@/hooks/use-user";
+export const initialIValLogedIn = (user: UserType) => ({
+  email: user?.email ?? "",
+  phone: user?.phone ?? "",
+  fname: user?.fname ?? "",
+  lname: user?.lname ?? "",
   country: "",
   state: "",
   city: "",
@@ -21,13 +22,17 @@ export const initialIValLogedIn = {
   password: "",
   save: false,
   default: false,
-};
+});
 
 export const AnotherAddressForm = () => {
   const queryClient = useQueryClient();
+  const {user} = useUser()
+  // Call the function to get the initial values object
+  const initialValues = initialIValLogedIn(user as UserType);
+
   return (
     <Formik
-      initialValues={initialIValLogedIn}
+      initialValues={initialValues}
       validate={(values) => {
         const errors = {};
         queryClient.setQueryData(["ORDER_BILLING_LOGEDIN"], values);
@@ -44,12 +49,14 @@ export const AnotherAddressForm = () => {
               name="email"
               placeholder="Email"
               align={-3}
+              y={-14}
             />
             <Field
               as={FormikNormalInput}
               name="phone"
               placeholder="Phone"
               align={-3}
+              y={-14}
             />
             <div className="grid grid-cols-10 gap-x-4">
               <div className="col-span-5">
@@ -58,7 +65,8 @@ export const AnotherAddressForm = () => {
                   name="fname"
                   placeholder="First Name"
                   align={-7}
-                />
+                  y={-14}
+                  />
               </div>
               <div className="col-span-5">
                 <Field
@@ -66,6 +74,7 @@ export const AnotherAddressForm = () => {
                   name="lname"
                   placeholder="Last name"
                   align={-7}
+                  y={-14}
                 />
               </div>
             </div>
@@ -122,7 +131,7 @@ export const AnotherAddressForm = () => {
             name="extra"
             rows={5}
             placeholder="Provide additional information about the delivery"
-            align={-42}
+            align={-50}
           />
         </Form>
       )}

@@ -33,6 +33,16 @@ export default async function OrdersPage({
   const endDate = searchParams.dateTo || "";
   const searchQuery = searchParams.searchQuery || "";
   const promotionStatus = searchParams.promotionStatus || "";
+  const pStat = Array.isArray(searchParams.pStat)
+  ? searchParams.pStat
+  : searchParams.pStat
+  ? [searchParams.pStat]
+  : [];
+  const promoT = Array.isArray(searchParams.promoT)
+  ? searchParams.promoT
+  : searchParams.promoT
+  ? [searchParams.promoT]
+  : [];
 
   const req = await getDashboardPromotion({
     categories: categories.map((el) => el.toLowerCase()),
@@ -44,6 +54,8 @@ export default async function OrdersPage({
     startDate,
     endDate,
     searchQuery,
+    pStat: pStat.map((el) => el.toLowerCase()),
+    promoT: promoT.map((el) => el.toLowerCase())
   });
 
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useNotification } from "@/hooks/use-notification";
 import { useUser } from "@/hooks/use-user";
@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/use-user";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const IsAuth = () => {
+export const IsAuth: React.FC<{ admin?: boolean }> = ({ admin = false }) => {
   const { user } = useUser();
   const { toggleNotification } = useNotification();
   const router = useRouter();
@@ -21,7 +21,7 @@ export const IsAuth = () => {
         type: "info",
       });
     }
-  }, [router, user, toggleNotification]);
+  }, [user]);
 
   return null;
 };

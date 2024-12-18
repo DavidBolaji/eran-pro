@@ -23,8 +23,6 @@ export const ShoppingComponent: React.FC<{
     }
   };
 
-  console.log(JSON.stringify(products, null, 2))
-
   return (
     <>
       <Wrapper>

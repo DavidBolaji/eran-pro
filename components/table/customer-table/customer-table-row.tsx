@@ -9,6 +9,7 @@ import { Button } from "@/components/button/button";
 import { formatDate } from "@/utils/helper";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Avatar } from "@/components/avatar/avatar";
 
 interface CustomerTableRowProps {
   customer: Customer;
@@ -33,7 +34,7 @@ export default function CustomerTableRow({
       </TableCell>
       <TableCell className="pl-6 py-3">
         <div className="flex items-center gap-3">
-          {customer?.pic && (
+          {customer?.pic ? (
             <Image
               src={customer?.pic ?? ""}
               alt={customer.fname + " avatar"}
@@ -41,9 +42,11 @@ export default function CustomerTableRow({
               height={40}
               className="rounded-full object-cover"
             />
-          )}
+          ) : <Avatar size="sm" src={customer.fname ? `https://avatar.iran.liara.run/username?username=${customer?.fname + "" + customer?.lname}
+
+`: undefined} />}
           <span className="font-bold text-sm  black-100">
-            {customer.fname} {customer.lname}
+            {customer.fname} {customer.lname} {(customer?.fname?.length ?? 0) < 1 ? "-" : null}
           </span>
         </div>
       </TableCell>
@@ -51,13 +54,13 @@ export default function CustomerTableRow({
         {customer?.email}
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
-        {customer?.phone}
+        {customer?.phone ? customer.phone : "-"}
       </TableCell>
       <TableCell className="pl-6 flex justify-center items-center font-bold text-sm black-100">
-        <div className={selectedItems.has(customer.id) ? "" : "translate-y-2"}>{customer?.totalOrders}</div>
+        <div className={selectedItems.has(customer.id) ? "" : "-translate-y-1"}>{customer?.totalOrders}</div>
       </TableCell>
       <TableCell className="pl-6 font-bold text-sm black-100">
-        {formatDate(customer?.lastOrderDate.toLocaleDateString())}
+        {customer?.lastOrderDate.toLocaleDateString() === "1/1/1970" ? "-" : formatDate(customer?.lastOrderDate.toLocaleDateString())}
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
         <Badge variant="outline" className={cn("capitalize rounded-full")}>

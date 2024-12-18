@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useState, FocusEvent, InputHTMLAttributes } from "react";
+import React, { useState, FocusEvent, InputHTMLAttributes, useEffect } from "react";
 import { motion } from "framer-motion";
 import classNames from "classnames";
 
@@ -9,8 +9,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   align?: number;
-  naira?: boolean
-  y?: number
+  naira?: boolean;
+  y?: number;
 }
 
 const NormalInput: React.FC<InputProps> = ({
@@ -21,10 +21,12 @@ const NormalInput: React.FC<InputProps> = ({
   naira = false,
   ...rest
 }) => {
-  
   const [isFocused, setIsFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(!!rest.value);
-  // alert(rest.type)
+  const [hasValue, setHasValue] = useState(!!rest.value || !!rest.defaultValue);
+
+    useEffect(() => {
+      setHasValue(!!rest.value || !!rest.defaultValue);
+    }, [rest.value, rest.defaultValue]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { className, placeholder, onBlur, ...props } = rest;
@@ -60,7 +62,11 @@ const NormalInput: React.FC<InputProps> = ({
   };
 
   return (
-    <div className={`relative h-12 w-full overflow-hidden border border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
+    <div
+      className={`relative h-12 w-full overflow-hidden border border-[#C8E0D2] rounded-2xl ${
+        hasValue ? "bg-grey-100" : "bg-grey-200"
+      }`}
+    >
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -101,24 +107,25 @@ const NormalInput: React.FC<InputProps> = ({
         >
           {placeholder} {props.required && "*"}
         </motion.label>
-      ): <motion.label
-      key={props.name}
-      initial={{ y: 0, scale: 1, x: 0 }}
-      animate={{
-        y: y ? y : 0,
-        x: align ? align : leftIcon ? 10 : 0,
-        scale: 0.7,
-      }}
-      transition={{ type: "linear", stiffness: 200 }}
-      className={`absolute ${
-        leftIcon ? "left-6" : "left-3"
-      } top-3 black-300 text-sm pointer-events-none ${
-        isFocused || hasValue ? "text-[16px]" : "text-sm"
-      } ${naira ? "pl-10" : "text-sm"}`}
-    >
-      {placeholder} {props.required && "*"}
-    </motion.label> }
-      
+      ) : (
+        <motion.label
+          key={props.name}
+          initial={{ y: 0, scale: 1, x: 0 }}
+          animate={{
+            y: y ? y : 0,
+            x: align ? align : leftIcon ? 10 : 0,
+            scale: 0.7,
+          }}
+          transition={{ type: "linear", stiffness: 200 }}
+          className={`absolute ${
+            leftIcon ? "left-6" : "left-3"
+          } top-3 black-300 text-sm pointer-events-none ${
+            (isFocused || hasValue) ? "text-[16px]" : "text-sm"
+          } ${naira ? "pl-10" : "text-sm"}`}
+        >
+          {placeholder} {props.required && "*"}
+        </motion.label>
+      )}
 
       {/* Right Icon */}
       {rightIcon && (

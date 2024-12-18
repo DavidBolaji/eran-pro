@@ -69,24 +69,51 @@ export const errorMessage = {
     "Promotion end time field must be filled in order to create a promotion",
 };
 
-export const addWeightToProducts = (order: Order | null) => {
+export const addWeightToProducts =  (order: Order  & {code: string[]} | null)  => {
   if (!order || !order.products) return order;
-
-  // Process each product to include the correct weight
+  
+  let code: string[] = [];
+  
+  // Process each product to include the correct weight and apply discount
   const productsWithWeight = order.products.map((product) => {
     // Find the ProductOrder entry that matches the order and product
     const productOrder = product?.ProductOrder?.find(
       (po) => po.orderId === order.id && po.productId === product.id
     );
+   const step = product.unit === "PER_ITEM" ? 1 : 0.5;
+   const prog = (productOrder?.weight || 0) / step
+    const discount = ((productOrder?.discount || 0)/100) * product.price;
 
+    if (productOrder?.code) {
+      code.push(productOrder?.code)
+    }
+    
+    
+    // Return the product with the calculated weight and total discount
     return {
       ...product,
       weight: productOrder?.weight || 0, // Default weight to 0 if not found
+      discount: discount * prog,           // Combined product and promotion discount
+      code: productOrder?.code,                   // Include the promotion code
     };
   });
 
   return {
     ...order,
     products: productsWithWeight,
+    code
   };
 };
+
+  // if (productOrder?.promotionId) {
+    //   const promotion = await db.promotion.findUnique({
+    //     where: { id: productOrder.promotionId },
+    //     select: { code: true, discount: true, status:  },
+    //   });
+
+    //   // if (promotion && promotion.status && promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
+    //     // If the promotion is valid, apply its discount
+    //     promotionCode = promotion?.code ?? ""; // Store the promotion code
+    //     totalDiscount += promotion?.discount ?? 0; // Add the promotion discount
+    //   // }
+    // }

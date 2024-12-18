@@ -24,9 +24,15 @@ export const PromotionItemForm = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProduct[] | null>(null);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const queryClient = useQueryClient()
-
+  
+  const cachedSelectedCategories = queryClient.getQueryData<{key: string; label: string; value: string}[]>([
+    "SELECT_ITEM",
+  ]);
+  
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    cachedSelectedCategories?.map((cat) => cat.value) || []
+  );
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {

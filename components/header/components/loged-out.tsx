@@ -23,10 +23,10 @@ export const LogedOut = () => {
     !user && (
       <div className="flex items-center gap-4">
         <CartButton />
-        <Button size="lg" iconL={LogInIcon} color="light" onClick={loginPopup}>
+        <Button size="lg" iconL={LogInIcon} color="light" onClick={loginPopup} className="hidden md:flex">
           Sign In
         </Button>
-        <Button size="lg" color="dark" iconL={UserIcon} onClick={registerPopup}>
+        <Button size="lg" color="dark" iconL={UserIcon} onClick={registerPopup} className="hidden md:flex">
           Create An Account
         </Button>
       </div>

@@ -23,6 +23,7 @@ export const ProductDashboardForm = () => {
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 5000))
     try {
       if (selected) {
         const products = await getProducts(selected);
@@ -41,7 +42,10 @@ export const ProductDashboardForm = () => {
     debounce(async (query: string) => {
       setLoading(true);
       try {
-        if (query) {
+        if (query.trim().length === 0) {
+          // Refetch all products when search input is empty
+          await fetchProducts();
+        } else {
           const products = await getProductsByQuery(query);
           setProducts(products);
         }
@@ -51,12 +55,12 @@ export const ProductDashboardForm = () => {
         setLoading(false);
       }
     }, 300),
-    [] // Ensure debounce itself doesn't depend on anything
+    [fetchProducts] // Add fetchProducts as a dependency
   );
 
   // Query products when the search state changes
   useEffect(() => {
-    if (search) {
+    if (search || search.trim().length === 0) {
       debouncedQueryProducts(search);
     }
 
@@ -76,7 +80,7 @@ export const ProductDashboardForm = () => {
     <>
       <Formik
         initialValues={{
-          categoryId: "All categories",
+          categoryId: "1",
           search: "",
         }}
         onSubmit={() => {}}
@@ -92,12 +96,13 @@ export const ProductDashboardForm = () => {
               options={category || []}
               placeholder="Select category"
               align={-13}
+              y={10}
               defaultValue={values.categoryId}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setSelected(e.target.value);
                 setFieldValue(
                   "categoryId",
-                  category?.find((el) => el.value === e.target.value)?.label
+                  category?.find((el) => el.value === e.target.value)?.value
                 );
               }}
               // value={values.categoryId}
@@ -127,6 +132,9 @@ export const ProductDashboardForm = () => {
             />
           ))}
           {!loading && !products?.length && <Empty />}
+          {loading && Array.from({ length: 3 }).map((_, idx) => (
+            <CartProductDashboardCard key={idx} loading />
+          ))}
       </div>
 
     </>

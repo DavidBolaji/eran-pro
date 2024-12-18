@@ -1,4 +1,3 @@
-// ProductTable.tsx
 "use client";
 
 import * as React from "react";
@@ -9,18 +8,20 @@ import { useTable } from "@/hooks/use-table";
 import { MainHeader } from "../main-header";
 import { Table, TableBody } from "@/components/ui/table";
 import { Product, ProductTableProps } from "./types";
-import { filterProduct } from "@/actions/get-products";
+import {  filterProduct } from "@/actions/get-products";
+import { Empty } from "antd";
+import { useDeleteModal } from "@/hooks/use-delete-modal";
 
 export default function ProductTable({
   initialProducts = [],
   onLoadMore,
   onSort,
-  onSearch,
   totalPages,
   page,
   itemsPerPage,
   categories
 }: ProductTableProps) {
+  const {toggleModal} = useDeleteModal()
   const {
     items,
     showFilters,
@@ -35,13 +36,20 @@ export default function ProductTable({
     selectedItems,
     isMobile,
     loading,
+    deleteMultiple,
+    handleSearch
   } = useTable<Product>({
     initialItems: initialProducts,
     onLoadMore,
     onSort,
-    onSearch,
+    onSearch(form, params) {
+      filterProduct(form, params)
+    },
     onFilter(form, params, path) {
       filterProduct(form, params, path)
+    },
+    async onDeleteMany(data) {
+      toggleModal(true, "DELETE_PRODUCT", data)
     },
   });
 
@@ -54,7 +62,9 @@ export default function ProductTable({
         setShowFilters={setShowFilters}
         showFilters={showFilters}
         onFilter={filterProduct}
+        handleSearch={handleSearch}
         categories={categories}
+        action={deleteMultiple}
         filter
         search
         more
@@ -75,10 +85,14 @@ export default function ProductTable({
                 product={product}
                 selectedItems={selectedItems}
                 toggleSelectItem={toggleSelectItem}
+                deleteOne={(data) => toggleModal(true, "DELETE_PRODUCT", data)}
               />
             ))}
           </TableBody>
         </Table>
+        {items?.length < 1 && <div className="py-8">
+          <Empty />
+        </div>}
       </div>
 
       <Pagination

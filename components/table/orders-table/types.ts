@@ -2,6 +2,10 @@ import { Address, Category, Image } from "@prisma/client";
 
 export interface Order {
   id: string;
+  fname: string;
+  lname: string;
+  phone: string;
+  email?: string;
   products: {
     id: string;
     name: string;
@@ -12,6 +16,9 @@ export interface Order {
      orderId: string; 
      productId: string
      weight: number;
+     discount: number; // Store the discount applied at the time of order
+     promotionId: string;
+     code: string
     }[] | null;
   }[];
   User: {

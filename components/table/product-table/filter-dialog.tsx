@@ -10,7 +10,7 @@ import { DateRange } from "react-day-picker";
 import { FilterCollapse } from "./filter-collapse";
 import { Category } from "@prisma/client";
 import { X } from "lucide-react";
-import {} from "date-fns";
+import { } from "date-fns";
 
 interface FilterDialogProps {
   open: boolean;
@@ -20,6 +20,9 @@ interface FilterDialogProps {
   calender?: boolean;
   payment?: boolean;
   status?: boolean;
+  pStatus?: boolean;
+  pType?: boolean;
+  orderStatus?: boolean;
 }
 
 export default function FilterDialog({
@@ -30,6 +33,9 @@ export default function FilterDialog({
   calender,
   payment,
   status,
+  orderStatus,
+  pStatus,
+  pType
 }: FilterDialogProps) {
   const searchParams = useSearchParams();
   const btnRef = useRef<HTMLButtonElement | null>(null);
@@ -56,7 +62,9 @@ export default function FilterDialog({
   }, [searchParams]);
 
   const isChecked = (name: string, value: string) => {
+    // console.log(name, value)
     const paramValues = searchParams.getAll(name); // Get all values for the parameter
+    // console.log(paramValues)
     return paramValues.includes(value); // Check if the value is in the list
   };
 
@@ -68,6 +76,7 @@ export default function FilterDialog({
       if (adjustedFrom) adjustedFrom.setDate(adjustedFrom.getDate() + 1);
       if (adjustedTo) adjustedTo.setDate(adjustedTo.getDate() + 1);
       formData.append("dateFrom", adjustedFrom?.toISOString() || "");
+      formData.append("dateTo", adjustedTo?.toISOString() || "");
       formData.append("dateTo", adjustedTo?.toISOString() || "");
     }
     onFilter(formData, searchParams);
@@ -120,148 +129,234 @@ export default function FilterDialog({
         <form action={handleFilter}>
           <FilterCollapse
             data={[
+              ...(status
+                ? [
+                  {
+                    key: "8",
+                    label: "Status",
+                    children: (
+                      <div className="pt-2">
+                        <div className="space-y-2">
+                          {[
+                            { id: "478894", name: "Pending" },
+                            { id: "478894", name: "Delivered" },
+                            { id: "478894", name: "Canceled" },
+                          ]?.map((status) => (
+                            <div
+                              key={status.id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={status.name.toLowerCase()}
+                                name="Status[]"
+                                value={status.name}
+                                defaultChecked={isChecked(
+                                  `status`,
+                                  status.name
+                                )}
+                              />
+                              <label
+                                htmlFor={status.name.toLowerCase()}
+                                className="text-sm leading-5 font-medium"
+                              >
+                                {status.name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        {/* <button className="hidden" type="submit" ref={btnRef} /> */}
+                      </div>
+                    ),
+                  },
+                ]
+                : []),
+
               ...(categories
                 ? [
+                  {
+                    key: "1",
+                    label: "Categories",
+                    children: (
+                      <div className="pt-2">
+                        <div className="space-y-2">
+                          {categories?.map((category) => (
+                            <div
+                              key={category.id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={category.name.toLowerCase()}
+                                name="Categories[]"
+                                value={category.name}
+                                defaultChecked={isChecked(
+                                  `category`,
+                                  category.name
+                                )}
+                              />
+                              <label
+                                htmlFor={category.name.toLowerCase()}
+                                className="text-sm leading-5 font-medium"
+                              >
+                                {category.name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ),
+                  },
+                ]
+                : []),
+
+                ...(pStatus
+                  ? [
                     {
-                      key: "1",
-                      label: "Categories",
+                      key: "3903",
+                      label: "Promotion status",
                       children: (
                         <div className="pt-2">
                           <div className="space-y-2">
-                            {categories?.map((category) => (
+                            {[
+                              { id: "45656", name: "Active" },
+                              { id: "7856", name: "Complete" },
+                              { id: "785678", name: "Cancelled" },
+                            ]?.map((stat) => (
                               <div
-                                key={category.id}
+                                key={stat.id}
                                 className="flex items-center space-x-2"
                               >
+                               
                                 <Checkbox
-                                  id={category.name.toLowerCase()}
-                                  name="Categories[]"
-                                  value={category.name}
+                                  id={stat.name.toLowerCase()}
+                                  name="Pstat[]"
+                                  value={stat.name}
                                   defaultChecked={isChecked(
-                                    `category`,
-                                    category.name
+                                    `pStat`,
+                                    stat.name
                                   )}
                                 />
                                 <label
-                                  htmlFor={category.name.toLowerCase()}
+                                  htmlFor={stat.name.toLowerCase()}
                                   className="text-sm leading-5 font-medium"
                                 >
-                                  {category.name}
+                                  {stat.name}
                                 </label>
                               </div>
                             ))}
                           </div>
+                          {/* <button className="hidden" type="submit" ref={btnRef} /> */}
                         </div>
                       ),
                     },
                   ]
+                  : []),
+                  
+              ...(pType
+                ? [
+                  {
+                    key: "2829",
+                    label: "Promotion Type",
+                    children: (
+                      <div className="pt-2">
+                        <div className="space-y-2">
+                          {[
+                            { id: "56", name: "Category" },
+                            { id: "75", name: "Item" },
+                          ]?.map((promo) => (
+                            <div
+                              key={promo.id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={promo.name.toLowerCase()}
+                                name="PromoT[]"
+                                value={promo.name}
+                                defaultChecked={isChecked(
+                                  `promoT`,
+                                  promo.name
+                                )}
+                              />
+                              <label
+                                htmlFor={promo.name.toLowerCase()}
+                                className="text-sm leading-5 font-medium"
+                              >
+                                {promo.name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        {/* <button className="hidden" type="submit" ref={btnRef} /> */}
+                      </div>
+                    ),
+                  },
+                ]
                 : []),
 
               ...(calender
                 ? [
-                    {
-                      key: "2",
-                      label: "Last order date range",
-                      children: (
-                        <div className="-ml-4 scale-[0.95] translate-y-2">
-                          <Calendar
-                            initialFocus
-                            mode="range"
-                            defaultMonth={date?.from}
-                            selected={date}
-                            onSelect={setDate}
-                            numberOfMonths={1}
-                            // fromYear={2000} // Set your desired start year here
-                            // toYear={2030} // Set your desired end year here
-                            // captionLayout="dropdown-buttons" // Enables dropdowns for month/year
-                            className="w-full max-w-lg" // Adjust width as needed
-                          />
-                        </div>
-                      ),
-                    },
-                  ]
+                  {
+                    key: "2",
+                    label: pType ? "Date range": "Last order date range",
+                    children: (
+                      <div className="-ml-4 scale-[0.95] translate-y-2">
+                        <Calendar
+                          initialFocus
+                          mode="range"
+                          defaultMonth={date?.from}
+                          selected={date}
+                          onSelect={setDate}
+                          numberOfMonths={1}
+                          // fromYear={2000} // Set your desired start year here
+                          // toYear={2030} // Set your desired end year here
+                          // captionLayout="dropdown-buttons" // Enables dropdowns for month/year
+                          className="w-full max-w-lg" // Adjust width as needed
+                        />
+                      </div>
+                    ),
+                  },
+                ]
                 : []),
+
               ...(payment
                 ? [
-                    {
-                      key: "3",
-                      label: "Categories",
-                      children: (
-                        <div className="pt-2">
-                          <div className="space-y-2">
-                            {[
-                              { id: "45656", name: "Debit Card" },
-                              { id: "7856", name: "Pay on Delivery" },
-                            ]?.map((payment) => (
-                              <div
-                                key={payment.id}
-                                className="flex items-center space-x-2"
+                  {
+                    key: "39028",
+                    label: "Categories",
+                    children: (
+                      <div className="pt-2">
+                        <div className="space-y-2">
+                          {[
+                            { id: "45656", name: "Debit Card" },
+                            { id: "7856", name: "Pay on Delivery" },
+                          ]?.map((payment) => (
+                            <div
+                              key={payment.id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={payment.name.toLowerCase()}
+                                name="Payment[]"
+                                value={payment.name}
+                                defaultChecked={isChecked(
+                                  `payment`,
+                                  payment.name
+                                )}
+                              />
+                              <label
+                                htmlFor={payment.name.toLowerCase()}
+                                className="text-sm leading-5 font-medium"
                               >
-                                <Checkbox
-                                  id={payment.name.toLowerCase()}
-                                  name="Payment[]"
-                                  value={payment.name}
-                                  defaultChecked={isChecked(
-                                    `payment`,
-                                    payment.name
-                                  )}
-                                />
-                                <label
-                                  htmlFor={payment.name.toLowerCase()}
-                                  className="text-sm leading-5 font-medium"
-                                >
-                                  {payment.name}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                          {/* <button className="hidden" type="submit" ref={btnRef} /> */}
+                                {payment.name}
+                              </label>
+                            </div>
+                          ))}
                         </div>
-                      ),
-                    },
-                  ]
-                : []),
-              ...(status
-                ? [
-                    {
-                      key: "8",
-                      label: "Status",
-                      children: (
-                        <div className="pt-2">
-                          <div className="space-y-2">
-                            {[
-                              { id: "478894", name: "Pending" },
-                              { id: "478894", name: "Delivered" },
-                              { id: "478894", name: "Canceled" },
-                            ]?.map((status) => (
-                              <div
-                                key={status.id}
-                                className="flex items-center space-x-2"
-                              >
-                                <Checkbox
-                                  id={status.name.toLowerCase()}
-                                  name="Status[]"
-                                  value={status.name}
-                                  defaultChecked={isChecked(
-                                    `status`,
-                                    status.name
-                                  )}
-                                />
-                                <label
-                                  htmlFor={status.name.toLowerCase()}
-                                  className="text-sm leading-5 font-medium"
-                                >
-                                  {status.name}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                          {/* <button className="hidden" type="submit" ref={btnRef} /> */}
-                        </div>
-                      ),
-                    },
-                  ]
-                : []),
+                        {/* <button className="hidden" type="submit" ref={btnRef} /> */}
+                      </div>
+                    ),
+                  },
+                ]
+                : []),  
             ]}
           />
           <button className="hidden" type="submit" ref={btnRef} />

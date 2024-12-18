@@ -4,26 +4,34 @@ import { useCallback, useEffect, useState } from "react";
 import { useCategory } from "@/hooks/use-category";
 import { debounce } from "lodash";
 import { Search } from "lucide-react";
-
+import { useQueryClient } from "@tanstack/react-query";
+import { getCategoryByQuery } from "@/actions/get-categories";
+import { Category } from "@prisma/client";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
-import { getCategoryByQuery } from "@/actions/get-categories";
-import { useQueryClient } from "@tanstack/react-query";
-import { Category } from "@prisma/client";
 
 export const PromotionCategoryForm = () => {
-  let { category } = useCategory();
-  category = category?.filter((cat) => cat.key !== "1");
+  let { category: initialCategory } = useCategory();
+  initialCategory = initialCategory?.filter((cat) => cat.key !== "1");
   const [search, setSearch] = useState("");
   const [cat, setCat] = useState(
-    category?.map((cat) => ({
+    initialCategory?.map((cat) => ({
       key: cat.key,
       value: cat.value,
       label: cat.label,
     }))
   );
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const queryClient = useQueryClient()
+  
+
+  const queryClient = useQueryClient();
+
+  // Get the initial selected categories from cache
+  const cachedSelectedCategories = queryClient.getQueryData<{key: string; label: string; value: string}[]>([
+    "SELECT_CATEGORY",
+  ]);
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    cachedSelectedCategories?.map((cat) => cat.value) || []
+  );
 
   // Debounced category query
   const debouncedQueryCategory = useCallback(
@@ -32,7 +40,7 @@ export const PromotionCategoryForm = () => {
         if (query) {
           const cate = await getCategoryByQuery(query);
           const category = cate?.map((cat) => ({
-            key: cat.name,
+            key: cat.id,
             value: cat.id,
             label: cat.name,
           }));
@@ -50,7 +58,7 @@ export const PromotionCategoryForm = () => {
       debouncedQueryCategory(search);
     } else {
       setCat(
-        category?.map((cat) => ({
+        initialCategory?.map((cat) => ({
           key: cat.key,
           value: cat.value,
           label: cat.label,
@@ -63,19 +71,22 @@ export const PromotionCategoryForm = () => {
     };
   }, [search, debouncedQueryCategory]);
 
+  // Update cache and selected state when a checkbox is toggled
   const handleData = (id: string) => {
-    const included = selectedIds.includes(id)
-    if(included) {
-      queryClient.setQueryData(['SELECT_CATEGORY'], (old:Category & {value: string}[]) => {
-        return old.filter(prev => prev.value !== id)
-      })
+    const included = selectedIds.includes(id);
+    if (included) {
+      queryClient.setQueryData(["SELECT_CATEGORY"], (old: Category & {value: string}[]) =>
+        old ? old.filter((prev) => prev.value !== id) : []
+      );
     } else {
-      const cat = category?.find((cat) => cat.value === id);
-      queryClient.setQueryData(['SELECT_CATEGORY'], (old: Category[]) => {
-        return old ? [...old, cat]: [cat]
-      })
+      const cat = initialCategory?.find((category) => category.value === id);
+      if (cat) {
+        queryClient.setQueryData(["SELECT_CATEGORY"], (old: Category[]) =>
+          old ? [...old, cat] : [cat]
+        );
+      }
     }
-   }
+  };
 
   const handleCheckboxChange = (id: string) => {
     handleData(id);
@@ -117,7 +128,6 @@ export const PromotionCategoryForm = () => {
           </div>
         ))}
       </div>
-     
     </>
   );
 };

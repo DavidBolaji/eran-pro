@@ -8,7 +8,7 @@ import { CartCheckoutCard } from "@/components/card/cart-checkout-card";
 import { IProduct } from "@/actions/get-products";
 import { UserUploadComponent } from "./user-upload-component";
 import { Button } from "@/components/button/button";
-
+// @ts-ignore
 export const UserInfocomponent: React.FC<{ userId: string }> = async ({
   userId,
 }) => {

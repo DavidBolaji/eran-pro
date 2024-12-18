@@ -17,6 +17,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { CartDashboardDrawer } from "@/components/drawer/cart-drawer-dashboard/cart-drawer-dashboard";
 import { ItemCategoryDrawer } from "@/components/drawer/promotion-drawer/item-promotion-drawer";
 import { PromotionCategoryDrawer } from "@/components/drawer/promotion-drawer/category-promotion-drawer";
+import { DeleteModal } from "@/components/modal/delete-modal/delete-modal";
 const TanstackProvider = dynamic(
   () =>
     import("../tanstack/tanstack-provider").then((mod) => mod.TanstackProvider),
@@ -44,6 +45,7 @@ export default function RootLayout({
               <NotificationDrawer />
               <LoginModal />
               <CartDrawer />
+              <DeleteModal />
               <Overlay />
             </TanstackProvider>
           </AntdRegistry>

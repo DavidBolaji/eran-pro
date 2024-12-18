@@ -1,6 +1,6 @@
 import { useUser } from "@/hooks/use-user";
 import { Field, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import FormikRadioInput from "../input/formik-radio-input";
 import { Empty } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,6 +24,14 @@ export const SelectDeliveryAddressForm = () => {
     value: address.id,
   }));
 
+  useEffect(() => {
+    const fn = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+      queryClient.setQueryData(["ADDRESS_ID"],  defaultAdd?.id);
+    }
+    fn()
+  }, [])
+
   return user?.orderAddress.length ? (
     <Formik
       onSubmit={() => {}}
@@ -36,6 +44,7 @@ export const SelectDeliveryAddressForm = () => {
         return errors;
       }}
       validateOnChange
+      enableReinitialize
     >
       {({ values }) => (
         <div className="border mt-5 p-6 rounded-2xl">

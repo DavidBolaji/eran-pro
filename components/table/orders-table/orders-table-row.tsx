@@ -44,10 +44,10 @@ export default function OrderTableRow({
         </div>
       </TableCell>
       <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">
-        {order.User?.fname} {order.User?.lname}
+        {order.User ? `${order.User?.fname} ${order.User?.lname}` : `${order?.fname} ${order?.lname}`}
       </TableCell>
       <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">
-        {order.User?.phone}
+        {order.User ? order.User?.phone : order?.phone}
       </TableCell>
       <TableCell className="py-3 font-satoshi text-center font-bold font-sm black-100">
         {order.orderId}

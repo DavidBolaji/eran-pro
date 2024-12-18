@@ -11,11 +11,12 @@ import { ICreateProduct } from "@/actions/get-products";
 export const isAllowedFileType = (fileType: string) =>
   ["image/jpeg", "image/png"].includes(fileType);
 
-export const UploadImageForm = () => {
+export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElement>, urls?: string[]}> = ({btnRef, urls}) => {
   const ref = useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
   const { toggleNotification } = useNotification();
   const [loading, setLoading] = useState<boolean>(false);
+  const isEdit = (urls?.length ?? 0) > 0 
 
   const open = () => {
     ref.current?.click();
@@ -82,6 +83,16 @@ export const UploadImageForm = () => {
 
       const newUrls = await Promise.all(uploadPromises);
       setFieldValue("urls", [...values.urls, ...newUrls]);
+      queryClient.setQueryData(["EDIT_PRODUCT"], (old: ICreateProduct) =>
+        old
+          ? {
+              ...old,
+              images: [...values.urls, ...newUrls],
+            }
+          : {
+              images: [...values.urls, ...newUrls],
+            }
+      );
       queryClient.setQueryData(["CREATE_PRODUCT"], (old: ICreateProduct) =>
         old
           ? {
@@ -114,7 +125,7 @@ export const UploadImageForm = () => {
   ) => {
     const newUrls = values.urls.filter((_, idx) => idx !== index);
     setFieldValue("urls", newUrls);
-    queryClient.setQueryData(["CREATE_PRODUCT"], (old: ICreateProduct) => ({
+    queryClient.setQueryData([isEdit ? "EDIT_PRODUCT" :"CREATE_PRODUCT"], (old: ICreateProduct) => ({
       ...old,
       images: newUrls,
     }));
@@ -123,13 +134,13 @@ export const UploadImageForm = () => {
   return (
     <Formik
       initialValues={{
-        urls: [],
+        urls: urls ?? [],
       }}
       validationSchema={productImageSchema}
       onSubmit={() => {}}
       enableReinitialize
     >
-      {({ values, setFieldValue }) => (
+      {({ values, setFieldValue, resetForm }) => (
         <Form>
           <div className="min-h-[200px]">
             <div className="space-y-4">
@@ -235,6 +246,13 @@ export const UploadImageForm = () => {
               </Button>
             </div>
           </div>
+          <button type="button" onClick={() => {
+            resetForm({
+              values: {
+                urls: [],
+              }
+            })
+          }} ref={btnRef} className="hidden"></button>
         </Form>
       )}
     </Formik>

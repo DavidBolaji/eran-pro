@@ -1,16 +1,12 @@
 import { Typography } from "@/components/typography/typography";
 import { formatToNaira } from "@/utils/helper";
-import { Category, Image as PImage, Product, Promotion } from "@prisma/client";
 import classNames from "classnames";
 import Image from "next/image";
 import React from "react";
+import { IPromotion } from "./types";
 
 export const PromotionProduct: React.FC<{
-  item:
-    | (Promotion & { product: (Product & {images: PImage[]})[] | null } & {
-        category: Category[] | null;
-      })
-    | null;
+  item: IPromotion;
 }> = ({ item }) => {
   const cartOrderStyles = classNames("w-full pr-4 flex mt-1  justify-between items-center rounded-xl")
 

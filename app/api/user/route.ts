@@ -27,6 +27,7 @@ async function handler(userId: string) {
         pic: true,
         email: true,
         phone: true,
+        role: true,
         orders: {
           select: {
             products: {
@@ -119,7 +120,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function updateHandler(userId: string, req: NextRequest) {
+async function updateHandler(userId: string, req: NextRequest) {
   try {
     const { fname, lname, phone, pic, address, orderAddress } =
       await req.json();

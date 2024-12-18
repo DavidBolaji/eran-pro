@@ -1,3 +1,6 @@
+import { deleteOrders } from "@/actions/get-orders";
+import { deleteProducts } from "@/actions/get-products";
+import { deletePromotions } from "@/actions/get-promotions";
 import { ICON } from "@/constants/icon";
 import { FacebookIcon } from "@/constants/icons/facebook";
 import { InstagramIcon } from "@/constants/icons/instagram";
@@ -825,3 +828,9 @@ export const renderPromotionCard = (data: {
     icon: ICON.CloseIcon,
   },
 ];
+
+export const deleteHash = {
+  "DELETE_PRODUCT": deleteProducts,
+  "DELETE_ORDERS": deleteOrders,
+  "DELETE_PROMOTIONS": deletePromotions,
+}

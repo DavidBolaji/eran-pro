@@ -6,7 +6,7 @@ import db from "@/db/db";
 import { Empty } from "antd";
 import { getMonthlyRevenue } from "@/actions/get-orders";
 
-export const RenderRevenueProduct = async () => {
+export async function RenderRevenueProduct ()  {
   // Fetch products grouped by order count in descending order
   const productOrderResult = db.productOrder.groupBy({
     by: ["productId"],

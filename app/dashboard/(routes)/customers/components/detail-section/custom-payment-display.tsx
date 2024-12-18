@@ -9,13 +9,13 @@ export const CustomerPaymentDisplay: React.FC<{
       <Typography as="p" size="s1" align="left" className="mb-[14px] black-100">
         Payment Status
       </Typography>
-      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4">
+      <div className="grid lg:grid-cols-12 grid-cols-6 lg:space-y-0 space-y-4 mb-2">
         <div className="col-span-6">
           <Typography
             as="p"
             size="s2"
             align="left"
-            className="mb-2 black-300"
+            className="black-300"
           >
             Payment type
           </Typography>
@@ -33,7 +33,7 @@ export const CustomerPaymentDisplay: React.FC<{
             as="p"
             size="s2"
             align="left"
-            className="mb-2 black-300"
+            className="black-300"
           >
             Phone number
           </Typography>

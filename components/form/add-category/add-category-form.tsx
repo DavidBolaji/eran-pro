@@ -1,7 +1,9 @@
+"use client"
+
 import { Button } from "@/components/button/button";
 import FormikNormalInput from "@/components/input/formik-normal-input";
 import FormikTextAreaInput from "@/components/input/formik-textarea-input";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import { addCategorySchema } from "./category-validation";
 import { useAddCategory } from "@/hooks/use-add-category";
@@ -9,6 +11,7 @@ import { Icategories } from "./types";
 import { useNotification } from "@/hooks/use-notification";
 import { errorMessage } from "@/utils/helper";
 import { useQueryClient } from "@tanstack/react-query";
+import { Spinner } from "@/components/spinner";
 ;
 
 export const AddCategoryForm = () => {
@@ -20,6 +23,16 @@ export const AddCategoryForm = () => {
     queryClient.setQueryData(["CATEGORY_DRAWER"], () => false);
   };
 
+  const discard = (fn: ({}) => void) => {
+    fn({
+      values: {
+        name: "",
+        description: ""
+      }
+    });
+    close();
+  }
+
 
   return (
     <Formik
@@ -27,8 +40,7 @@ export const AddCategoryForm = () => {
         name: "",
         description: "",
       }}
-      onSubmit={(values: Icategories) => {
-        close()
+      onSubmit={(values: Icategories, {setSubmitting}: FormikHelpers<Icategories>) => {
         addCategorySchema
           .validate(values)
           .then(() => {
@@ -44,17 +56,21 @@ export const AddCategoryForm = () => {
               message:
                 errorMessage[errorList[1].trim() as keyof typeof errorMessage],
             });
+          }).finally(() => {
+            close();
+            setSubmitting(false)
           });
       }}
       enableReinitialize
     >
-      {({}) => (
+      {({isSubmitting, resetForm}) => (
         <Form className="space-y-4">
           <Field
             as={FormikNormalInput}
             name="name"
             placeholder="Product name"
-            align={-12}
+            align={-10}
+            y={-14}
           />
           <Field
             as={FormikTextAreaInput}
@@ -64,11 +80,13 @@ export const AddCategoryForm = () => {
             rows={4}
           />
           <div className="flex justify-end space-x-4">
-            <Button type="button" color="light" size="lg">
+            <Button onClick={() => discard(resetForm)} disabled={isPending || isSubmitting} type="button" color="light" size="lg">
               Discard
             </Button>
-            <Button disabled={isPending} type="submit" color="dark" size="lg">
-              Add Category
+            
+            <Button disabled={isPending || isSubmitting} type="submit"  color={isSubmitting ? "light" : "dark"} size="lg">
+            {isSubmitting ? <Spinner /> : "Add Category"}
+              
             </Button>
           </div>
         </Form>

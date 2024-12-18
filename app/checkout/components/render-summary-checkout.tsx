@@ -4,12 +4,14 @@ import { CartCheckoutCard } from "@/components/card/cart-checkout-card";
 import { initialIValLogedIn } from "@/components/form/another-address-form";
 import { initialIVal } from "@/components/form/billing-form";
 import { PromoForm } from "@/components/form/promo-form";
+import { billingNewSchema, billingPrevSchema } from "@/components/form/validation";
 import { PaymentMethod } from "@/components/payment-method";
 import PaymentComponent from "@/components/paystack/paystack";
 import { Typography } from "@/components/typography/typography";
 import { CheckCircleIcon } from "@/constants/icons/check-circle";
 import { useAxios } from "@/hooks/use-axios";
 import { useCartData } from "@/hooks/use-cart-data";
+import { useNotification } from "@/hooks/use-notification";
 import { paystackKey } from "@/hooks/use-paystack";
 import { useUser } from "@/hooks/use-user";
 import { formatToNaira } from "@/utils/helper";
@@ -22,6 +24,7 @@ export const RenderSummaryCheckout = () => {
   const { calculateTotal, cartData } = useCartData();
   const Axios = useAxios();
   const { user } = useUser();
+  const { toggleNotification } = useNotification()
   const total = (calculateTotal() ?? 0) + 2500;
   const router = useRouter();
 
@@ -33,7 +36,16 @@ export const RenderSummaryCheckout = () => {
     prefetch();
   }, [prefetch]);
 
+  useEffect(() => {
+    queryClient.setQueryData([
+      "ADDRESS_ID",
+    ], null)
+
+  }, []);
+
   const navigateTo = useCallback(async () => {
+    const flow = queryClient.getQueryData(["BILLING"]);
+
     queryClient.setQueryData(["PAYSTACK_MODAL"], () => ({
       amount: 0 * 100,
       email: "",
@@ -43,6 +55,61 @@ export const RenderSummaryCheckout = () => {
     }));
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const paymentFlow = queryClient.getQueryData(["PAYMENT_FLOW"]);
+    console.log(user)
+    if (!user) {
+      const data = queryClient.getQueryData([
+        "ORDER_BILLING_NOT_LOGEDIN",
+      ]) as typeof initialIVal;
+
+      try {
+        await billingNewSchema.validate(data)
+
+      } catch (error) {
+        return toggleNotification({
+          show: true,
+          type: "error",
+          title: "Validation error",
+          message: (error as Error).message
+        })
+      }
+
+    } else {
+      if (flow === "Select delivery address") {
+        const addressId = queryClient.getQueryData([
+          "ADDRESS_ID",
+        ]) as string;
+        console.log('[FLOW]', flow)
+        console.log('[addressID]', addressId)
+        try {
+          await billingPrevSchema.validate({ address: addressId })
+        } catch (error) {
+          return toggleNotification({
+            show: true,
+            type: "error",
+            title: "Validation error",
+            message: (error as Error).message
+          })
+        }
+      } else {
+        const data = queryClient.getQueryData([
+          "ORDER_BILLING_LOGEDIN",
+        ]) as typeof initialIValLogedIn;
+        try {
+          await billingNewSchema.validate(data)
+
+        } catch (error) {
+          return toggleNotification({
+            show: true,
+            type: "error",
+            title: "Validation error",
+            message: (error as Error).message
+          })
+        }
+
+      }
+
+    }
+
     if (!user) {
       // ORDER_BILLING_NOT_LOGEDIN
       const data = queryClient.getQueryData([
@@ -205,14 +272,30 @@ export const RenderSummaryCheckout = () => {
               "ORDER_BILLING_NOT_LOGEDIN",
             ]) as typeof initialIVal;
             if (data.create) {
-              await Axios.post("/orders-users/create", {
+              if (!data.password) {
+                return toggleNotification({
+                  show: true,
+                  type: "error",
+                  title: "Validation error",
+                  message: "Password field cannot be empty"
+                })
+              }
+              await Axios.post("/ordersusers/create", {
                 ...data,
                 orders: cartData,
                 paymentType: paymentFlow,
                 price: paymentFlow === "Debit card" ? total : total * 0.25,
               });
+              queryClient.setQueryData(["PAYSTACK_MODAL"], () => ({
+                amount: 0 * 100,
+                email: "",
+                shown: false,
+                publicKey: paystackKey,
+                reference: Date.now().toString(),
+              }));
+              router.push("/success");
             }
-            await Axios.post("/orders-users/no-create", {
+            await Axios.post("/ordersusers/no-create", {
               ...data,
               orders: cartData,
               paymentType: paymentFlow,

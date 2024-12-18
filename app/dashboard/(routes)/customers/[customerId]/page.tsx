@@ -50,7 +50,6 @@ export default async function CustomerPage({
 
   const custormerName = searchParams?.tab;
   const categoryRequest = getCategories();
-  console.log('[TAB]', custormerName)
 
   // Await both requests
   const [customer, categories] = await Promise.all([

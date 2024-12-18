@@ -22,6 +22,7 @@ const FormikRadioInput: React.FC<CustomRadioInputProps> = ({ name, col = false, 
   const { setValue } = helpers;
 
   const handleChange = (value: string) => {
+
     setValue(value);  // Update Formik state
     if (onChange) {
       onChange(value);  // Call custom onChange if provided
@@ -34,12 +35,13 @@ const FormikRadioInput: React.FC<CustomRadioInputProps> = ({ name, col = false, 
         <div key={option.id} className={`mr-3 mt-1 ${rev && `w-full ${idx < options.length - 1 && "border-b"}`}`}>
           <input
             ref={btnRef}
-            type="radio"
+            type="radio" 
             id={option.id} // Unique ID for each radio button
             name={option.name} // Unique name if needed per FieldArray item
             value={option.value}
             checked={field.value === option.value}
             onChange={() => handleChange(option.value)}
+            // onClick={() => handleChange(option.value)}
             {...rest}
             className="hidden"
           />

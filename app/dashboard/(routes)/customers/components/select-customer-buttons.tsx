@@ -8,7 +8,7 @@ import React, { useState } from "react";
 interface Customer {
   id: string;
   name: string;
-  key: string
+  key?: string
 }
 
 interface Props {
@@ -38,7 +38,7 @@ export const SelectedCustomerButtons: React.FC<Props> = ({
     <div className="flex gap-x-2.5">
       {customers.map((customer) => (
         <form
-          key={customer.id}
+          key={customer?.id}
           onSubmit={(e) => handleClick(e, customer)}
           method="post"
         >

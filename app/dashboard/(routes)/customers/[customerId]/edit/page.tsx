@@ -24,6 +24,8 @@ export default async function CustomerEditPage({
     customerRequest
   ]);
 
+  console.log(customer.customer?.orders)
+
   return (
     <div className="p-4">
       <div>
@@ -50,6 +52,7 @@ export default async function CustomerEditPage({
           <EditCustomerForm
             user={customer?.customer}
             address={customer.customer?.orderAddress ?? []}
+            disabled
           />
         </div>
       </div>

@@ -18,7 +18,6 @@ export default function CustomerOrdersTable({
   initialOrders,
   onLoadMore,
   onSort,
-  onSearch,
   totalPages,
   page,
   itemsPerPage,
@@ -38,8 +37,8 @@ export default function CustomerOrdersTable({
     initialItems: initialOrders as CustomerOrders[],
     onLoadMore,
     onSort,
-    onSearch,
     onFilter(form, params) {
+      alert(params)
       filterCustomerOrder(
         form,
         params,

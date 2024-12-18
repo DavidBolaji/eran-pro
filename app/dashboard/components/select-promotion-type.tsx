@@ -1,30 +1,51 @@
+"use client"
 import { IProduct } from "@/actions/get-products";
 import { CartOrderCard } from "@/components/card/cart-order-card";
 import { EmptyCart } from "@/components/empty/empty-cart";
 import { Promotion } from "@/components/table/promotions-table/types";
 import { Typography } from "@/components/typography/typography";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import React from "react";
+
 
 export const SelectPromotionType = () => {
   const queryClient = useQueryClient();
-  const { data: path } = useQuery({
-    queryKey: ["CREATE_PROMOTION"],
-    queryFn: () =>
-      queryClient.getQueryData(["CREATE_PROMOTION"]) as Promotion & {
-        type: string;
+
+  const [{data: path}, {data: selectItem}, {data: catItem}] = useQueries({
+    queries: [
+      {
+        queryKey: ["CREATE_PROMOTION"],
+        queryFn: () =>
+          queryClient.getQueryData(["CREATE_PROMOTION"]) as Promotion & {
+            type: string;
+          },
       },
-  });
+      {
+        queryKey: ["SELECT_ITEM"],
+        queryFn: () =>
+          queryClient.getQueryData(["SELECT_ITEM"]) as (IProduct & {
+            weight: number;
+          })[],
+      },
+      {
+        queryKey: ["SELECT_CATEGORY"],
+        queryFn: () =>
+          queryClient.getQueryData(["SELECT_CATEGORY"]) as {
+            label: string;
+            value: string;
+            key: string;
+          }[] ?? [],
+      }
+    ]
+  })
+
 
   const getRender = () => {
-    if (path?.type.toLocaleLowerCase() !== "category") {
-      const catData = queryClient.getQueryData(["SELECT_ITEM"]) as (IProduct & {
-        weight: number;
-      })[];
+    if (path?.type?.toLocaleLowerCase() !== "category") {
 
-      return catData?.length ? (
-        catData?.map((d) => {
+      return selectItem?.length ? (
+        selectItem?.map((d) => {
           return (
             <div key={d.id} className=" mb-6">
               <CartOrderCard product={d} remove />
@@ -39,14 +60,9 @@ export const SelectPromotionType = () => {
         />
       );
     } else {
-      const catData = queryClient.getQueryData(["SELECT_CATEGORY"]) as {
-        label: string;
-        value: string;
-        key: string;
-      }[];
-
-      return catData?.length ? (
-        catData?.map((d) => {
+      console.log('CATEGORY')
+      return catItem?.length ? (
+        catItem?.map((d) => {
           return (
             <div key={d.key} className="flex items-center space-x-2 h-10">
               <Checkbox id={d.key} checked={true} />
@@ -75,4 +91,4 @@ export const SelectPromotionType = () => {
     }
   };
   return getRender();
-};
+}

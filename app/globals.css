@@ -15,6 +15,10 @@
     }
   }
 
+  * {
+    scroll-behavior: smooth;
+  }
+
 body > * {
     font-family: 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
 }

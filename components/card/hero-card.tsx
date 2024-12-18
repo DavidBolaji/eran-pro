@@ -30,9 +30,11 @@ export const HeroCcard = () => {
           doorstep at a discount. Don&apos;t miss out – order now and savor the
           savings!
         </Typography>
-        <Button color="dark" size="lg">
-          Make an Order Now
-        </Button>
+        <a className="" href="#orders">
+          <Button color="dark" size="lg">
+            Make an Order Now
+          </Button>
+        </a>
       </div>
 
       <Image

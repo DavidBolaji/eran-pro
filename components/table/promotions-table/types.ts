@@ -2,6 +2,7 @@
 
 export interface Promotion {
   id: string;
+  status: boolean;
   name: string;
   code: string;
   promotionType: string

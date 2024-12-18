@@ -7,16 +7,19 @@ const usePath = () => {
   const params = useParams();
   const customerId = params?.customerId;
   const orderId = params?.orderId;
+  const productId = params?.productId;
   const promotionId = params?.promotionId;
   const [locationCurrent, setLoc] = useState("");
 
   useEffect(() => {
     const key =
-      pathname === "/dashboard"
-        ? "/dashboard"
+      pathname === "/dashboard/home"
+        ? "/dashboard/home"
         : pathname === "/dashboard/products"
         ? "/dashboard/products"
         : pathname === "/dashboard/products/add"
+        ? "/dashboard/products"
+        : pathname === `/dashboard/products/edit/${productId}`
         ? "/dashboard/products"
         : pathname === "/dashboard/customers"
         ? "/dashboard/customers"
@@ -35,6 +38,8 @@ const usePath = () => {
          : pathname === `/dashboard/promotions/add`
         ? "/dashboard/promotions"
          : pathname === `/dashboard/promotions/${promotionId}`
+        ? "/dashboard/promotions"
+         : pathname === `/dashboard/promotions/${promotionId}/edit`
         ? "/dashboard/promotions"
         : pathname?.split("/")[pathname?.split("/").length - 1];
     setLoc(key);

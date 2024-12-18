@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, FocusEvent, useEffect, useRef } from "react";
+import React, { ChangeEvent, FocusEvent, useEffect, useRef, useState } from "react";
 import FormikNormalInput from "../input/formik-normal-input";
 import { Field, FieldArray, Form, Formik } from "formik";
 import { Button } from "../button/button";
@@ -7,13 +7,6 @@ import { ICON } from "@/constants/icon";
 import { IUser } from "@/actions/get-customers";
 import { Address } from "@prisma/client";
 
-// import { isValidPhoneNumber } from 'react-phone-number-input'
-// sch_admin_phone: Yup.string()
-// .required('Phone number is required')
-// .test('isValidNumber', 'Invalid phone number', (adminNo) =>
-//   isValidPhoneNumber(adminNo || ''),
-// ),
-import * as Yup from "yup";
 import { Typography } from "../typography/typography";
 import { Plus } from "lucide-react";
 import TextAreaInput from "../input/textarea-input";
@@ -23,40 +16,41 @@ import useCountry from "@/hooks/useCountry";
 import useAddress from "@/hooks/useAddress";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserUploadComponent } from "@/app/(home)/(routes)/orders/components/user-upload-component";
-export const editCustomerSchema = Yup.object().shape({
-  email: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      "Invalid email format"
-    )
-    .required("Email is required"),
-  fname: Yup.string().required("First name is required"),
-  lname: Yup.string().required("Last name is required"),
-  phone: Yup.string().required("Phone is required"),
-  pic: Yup.string().notRequired(),
-  address: Yup.array().of(
-    Yup.object().shape({
-      country: Yup.string().required("City is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      address: Yup.string().required("Addres is required"),
-      info: Yup.string().optional(),
-      active: Yup.boolean().required(),
-    })
-  ),
-  orderAddress: Yup.array().optional()
-});
+
 
 const options = [{ name: true, value: true, label: "Set as default" }];
 
 export const EditCustomerForm: React.FC<{
   user: IUser | null;
   address: Address[] | null;
-}> = ({ user, address }) => {
+  disabled?: boolean,
+  order?: boolean,
+  reset?: number
+}> = ({ user, address, disabled = false, order = false, reset }) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const { countries } = useCountry();
   const { fetchCity, states } = useAddress();
   const queryClient = useQueryClient();
+  const [processedAddresses, setProcessedAddresses] = useState<
+    Array<Address & { cityOption: any[] }>
+  >([]);
+
+  
+  useEffect(() => {
+    const processAddresses = async () => {
+      if (address) {
+        const processed = await Promise.all(
+          address.map(async (el) => ({
+            ...el,
+            cityOption: await fetchCity(el?.state) ?? [],
+          }))
+        );
+        setProcessedAddresses(processed);
+      }
+    };
+
+    processAddresses();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -72,18 +66,13 @@ export const EditCustomerForm: React.FC<{
 
   return (
     <Formik
-      initialValues={{
-        email: user?.email ?? "",
-        phone: user?.phone ?? "",
-        fname: user?.fname ?? "",
-        lname: user?.lname ?? "",
-        address: address
-          ? address.map((el) => ({
-              ...el,
-              cityOption: [],
-            }))
-          : [],
-      }}
+    initialValues={{
+      email: user?.email ?? "",
+      phone: user?.phone ?? "",
+      fname: user?.fname ?? "",
+      lname: user?.lname ?? "",
+      address: processedAddresses,
+    }}
       onSubmit={() => {}}
       validate={(values) => {
         const errors = {};
@@ -107,7 +96,7 @@ export const EditCustomerForm: React.FC<{
       }}
       validateOnChange
       enableReinitialize
-      key={user?.id}
+      key={user?.id ?? reset ?? 0}
     >
       {({ values, setFieldValue, handleBlur, setFieldTouched }) => (
         <Form className="w-full">
@@ -117,7 +106,8 @@ export const EditCustomerForm: React.FC<{
               name="email"
               placeholder="Email Address"
               align={-9}
-              disabled
+              y={-14}
+              disabled={disabled}
               focus
             />
             <Field
@@ -125,6 +115,7 @@ export const EditCustomerForm: React.FC<{
               name="phone"
               placeholder="Phone number"
               align={-11}
+              y={-14}
             />
             <div className="flex justify-between items-center gap-x-4">
               <Field
@@ -132,18 +123,20 @@ export const EditCustomerForm: React.FC<{
                 name="fname"
                 placeholder="First name"
                 align={-7}
+                y={-14}
               />
               <Field
                 as={FormikNormalInput}
                 name="lname"
                 placeholder="Last name"
                 align={-7}
+                y={-14}
               />
             </div>
           </div>
-          <div className="bg-white mt-6 px-4 lg:hidden block py-6 rounded-2xl">
+          {!order ? <div className="bg-white mt-6 px-4 lg:hidden block py-6 rounded-2xl">
             <UserUploadComponent view />
-          </div>
+          </div>: null}
           <div className="bg-white mt-6 py-6 px-4 rounded-2xl space-y-4">
             <div className="flex lg:flex-row flex-col justify-between items-start lg:items-center">
               <Typography
@@ -159,7 +152,7 @@ export const EditCustomerForm: React.FC<{
                 size="lg"
                 color="light"
                 type="button"
-                onClick={() => btnRef.current?.click()}
+                onClick={() => order && values.address.length === 1 ? {}: btnRef.current?.click()}
               >
                 <span className="border border-black l-2 rounded-full h-5 w-5 flex items-center justify-center">
                   <Plus className="h-4 w-4" color="black" />
@@ -196,10 +189,11 @@ export const EditCustomerForm: React.FC<{
                         <Field
                           name={`address[${ind}].country`}
                           options={countries ?? []}
-                          defaultValue={values.address[ind].country}
+                          defaultValue={values.address[ind]?.country}
                           as={FormikSelectInput}
                           placeholder={"Country"}
                           align={-5}
+                          y={9}
                           onChange={async (
                             e: ChangeEvent<HTMLSelectElement>
                           ) => {
@@ -228,6 +222,7 @@ export const EditCustomerForm: React.FC<{
                             placeholder="State"
                             defaultValue={values.address[ind].state}
                             align={-3}
+                            y={9}
                             options={states ?? []}
                             onChange={async (
                               e: ChangeEvent<HTMLSelectElement>
@@ -246,11 +241,12 @@ export const EditCustomerForm: React.FC<{
 
                           <Field
                             name={`address[${ind}].city`}
-                            align={-9}
-                            options={values?.address[ind]?.cityOption ?? []}
                             as={FormikSelectInput}
                             placeholder={"Town / City"}
                             defaultValue={values.address[ind].city}
+                            align={-9}
+                            y={9}
+                            options={values?.address[ind]?.cityOption ?? []}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                               setFieldValue(
                                 `address[${ind}].city`,
@@ -318,11 +314,12 @@ export const EditCustomerForm: React.FC<{
             {values.address.length > 0 && (
               <div className="flex items-center justify-center w-full">
                 <Button
+                  disabled={order && values.address.length === 1}
                   className=" flex items-center justify-center"
                   size="lg"
                   color="light"
                   type="button"
-                  onClick={() => btnRef.current?.click()}
+                  onClick={() => order && values.address.length === 1 ? {}: btnRef.current?.click()}
                 >
                   <span className="border border-black rounded-full h-5 w-5 flex items-center justify-center">
                     <Plus className="h-4 w-4" color="black" />

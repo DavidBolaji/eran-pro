@@ -9,7 +9,7 @@ export type IProduct = Omit<
   Product,
   "order" | "updatedAt" | "createdAt" | "categoryId"
 > & {
-  promotion: Pick<Promotion, "name" | "discount" | "startDate" | "endDate">[]; // Note: promotion is an array
+  promotion: Pick<Promotion, "name" | "discount" | "startDate" | "endDate" | "id">[]; // Note: promotion is an array
   category: Pick<Category, "name" | "id">;
   images: Pick<Image, "url">[];
 };
@@ -31,6 +31,7 @@ interface GetProductsParams {
   limit?: number;
   sort?: string; // default sorting field
   sortOrder?: string; // ascending or descending order
+  searchQuery?: string; // ascending or descending order
 }
 
 export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
@@ -77,13 +78,78 @@ export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
         };
       })
     );
-
-    console.log(JSON.stringify(productsWithPromotions, null, 2));
     return productsWithPromotions;
   } catch (error) {
     throw new Error((error as Error).message);
   }
 };
+
+export const getProduct = async (productId: string): Promise<IProduct | null> => {
+  try {
+    const product = await db.product.findUnique({
+      where: {
+        id: productId,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        img: true,
+        price: true,
+        qty: true,
+        stock: true,
+        unit: true,
+        status: true,
+        images: {
+          select: {
+            url: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            Promotion: {
+              where: {
+                promotionType: "CATEGORY",
+              },
+              select: {
+                id: true,
+                name: true,
+                code: true,
+                discount: true
+              },
+            }
+          },
+        },
+        promotion: {
+          select: {
+            id: true,
+            name: true,
+            discount: true,
+            startDate: true,
+            endDate: true
+          },
+        },
+      },
+    });
+
+    const categoryPromotions = product?.category?.Promotion || [];
+    const productPromotions = product?.promotion || [];
+    const allPromotions = [...categoryPromotions, ...productPromotions];
+
+    const newProduct = {
+      ...product,
+      promotion: allPromotions
+    } as unknown as IProduct
+
+
+    return newProduct ?? null;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
 export const getProductsByQuery = async (
   search: string
 ): Promise<IProduct[]> => {
@@ -108,12 +174,32 @@ export const getDashboardProduct = async ({
   limit = 10,
   sort = "createdAt", // default sorting field
   sortOrder = "asc", // ascending or descending order
+  searchQuery = "", // ascending or descending order
 }: GetProductsParams) => {
   const skip = (page - 1) * limit;
   // Build the `where` clause conditionally
   const whereClause: Prisma.ProductWhereInput = {};
 
-  if (
+  if (categories &&
+    categories.length > 0 && searchQuery &&
+    searchQuery.length > 0) {
+
+     whereClause.AND = [
+    {
+      category: {
+        name: {
+          in: categories,
+        },
+      },
+    },
+    {
+      name: {
+        contains: searchQuery,
+      },
+    },
+  ];
+
+  } else if (
     categories &&
     categories.length > 0 &&
     categories[0].trim().length !== 0
@@ -124,11 +210,22 @@ export const getDashboardProduct = async ({
       },
     };
   }
+  else if (
+    searchQuery &&
+    searchQuery.length > 0
+  ) {
+    whereClause.name = {
+      contains: searchQuery,
+    };
+  }
 
   const orderBy: Prisma.ProductOrderByWithRelationInput =
     sort === "category"
       ? { category: { name: sortOrder as Prisma.SortOrder } }
+      : sort === "promotion" ?{ promotion: { _count: sortOrder as Prisma.SortOrder } }
       : { [sort]: sortOrder as Prisma.SortOrder };
+
+    
 
   try {
     const totalItems = await db.product.count({ where: whereClause });
@@ -141,6 +238,15 @@ export const getDashboardProduct = async ({
           select: {
             id: true,
             name: true,
+            Promotion: {
+              where: {
+                promotionType: "CATEGORY",
+              },
+              select: {
+                code: true,
+                discount: true
+              },
+            }
           },
         },
         price: true,
@@ -166,7 +272,19 @@ export const getDashboardProduct = async ({
     });
     const totalPages = Math.ceil(totalItems / limit);
 
-    return { products: products ?? [], totalPages };
+
+    const finalProducts = products.map(product => {
+      const categoryPromotions = product.category?.Promotion || [];
+      const productPromotions = product.promotion || [];
+      const allPromotions = [...categoryPromotions, ...productPromotions];
+
+      return {
+        ...product,
+        promotion: allPromotions,
+      };
+    });
+
+    return { products: finalProducts ?? [], totalPages };
   } catch (error) {
     console.log((error as Error).message);
   }
@@ -189,7 +307,7 @@ export const filterProduct = (
     (formData.get("sortOrder") as string) || params.get("sortOrder") || "asc";
   const startDate = formData.get("startDate") as string;
   const endDate = formData.get("endDate") as string;
-  const searchQuery = formData.get("searchQuery") as string;
+  const searchQuery = params.get("searchQuery") as string;
 
   // Handle categories - Add or remove based on selection
   params.delete("category");
@@ -244,3 +362,20 @@ export const filterProduct = (
 export const resetProduct = () => {
   redirect(`/dashboard/products`);
 };
+
+export const deleteProducts = async (data: Set<string>) => {
+  await db.product.deleteMany({
+    where: {
+      id: {
+        in: Array.from(data)
+      }
+    }
+  })
+  await db.image.deleteMany({
+    where: {
+      productId: {
+        in: Array.from(data)
+      }
+    }
+  })
+}

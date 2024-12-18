@@ -23,6 +23,7 @@ export default async function ProductPage({
   const limit = parseInt(searchParams.limit) || 7;
   const sort = searchParams.sort || "createdAt"; 
   const sortOrder = searchParams.sortOrder || "asc"; 
+  const searchQuery = searchParams.searchQuery || ""; 
   
 
   const req = getDashboardProduct({
@@ -30,7 +31,8 @@ export default async function ProductPage({
     page,
     limit,
     sort,
-    sortOrder
+    sortOrder,
+    searchQuery
   });
 
   const req2 = getCategories() 

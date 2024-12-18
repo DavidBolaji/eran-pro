@@ -13,6 +13,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   align?: number;
+  y?: number;
   options: { label: string; value: string }[];
   placeholder?: string;
 }
@@ -21,27 +22,32 @@ const SelectInput: React.FC<SelectProps> = ({
   rightIcon,
   leftIcon,
   align = -15,
+  y = -10,
   options,
   placeholder,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(!!rest.value);
+  const [hasValue, setHasValue] = useState(!!rest.value || !!rest.defaultValue);
   const selectRef = useRef<HTMLSelectElement | null>(null);
+
+  useEffect(() => {
+    setHasValue(!!rest.value || !!rest.defaultValue);
+  }, [rest.value, rest.defaultValue]);
 
   const { className, onBlur, onChange, ...props } = rest;
   props.required = props.required ?? true;
 
-  useEffect(() => {
-    const el = selectRef.current;
-    el?.addEventListener("change", () => {
-      el.blur();
-    });
+  // useEffect(() => {
+  //   const el = selectRef.current;
+  //   el?.addEventListener("change", () => {
+  //     el.blur();
+  //   });
 
-    return () => {
-      el?.removeEventListener("change", () => {});
-    };
-  }, []);
+  //   return () => {
+  //     el?.removeEventListener("change", () => {});
+  //   };
+  // }, []);
 
   const handleFocus = (e: FocusEvent<HTMLSelectElement>) => {
     e.preventDefault();
@@ -54,18 +60,16 @@ const SelectInput: React.FC<SelectProps> = ({
     if (onBlur) onBlur(e);
   };
 
-  const handleOptionClick = () => {
-    selectRef.current?.blur(); // Trigger blur when an option is clicked
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
-    console.log("Option clicked:", selectedValue); // Log the selected option's value
-    setHasValue(Boolean(selectedValue)); // Update state based on selected value
-
+    console.log(selectedValue)
+    setHasValue(Boolean(selectedValue));
+    
     if (onChange) {
-      onChange(e); // Call external onChange if provided
+      onChange(e);
     }
+    setIsFocused(false);
+    selectRef.current?.blur()
   };
 
   const selectStyle = classNames(
@@ -79,8 +83,8 @@ const SelectInput: React.FC<SelectProps> = ({
       "pr-3": !rightIcon,
     },
     {
-      "text-transparent": isFocused, // Hide selected text on focus
-      "text-black": !isFocused && hasValue, // Show selected text when not focused
+      "text-transparent": isFocused,
+      "text-black": !isFocused && hasValue,
     },
     {
       "placeholder:text-transparent": isFocused || hasValue,
@@ -88,9 +92,12 @@ const SelectInput: React.FC<SelectProps> = ({
     className
   );
 
-
   return (
-    <div className={`relative overflow-hidden h-12 group w-full border pr-2 border-[#C8E0D2] rounded-2xl ${hasValue ? "bg-grey-100": "bg-grey-200"}`}>
+    <div
+      className={`relative overflow-hidden h-12 group w-full border pr-2 border-[#C8E0D2] rounded-2xl ${
+        hasValue ? "bg-grey-100" : "bg-grey-200"
+      }`}
+    >
       {/* Left Icon */}
       {leftIcon && (
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -100,22 +107,21 @@ const SelectInput: React.FC<SelectProps> = ({
 
       {/* Select Field */}
       <select
+        name={rest.name}
         ref={selectRef}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onChange={handleChange}  // Handle option selection
+        onChange={handleChange} // Handle option selection
         className={selectStyle}
-        defaultValue={rest.defaultValue}
-       
+        value={rest.value || ""} // Controlled component with value from props
       >
-        <option value="">{/* Empty option for placeholder */}</option>
-        {!isFocused && hasValue && <option value={rest.value} selected>{rest.value}</option>}
+        <option value="">{/* Placeholder option */}</option>
         {options?.map((option) => (
           <option
-            className="text-black"
+            className="text-black font-bold"
             key={option.value}
-            onClick={handleOptionClick}
             value={option.value}
+            
           >
             {option.label}
           </option>
@@ -124,9 +130,9 @@ const SelectInput: React.FC<SelectProps> = ({
 
       {/* Floating Label */}
       <motion.label
-        initial={{ y: 20, scale: 1 }}
+        initial={{ y: 0, scale: 1 }}
         animate={{
-          y: isFocused || hasValue ? 6 : 20,
+          y: isFocused || hasValue ? y : 20,
           x: isFocused || hasValue ? align : 0,
           scale: isFocused || hasValue ? 0.7 : 1,
         }}

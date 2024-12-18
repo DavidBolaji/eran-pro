@@ -9,10 +9,11 @@ export const EmptyCart: React.FC<{
   close: () => void;
   dashboard?: boolean;
   promotion?: string;
-}> = ({ close, dashboard = false, promotion = "Your Cart is Empty 🛒" }) => {
+  order?: string
+}> = ({ close, dashboard = false, promotion  }) => {
   const queryClient = useQueryClient();
   const open = () => {
-    if (promotion.length) {
+    if (promotion?.length) {
       const path = queryClient.getQueryData(["CREATE_PROMOTION"]) as Promotion & {type: string}
       if(path.type.toLocaleLowerCase() === "category") {
         return queryClient.setQueryData(["PROMOTION_CATEGORY_DRAWER"], true);
@@ -26,11 +27,11 @@ export const EmptyCart: React.FC<{
   return (
     <div className="h-5/6 max-w-[390px] flex-col flex items-center justify-center w-full mx-auto">
       <Typography as="h6" size="h6" align="center" className="pb-2">
-        {promotion}
+        {promotion ?? "Add item to cart"}
       </Typography>
       {dashboard && (
         <Button color="light" size="lg" onClick={open}>
-          {promotion.length ? "Select products" : "Add item to cart"}
+          {promotion?.trim().length ? "Select products" : "Add item to cart"}
         </Button>
       )}
       {!dashboard && (

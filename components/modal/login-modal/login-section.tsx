@@ -2,14 +2,14 @@
 import { Button } from "@/components/button/button";
 import { LoginForm } from "@/components/form/login-form";
 import { Typography } from "@/components/typography/typography";
-import { ICON } from "@/constants/icon";
-import { useUser } from "@/hooks/use-user";
+// import { ICON } from "@/constants/icon";
+// import { useUser } from "@/hooks/use-user";
 import { motion } from "framer-motion";
 import React from "react";
 
 
 export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopup}) => {
-  const {googleLogin} = useUser()
+  // const {googleLogin} = useUser()
   return (
     <motion.div
       key={"LOGIN_MODAL"}
@@ -31,7 +31,7 @@ export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopu
         Login to Your EranPro Account
       </Typography>
       <LoginForm />
-      <div className="my-6 flex items-center justify-center space-x-4">
+      {/* <div className="my-6 flex items-center justify-center space-x-4">
         <Typography
           size="s2"
           as="p"
@@ -43,10 +43,10 @@ export const LoginSection:React.FC<{registerPopup: () => void}> = ({registerPopu
         <div onClick={googleLogin}>
           <ICON.GoogleIcon />
         </div>
-        {/* <div onClick={googleSignUP}>
+        <div onClick={googleSignUP}>
           <ICON.FacebookCircleIcon />
-        </div> */}
-      </div>
+        </div>
+      </div> */}
       <Button
         size="lg"
         color="light"

@@ -21,14 +21,15 @@ import { Promotion } from "@/components/table/promotions-table/types";
 import { SelectPromotionType } from "./select-promotion-type";
 import { allPromotionSchema } from "@/components/form/promotion-schema";
 import { IProduct } from "@/actions/get-products";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+// Promotion & { product: (Product & {images: Image[]})[] | null } & {category: Category[] | null} | null
 export default function AddPromotions() {
   const { toggleNotification } = useNotification();
   const { toggleDrawer: toggleItemDrawer } = usePromotionItemDrawer();
   const { toggleDrawer } = usePromotionCategoryDrawer();
   const queryClient = useQueryClient();
   const Axios = useAxios();
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     queryClient.setQueryData(["SELECT_CATEGORY"], [])
@@ -40,6 +41,7 @@ export default function AddPromotions() {
   const { mutate } = useMutation({
     mutationKey: ["CREATE_PROMOTION"],
     mutationFn: async () => {
+      setLoading(true)
       const path = getPath();
       const ids: string[] = [];
       const promotion = queryClient.getQueryData(["CREATE_PROMOTION"]) as Promotion;
@@ -52,6 +54,7 @@ export default function AddPromotions() {
         }[];
 
         if (!catData.length) {
+          setLoading(false)
           return toggleNotification({
             type: "error",
             title: "Validation Error",
@@ -60,29 +63,36 @@ export default function AddPromotions() {
             show: true,
           });
         }
-        catData.forEach((el) => ids.push(el.value));
+        catData?.forEach((el) => ids.push(el.value));
       } else {
         const catData = queryClient.getQueryData([
           "SELECT_ITEM",
         ]) as (IProduct & {
           weight: number;
         })[];
-        if (!catData.length) {
-          return toggleNotification({
-            type: "error",
-            title: "Validation Error",
-            message:
-              "Promotion cannot be applied to null product. Please select product",
-            show: true,
-          });
-        }
-        catData.forEach((el) => ids.push(el.id));
+        // if (!catData.length) {
+        //   return toggleNotification({
+        //     type: "error",
+        //     title: "Validation Error",
+        //     message:
+        //       "Promotion cannot be applied to null product. Please select product",
+        //     show: true,
+        //   });
+        // }
+        catData?.forEach((el) => ids.push(el.id));
       }
 
       allPromotionSchema
         .validate(promotion)
         .then(async () => {
-          await Axios.post("/promotion", {...promotion, ids});
+          await Axios.post("/promotion", {...promotion, ids: ids ?? []});
+          toggleNotification({
+            show: true,
+            title: "Promotion Created",
+            type: "success",
+            message:
+              "Promotion created successfully",
+          });
         })
         .catch((reason) => {
           console.log(reason?.message);
@@ -94,15 +104,7 @@ export default function AddPromotions() {
             message:
               errorMessage[errorList[1].trim() as keyof typeof errorMessage],
           });
-        });
-    },
-    onSuccess: () => {
-      // toggleNotification({
-      //   show: true,
-      //   title: "Promotion Created",
-      //   type: "success",
-      //   message: "Promotion has been created succesfully",
-      // });
+        }).finally(() => setLoading(false));
     },
   });
 
@@ -120,14 +122,19 @@ export default function AddPromotions() {
     }
   };
 
+  const discard = () => {
+
+  }
+
   return (
     <div className="container mx-auto mt-6 overflow-hidden">
       {/* Header */}
       <DashboardTitleHeader
         title={"Create New Promotion"}
-        discardKey="CREATE_DASHBOARD_PROMOTION"
+        discard={discard}
         addItem={mutate}
         btnText="Create Promotion"
+        loading={loading}
       />
 
       <div className="grid gap-6 md:grid-cols-2">

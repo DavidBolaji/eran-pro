@@ -4,6 +4,7 @@ import { PendingOrders } from "./types";
 import { Button } from "@/components/button/button";
 import Image from "next/image";
 import { format } from "date-fns";
+import Link from "next/link";
 
 interface PendingOrdersTableRowProps {
   orders: PendingOrders;
@@ -26,10 +27,11 @@ export default function PendingordersTableRow({
           <span className="font-bold text-sm  black-100">{orders.products[0].name}</span>
         </div>
       </TableCell>
-      <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">{orders.User?.fname}</TableCell>
-      <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">{orders.User?.phone}</TableCell>
+      <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">{orders?.User ? orders.User?.fname : orders?.fname }</TableCell>
+      <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">{orders?.User ? orders.User?.phone : orders?.phone}</TableCell>
       <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">{format(orders.createdAt, "MMM dd, h:maa")}</TableCell>
       <TableCell className="pl-6 py-3 font-satoshi font-bold font-sm black-100">
+        <Link href={`/dashboard/orders/${orders.id}`}>
         <Button
           size="sm"
           color="light"
@@ -37,6 +39,7 @@ export default function PendingordersTableRow({
         >
           View
         </Button>
+        </Link>
       </TableCell>
     </TableRow>
   );

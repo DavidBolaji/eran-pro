@@ -25,6 +25,11 @@ enum PromotionType {
   ITEM
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 enum STATUS {
   DRAFT
   ACTIVE
@@ -84,21 +89,21 @@ model Image {
 }
 
 model Order {
-  id          String      @id @default(uuid())
-  userId      String?
-  orderId     String      @unique
-  fname       String?
-  lname       String?
-  phone       String?
-  email       String?
-  User        User?        @relation(fields: [userId], references: [id])
-  products    Product[]
-  status      OrderStatus @default(PENDING)
-  address     Address?
-  paymentType String
-  promotionId String?
-  promotion   Promotion?  @relation(fields: [promotionId], references: [id])
-  price       Float
+  id           String         @id @default(uuid())
+  userId       String?
+  orderId      String         @unique
+  fname        String?
+  lname        String?
+  phone        String?
+  email        String?
+  User         User?          @relation(fields: [userId], references: [id])
+  products     Product[]
+  status       OrderStatus    @default(PENDING)
+  address      Address?
+  paymentType  String
+  promotionId  String?
+  promotion    Promotion?     @relation(fields: [promotionId], references: [id])
+  price        Float
   ProductOrder ProductOrder[]
 
   createdAt DateTime @default(now())
@@ -110,31 +115,36 @@ model Order {
 }
 
 model ProductOrder {
-  id        String  @id @default(uuid())
+  id        String @id @default(uuid())
   orderId   String
   productId String
-  weight    Float  
+  weight    Float
 
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  discount    Int
+  promotionId String?  
+  code        String?
+  promotion   Promotion? @relation(fields: [promotionId], references: [id])
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
   @@index([productId])
 }
 
 model Product {
-  id          String      @id @default(uuid())
-  name        String      @db.VarChar(50)
-  description String      @db.VarChar(600)
-  img         String?     @db.VarChar(300)
-  price       Float
-  qty         Int         @default(0)
-  stock       Boolean
-  unit        UNIT        @default(PER_ITEM)
-  status      STATUS      @default(ACTIVE)
-  Order       Order[]
-  promotion   Promotion[]
-  images      Image[]
+  id           String         @id @default(uuid())
+  name         String         @db.VarChar(50)
+  description  String         @db.VarChar(600)
+  img          String?        @db.VarChar(300)
+  price        Float
+  qty          Int            @default(0)
+  stock        Boolean
+  unit         UNIT           @default(PER_ITEM)
+  status       STATUS         @default(ACTIVE)
+  Order        Order[]
+  promotion    Promotion[]
+  images       Image[]
   ProductOrder ProductOrder[]
 
   categoryId String
@@ -150,7 +160,7 @@ model Promotion {
   id            String        @id @default(uuid())
   name          String
   promotionType PromotionType
-  code          String        
+  code          String
   categoryId    String?
   category      Category?     @relation(fields: [categoryId], references: [id]) // Relation to Category
   productId     String?
@@ -161,8 +171,10 @@ model Promotion {
   startDate DateTime
   endDate   DateTime
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  status       Boolean
+  ProductOrder ProductOrder[]
 
   @@index([categoryId])
   @@index([productId])
@@ -179,6 +191,7 @@ model User {
   orders       Order[]
   status       USERSTATUS @default(ACTIVE)
   orderAddress Address[]
+  role         Role       @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

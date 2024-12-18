@@ -12,7 +12,8 @@ import React from "react";
 export const RenderOrderCheckoutSummary: React.FC<{ order: Order | null }> = ({
   order,
 }) => {
-  const ordersNew = addWeightToProducts(order);
+  const ordersNew = addWeightToProducts(order as unknown as Order & {code: string[]});
+  console.log('[ORDERS]', ordersNew)
 
   const calculateTotal = () => {
     if (!ordersNew || !ordersNew.products) return 0;
@@ -21,9 +22,29 @@ export const RenderOrderCheckoutSummary: React.FC<{ order: Order | null }> = ({
       const nProd = prod as unknown as IProduct & { weight: number };
       const weight = nProd?.weight || 0; // Ensure weight is always a number
       const stepValue = prod.unit === "PER_KG" ? 0.5 : 1;
+      // const discount = prod.ProductOrder
       return acc + (prod.price * weight) / stepValue;
     }, 0);
   };
+
+  const calculateTotalDiscount = () => {
+    if (!ordersNew || !ordersNew.products) return 0;
+
+    return ordersNew.products.reduce((acc, prod) => {
+      
+      const nProd = prod as unknown as IProduct & { discount: number };
+      const discount = nProd?.discount || 0; // Ensure weight is always a number
+      // const stepValue = prod.unit === "PER_KG" ? 0.5 : 1;
+      return acc + discount 
+
+    }, 0);
+  };
+
+  const totalDs = calculateTotalDiscount()
+  const total = calculateTotal()
+ 
+  
+
 
   return (
     <div className="bg-black-100 lg:rounded-2xl ">
@@ -58,7 +79,7 @@ export const RenderOrderCheckoutSummary: React.FC<{ order: Order | null }> = ({
               as="h6"
               className="text-white font-bold"
             >
-              {formatToNaira(calculateTotal() ?? 0, 2)}
+              {formatToNaira(total ?? 0, 2)}
             </Typography>
           </div>
         </div>
@@ -96,7 +117,7 @@ export const RenderOrderCheckoutSummary: React.FC<{ order: Order | null }> = ({
             <span className="font-medium text-[16px] block leading-5 mb-1">
               Promotion applied
             </span>
-            <span className="font-bold text-sm block">{"2024CHRISTMAS"}</span>
+            <span className="font-bold text-sm block">{ordersNew?.code.join('+')}</span>
           </Typography>
           <div className="">
             <Typography
@@ -105,7 +126,7 @@ export const RenderOrderCheckoutSummary: React.FC<{ order: Order | null }> = ({
               as="h6"
               className="text-white font-bold"
             >
-              {formatToNaira(2500, 2)}
+              {formatToNaira(totalDs, 2)}
             </Typography>
           </div>
         </div>
@@ -115,7 +136,7 @@ export const RenderOrderCheckoutSummary: React.FC<{ order: Order | null }> = ({
           Total
         </Typography>
         <Typography align="left" size="h6" as="h6" className="text-white flex flex-col">
-          {formatToNaira(calculateTotal() + 2500 ?? 0, 2)}
+          {formatToNaira((total + 2500 - totalDs), 2)}
           <span className="ml-2 mt-1 text-xs font-bold">
             Paid: ({formatToNaira(order?.price ?? 0, 2)})
           </span>

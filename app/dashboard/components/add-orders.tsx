@@ -1,25 +1,27 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-
-import { DashboardTitleHeader } from "@/components/dashboard-header/dashboard-header";
-
-import { Typography } from "@/components/typography/typography";
-
-import { Button } from "@/components/button/button";
-
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { allProductSchema } from "@/components/form/add-product/product-validation";
+import { AxiosError } from "axios";
+import { Address } from "@prisma/client";
+
+import { Card } from "@/components/ui/card";
+import { DashboardTitleHeader } from "@/components/dashboard-header/dashboard-header";
+import { Typography } from "@/components/typography/typography";
+import { Button } from "@/components/button/button";
+import { EditCustomerForm } from "@/components/form/edit-customer-form";
+import { EmptyCart } from "@/components/empty/empty-cart";
+import { CartOrderCard } from "@/components/card/cart-order-card";
+
 import { errorMessage } from "@/utils/helper";
 import { useNotification } from "@/hooks/use-notification";
 import { useAxios } from "@/hooks/use-axios";
-import { EditCustomerForm } from "@/components/form/edit-customer-form";
 import { useCartData } from "@/hooks/use-cart-data";
-
-import { EmptyCart } from "@/components/empty/empty-cart";
-import { IProduct } from "@/actions/get-products";
-import { CartOrderCard } from "@/components/card/cart-order-card";
 import { useCartDashboardDrawer } from "@/hooks/use-cart-dashboard-drawer";
+
+import { IProduct } from "@/actions/get-products";
+import { IUser } from "@/actions/get-customers";
+import { createOrderSchema } from "@/components/form/validation";
 
 export default function AddOrders() {
   const { toggleNotification } = useNotification();
@@ -27,53 +29,101 @@ export default function AddOrders() {
   const { cartData } = useCartData();
   const queryClient = useQueryClient();
   const Axios = useAxios();
+  const [loading, setLoading] = useState(false);
+  const [key, setkey] = useState(0);
 
-  // const router = useRouter()
+  const discard = () => {
+    queryClient.setQueryData(["EDIT_CUSTOMER"], () => null);
+    queryClient.setQueryData(["CART_DATA"], () => []);
+    setkey(prev => prev + 1)
+  };
+
   const { mutate } = useMutation({
-    mutationKey: ["CREATE_PRODUCT"],
+    mutationKey: ["EDIT_CUSTOMER"],
     mutationFn: async () => {
-      const product = queryClient.getQueryData(["CREATE_PRODUCT"]);
-      allProductSchema
-        .validate(product)
-        .then(async () => {
-          await Axios.post("/product", product);
-          toggleNotification({
-            show: true,
-            title: "Product Created",
-            type: "success",
-            message: "Product has been created succesfully",
-          });
-        })
-        .catch((reason) => {
-          console.log(reason?.message);
-          const errorList = String(reason)?.split(":");
+      setLoading(true);
+      const data = queryClient.getQueryData(["EDIT_CUSTOMER"]) as IUser & { address: Address[] };
+      const newData =  {
+        email: data.email,
+        fname: data.fname,
+        lname: data.lname,
+        phone: data.phone,
+        country: data.address[0]?.country,
+        state: data.address[0]?.state,
+        city: data.address[0]?.city,
+        address: data.address[0]?.address,
+        orders: cartData,
+        paymentType: "Pay on delivery",
+        price: 0,
+        active: true
+        
+      }
+      try {
+        // Validate data
+        await createOrderSchema.validate(newData);
+
+        // Make API request
+        await Axios.post("/ordersusers/no-create", newData);
+
+        toggleNotification({
+          show: true,
+          title: "Order Created",
+          type: "success",
+          message: "Order has been created successfully",
+        });
+        discard()
+      } catch (error) {
+        const message = (error as AxiosError<{ message: string }>).response?.data.message ?? "An error occurred";
+
+        // Handle validation errors
+        if ((error as Error).name === "ValidationError") {
+          const errorList = String(error)?.split(":");
           toggleNotification({
             show: true,
             title: errorList[1],
             type: "error",
-            message:
-              errorMessage[errorList[1].trim() as keyof typeof errorMessage],
+            message: errorMessage[errorList[1]?.trim() as keyof typeof errorMessage],
           });
+          return;
+        }
+
+        // Notify API error
+        toggleNotification({
+          show: true,
+          title: "Order Creation Error",
+          type: "error",
+          message: message,
         });
+      }
     },
-    onSuccess: () => {
-      alert("Product ");
+    onError: (error) => {
+      const message = (error as AxiosError<{ message: string }>).response?.data.message ?? "An error occurred";
+      toggleNotification({
+        show: true,
+        title: "Order Creation Error",
+        type: "error",
+        message: message,
+      });
     },
+    onSettled: () => setLoading(false),
   });
+
   return (
     <div className="container mx-auto mt-6 overflow-hidden">
       {/* Header */}
       <DashboardTitleHeader
-        title={"Create New Order"}
-        discardKey="CREATE_DASHBOARD_ORDER"
+        title="Create New Order"
+        discard={discard}
         addItem={mutate}
         btnText="Create Order"
+        loading={loading}
       />
 
       <div className="grid gap-6 md:grid-cols-2">
-        <EditCustomerForm user={null} address={null} />
+        {/* Customer Form */}
+        <EditCustomerForm reset={key} order user={null} address={null} />
 
-        {/* Inventory */}
+        {/* Cart Section */}
         <Card className="p-6">
           <div className="flex justify-between items-center">
             <Typography size="s1" as="p" align="left" className="mb-4">
@@ -88,7 +138,8 @@ export default function AddOrders() {
               Add item to cart
             </Button>
           </div>
-          {cartData && cartData?.length < 1 ? (
+
+          {cartData && cartData.length < 1 ? (
             <EmptyCart close={() => toggleDrawer(true)} dashboard />
           ) : (
             cartData?.map((product: IProduct & { weight: number }) => (

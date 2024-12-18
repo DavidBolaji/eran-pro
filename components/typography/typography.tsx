@@ -9,6 +9,7 @@ export interface TypographyProps extends HTMLAttributes<HTMLElement> {
   size: headings | texts;
   align: "left" | "center" | "right";
   children: ReactNode;
+  onClick?: () => void;
 }
 
 export const Typography: React.FC<TypographyProps> = ({
@@ -16,6 +17,7 @@ export const Typography: React.FC<TypographyProps> = ({
   size = "h4",
   align = "left",
   children,
+  onClick,
   ...rest
 }) => {
 const HeadingTag = as;
@@ -41,5 +43,5 @@ const HeadingTag = as;
     rest.className,
   );
 
-  return <HeadingTag className={headingClassnames}>{children}</HeadingTag>;
+  return <HeadingTag className={headingClassnames} onClick={onClick}>{children}</HeadingTag>;
 };

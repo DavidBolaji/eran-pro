@@ -1,4 +1,4 @@
-import { ICreateProduct } from "@/actions/get-products";
+import { ICreateProduct, IProduct } from "@/actions/get-products";
 import FormikNormalInput from "@/components/input/formik-normal-input";
 import { Toggle } from "@/components/input/toggle";
 import { useQueryClient } from "@tanstack/react-query";
@@ -6,13 +6,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Field, Form, Formik } from "formik";
 import React from "react";
 
-export const ProductInentoryForm = () => {
+export const ProductInentoryForm:React.FC<{  btnRef?: React.RefObject<HTMLButtonElement>, product: IProduct | null | undefined }> = ({btnRef, product}) => {
   const queryClient = useQueryClient()
+  const isEdit = (product?.name?.length ?? 0) > 0 
   return (
     <Formik
       initialValues={{
-        stock: true,
-        qty: "",
+        stock: product?.stock ?? true,
+        qty:String(product?.qty ?? 0) ?? "",
       }}
       validate={(values: { stock: boolean; qty: string }) => {
         const errors = {};
@@ -22,7 +23,7 @@ export const ProductInentoryForm = () => {
           stock,
           qty: +qty,
         };
-        queryClient.setQueryData(["CREATE_PRODUCT"], (old: ICreateProduct) =>
+        queryClient.setQueryData([isEdit ? "EDIT_PRODUCT" : "CREATE_PRODUCT"], (old: ICreateProduct) =>
           old
             ? {
                 ...old,
@@ -38,7 +39,7 @@ export const ProductInentoryForm = () => {
       onSubmit={() => {}}
       enableReinitialize
     >
-      {({}) => (
+      {({resetForm}) => (
         <Form className="">
           <div className="mb-6">
             <Field as={Toggle} name="stock" label="In stock" />
@@ -48,7 +49,16 @@ export const ProductInentoryForm = () => {
             name="qty"
             placeholder="Quantity in stock"
             align={-12}
+            y={-14}
           />
+          <button type="button" onClick={() => {
+            resetForm({
+              values: {
+                stock: true,
+                qty: ""
+              }
+            })
+          }} ref={btnRef} className="hidden"></button>
         </Form>
       )}
     </Formik>

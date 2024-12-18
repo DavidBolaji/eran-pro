@@ -32,13 +32,16 @@ export default async function Home({
     <div className="bg-grey-200">
       <HeroSection />
       <Wrapper>
+        <div id="orders" />
         <Typography
           as="h4"
           size="h4"
           align="left"
           className="font-bold md:pb-0 pb-2 lg:px-0 px-4 black-100"
+
         >
-          Shop by Meat Category: Find Your Perfect Cut 🍗🥩
+          Shop by Meat Category: Find Your Perfect Cut 🍗
+
         </Typography>
         <Typography
           as="p"
@@ -76,13 +79,14 @@ export default async function Home({
         </div>
       </Wrapper>
       <Wrapper>
+        <div id="sellings" />
         <Typography
           as="h4"
           size="h4"
           align="left"
           className="font-bold lg:px-0 px-4 black-100"
         >
-          Selling Fast: Get Them Before They&apos;re Gone! 🚀
+          Selling Fast: Get Them Before They&apos;re Gone!🚀
         </Typography>
         <Typography
           as="p"
@@ -102,7 +106,7 @@ export default async function Home({
         </div>
         <EnhanceCard />
         <div className="pb-20" />
-      </Wrapper>     
+      </Wrapper>
     </div>
   );
 }

@@ -7,9 +7,7 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { Filter, Plus, Search } from "lucide-react";
 import React, { Dispatch, SetStateAction, useRef } from "react";
@@ -31,12 +29,16 @@ interface MainHeaderProps {
   showFilters?: boolean;
   payment?: boolean;
   status?: boolean;
+  pType?: boolean;
+  pStatus?: boolean;
   url?: string;
   name?: string;
   title: string;
   categories?: Pick<Category, "id" | "name">[];
   calender?: boolean;
   onFilter: (form: FormData, params: URLSearchParams, path?: string) => void;
+  action?: () => void;
+  placeholder?: string
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({
@@ -46,6 +48,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
 
   payment = false,
   status = false,
+  pType = false,
+  pStatus = false,
   handleSearch,
   url,
   name,
@@ -53,6 +57,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   categories,
   calender = false,
   onFilter,
+  action,
+  placeholder
 }) => {
   const divRef = useRef<null | HTMLButtonElement>(null);
   const { toggleOverlay } = useOverlay();
@@ -61,7 +67,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   const screen = useBreakpoint();
   const queryClient = useQueryClient();
 
-  const {data: showFilters } = useQuery({
+  const { data: showFilters } = useQuery({
     queryKey: ['FILTER_OPEN'],
     queryFn: () => queryClient.getQueryData(['FILTER_OPEN']) ?? false as boolean
   })
@@ -78,13 +84,19 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
     // setShowFilters!(false);
   };
 
+  const handleDelete = () => {
+    if (action) {
+      queryClient.setQueryData(["OVERLAY"], () => true);
+      action()
+    }
+  }
+
   return (
     <div className="lg:pb-6 pt-2 bg-white border-b rounded-t-2xl">
       <div className="flex lg:flex-row flex-col  items-center lg:justify-between pt-5 mb-6">
         <h1
-          className={`text-2xl  px-6 font-semibold  lg:w-auto w-full lg:mb-0 mb-4 text-nowrap ${
-            screen.lg ? "" : "border-b pb-4"
-          }`}
+          className={`text-2xl  px-6 font-semibold  lg:w-auto w-full lg:mb-0 mb-4 text-nowrap ${screen.lg ? "" : "border-b pb-4"
+            }`}
         >
           {title}
         </h1>
@@ -93,7 +105,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
             <div className="relative lg:min-w-[354px] md:block hidden">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search for product"
+                placeholder={placeholder ?? "Search for product"}
                 className="pl-8 rounded-full"
                 onChange={handleSearch}
               />
@@ -114,13 +126,14 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                 >
                   {(searchParams.getAll("category")?.length || 0) +
                     (searchParams.getAll("status")?.length || 0) +
+                    (searchParams.getAll("pStat")?.length || 0) +
+                    (searchParams.getAll("promoT")?.length || 0) +
                     (searchParams.getAll("payment")?.length || 0)}
                 </Badge>
               </ShadButton>
               <div
-                className={`absolute top-0 ${
-                  status ? "-right-1/4 -translate-x-8" : ""
-                } z-10`}
+                className={`absolute top-0 ${status ? "-right-1/4 -translate-x-8" : ""
+                  } z-10`}
               >
                 <FilterDialog
                   open={showFilters as boolean}
@@ -130,18 +143,21 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                   onFilter={onFilter}
                   payment={payment}
                   status={status}
+                  pStatus={pStatus}
+                  pType={pType}
                 />
               </div>
             </div>
           )}
           {more && (
-            <Select>
+            <Select >
               <SelectTrigger ref={divRef} className="w-32 rounded-full">
-                <SelectValue placeholder="More Actions" />
+                More Action
+                {/* <SelectValue placeholder="More Actions" /> */}
+                {/* <SelectValue placeholder="More Actions" defaultValue={"More Actions"} /> */}
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="delete">Delete Selected</SelectItem>
-                <SelectItem value="archive">Archive Selected</SelectItem>
+                <span className="p-2 hover:bg-green-500/10 cursor-pointer text-sm font-satoshi inline-block" onClick={handleDelete}>Delete Selected</span>
               </SelectContent>
             </Select>
           )}
@@ -169,13 +185,13 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
           <div className="relative px-6 lg:min-w-[154px] md:hidden block mt-5 w-full">
             <Search className="absolute left-9 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search for product"
+              // placeholder={placeholder ?? "Search for product"}
               className="pl-8 rounded-full"
               onChange={handleSearch}
             />
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };

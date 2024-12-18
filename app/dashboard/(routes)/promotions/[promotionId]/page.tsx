@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { getSinglePromotion } from "@/actions/get-promotions";
 import { Crumb } from "@/components/crumb/crumb";
 import { endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
@@ -20,10 +21,10 @@ export default async function PromotionPage({
 }: CustomerPageSearchParams) {
   const promotionId = params.promotionId;
 
-  const promotion = await getSinglePromotion(promotionId) as Promotion & { product: (Product & {images: Image[]})[] | null } & {category: Category[] | null} | null;
+  const promotion = await getSinglePromotion(promotionId) as Promotion & { product: (Product & { images: Image[] })[] | null } & { category: Category[] | null } | null;
   const isActive = promotion &&
-        isBefore(new Date(promotion?.startDate), endOfToday()) &&
-        isAfter(new Date(promotion?.endDate), startOfToday())
+    isBefore(new Date(promotion?.startDate), endOfToday()) &&
+    isAfter(new Date(promotion?.endDate), startOfToday())
 
   console.log(JSON.stringify(promotion, null, 2))
 
@@ -41,7 +42,7 @@ export default async function PromotionPage({
               href: "/dashboard/promotions",
             },
             {
-              text: isActive ? "Active": "Cancelled",
+              text: isActive ? "Active" : "Cancelled",
               href: "#",
             },
             {

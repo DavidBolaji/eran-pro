@@ -121,20 +121,22 @@ export const PromotionForm: React.FC<{
               as={FormikNormalInput}
               name="name"
               placeholder="Promotion name"
-              align={-9}
+              align={-12}
+              y={-14}
             />
             <Field
               as={FormikNormalInput}
               name="code"
               placeholder="Promotion code"
               align={-11}
+              y={-14}
             />
             <Field
               as={FormikNormalInput}
               name="discount"
               placeholder="Percentage discount"
               align={-15}
-              y={-10}
+              y={-14}
             />
             <div className="flex gap-x-4">
               <Field
@@ -150,7 +152,7 @@ export const PromotionForm: React.FC<{
                 name="endDate"
                 placeholder="End date"
                 type="date"
-                align={-1}
+                align={-3}
                 y={-14}
               />
             </div>

@@ -21,6 +21,7 @@ export default function FormikSelectInput({
 
   const handleChange = (e: FocusEvent<HTMLSelectElement>) => {
     field.onChange(e); 
+    
     if (rest.onChange) rest.onChange(e); 
   };
 

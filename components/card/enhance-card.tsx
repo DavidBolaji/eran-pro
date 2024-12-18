@@ -8,7 +8,7 @@ import { ArrowUpRightIcon } from "@/constants/icons/arrow-up-right";
 
 export const EnhanceCard = () => {
   return (
-    <div className="relative w-full py-10 bg-black-600 md:rounded-2xl">
+    <div className="relative overflow-hidden w-full py-10 bg-black-600 md:rounded-2xl">
       <div className="px-6">
         <Typography
           as="h4"
@@ -29,14 +29,16 @@ export const EnhanceCard = () => {
           flavourful marinades, fresh veggies, and delicious sauces to elevate
           your cooking experience!
         </Typography>
-        <Button iconR={ArrowUpRightIcon} color="dark" size="lg">
-          Shop Now
-        </Button>
+        <a href="#orders">
+          <Button iconR={ArrowUpRightIcon} color="dark" size="lg">
+            Shop Now
+          </Button>
+        </a>
       </div>
 
       <Image
         className="absolute right-[33px] bottom-[22px] md:block hidden"
-        src={Images?.Black}
+        src={Images?.BigLogo}
         alt="right circle"
         width={216}
         height={216}
@@ -44,14 +46,14 @@ export const EnhanceCard = () => {
       />
       <Image
         className="absolute z-10 right-[61px] bottom-[50px] md:block hidden"
-        src={Images.Black}
+        src={Images.CenterMeat}
         alt="right circle"
         width={160}
         height={160}
       />
       <Image
         className="absolute right-[132px] top-[51px] md:block hidden"
-        src={Images.Black}
+        src={Images.BigLogo}
         alt="right circle"
         width={142}
         height={142}
@@ -59,7 +61,7 @@ export const EnhanceCard = () => {
       />
       <Image
         className="absolute right-[154px] top-[73px] md:block hidden"
-        src={Images.Black}
+        src={Images.LeftMeat}
         alt="right circle"
         width={98}
         height={98}
@@ -75,10 +77,26 @@ export const EnhanceCard = () => {
           priority
         />
         <Image
+          className="absolute translate-x-5 translate-y-5"
+          src={Images.BreastMeat}
+          alt="right circle"
+          width={54}
+          height={120}
+          priority
+        />
+        <Image
           className=""
           src={Images.Bottom}
           alt="right circle"
           width={95}
+          height={190}
+          priority
+        />
+        <Image
+          className="absolute rotate-180 translate-x-[140px] translate-y-5"
+          src={Images.CowMeat}
+          alt="right circle"
+          width={55}
           height={190}
           priority
         />

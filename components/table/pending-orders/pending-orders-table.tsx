@@ -16,7 +16,6 @@ export default function PendingOrdersTable({
   initialOrders,
   onLoadMore,
   onSort,
-  onSearch,
 }:  PendingOrdersTableProps) {
   const {
     items,
@@ -27,7 +26,6 @@ export default function PendingOrdersTable({
     initialItems: initialOrders as PendingOrders[],
     onLoadMore,
     onSort,
-    onSearch,
     onFilter(form, params) {
       filterPendingOrders(form, params)
   },

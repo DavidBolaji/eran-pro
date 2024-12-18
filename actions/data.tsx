@@ -17,10 +17,12 @@ export const productQuery = {
       select: {
         id: true,
         name: true,
+        
       },
     },
     promotion: {
       select: {
+        id: true,
         name: true,
         discount: true,
         startDate: true,

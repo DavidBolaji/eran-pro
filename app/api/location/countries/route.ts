@@ -13,7 +13,7 @@ export async function OPTIONS() {
 }
 
 export async function GET(
-    _req: Request,
+    
   ) {
     try {
     

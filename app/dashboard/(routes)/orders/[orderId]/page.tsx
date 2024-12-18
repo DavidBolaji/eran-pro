@@ -4,6 +4,7 @@ import React from "react";
 import ViewOrder from "./components/view-order";
 import { getSingleOrder } from "@/actions/get-orders";
 import { OrderComponent } from "./components/order-component";
+import { Order } from "@/components/table/orders-table/types";
 
 export const revalidate = 0;
 
@@ -44,9 +45,9 @@ export default async function CustomerOrderPage({
         />
       </div>
       <div className="px-4">
-        <ViewOrder order={order ?? null} />
+        <ViewOrder order={order as unknown as Order ?? null} />
       </div>
-      <OrderComponent order={order ?? null} />
+      <OrderComponent order={order as unknown as Order ?? null} />
     </div>
   );
 }

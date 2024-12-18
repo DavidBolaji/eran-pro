@@ -27,10 +27,10 @@ export const OrderComponent = async ({
           />
           <CustomerDetailDisplay
             user={{
-              fname: order?.User?.fname as string,
-              lname: order?.User?.lname as string,
-              email: order?.User?.email as string,
-              phone: order?.User?.phone as string,
+              fname: order?.User?.fname as string ?? order?.fname as string,
+              lname: order?.User?.lname as string ?? order?.lname as string,
+              email: order?.User?.email as string ?? order?.email as string,
+              phone: order?.User?.phone as string ?? order?.phone as string,
             }}
           />
           <CustomerDeliveryDetail

@@ -24,6 +24,11 @@ export default async function OrdersPage({
     : searchParams.category
     ? [searchParams.category]
     : [];
+  const status = Array.isArray(searchParams.status)
+    ? searchParams.status
+    : searchParams.status
+    ? [searchParams.status]
+    : [];
   // const categories = searchParams.category?.split(",") || [];
   const page = parseInt(searchParams.page) || 1;
   const limit = parseInt(searchParams.limit) || 7;
@@ -35,6 +40,7 @@ export default async function OrdersPage({
 
   const req = getDashboardOrder({
     categories: categories.map((el) => el.toLowerCase()),
+    status: status.map((el) => el.toUpperCase()),
     page,
     limit,
     sort,

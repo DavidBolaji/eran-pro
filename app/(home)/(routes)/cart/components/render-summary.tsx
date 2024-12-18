@@ -39,7 +39,7 @@ export const RenderSummary = () => {
           </div>
         </div>
         <div className="flex flex-col items-end w-full space-y-2">
-          <Typography
+          {/* <Typography
             align="left"
             size="s1"
             as="p"
@@ -54,7 +54,7 @@ export const RenderSummary = () => {
             className="black-100 cursor-pointer underline font-bold text-sm leading-5"
           >
             Change Address
-          </Typography>
+          </Typography> */}
         </div>
       </div>
       <div className="flex items-center justify-between px-6 pt-8 bg-grey-200 pb-6 mb-4">
