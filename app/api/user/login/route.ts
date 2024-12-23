@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60, // 1 hr
       path: "/",
-      sameSite: "strict",
+      sameSite: "lax",
       secure: process.env.NEXT_PUBLIC_SECURE === "true",
       domain: process.env.NEXT_PUBLIC_DOMAIN,
     });
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60, // 7 days
       path: "/",
-      sameSite: "strict",
+      sameSite: "lax",
       secure: process.env.NEXT_PUBLIC_SECURE === "true",
       domain: process.env.NEXT_PUBLIC_DOMAIN,
     });
