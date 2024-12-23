@@ -28,7 +28,6 @@ export default async function CustomerPage({
       ? searchParams.payment
       : [];
 
-      console.log('[CAT]', category)
 
   // Ensure status is always an array
   const status =
@@ -57,6 +56,8 @@ export default async function CustomerPage({
     categoryRequest,
   ]);
 
+  const detail = (customer?.customer?.fname && customer?.customer?.fname?.length) && (customer?.customer?.lname && customer?.customer?.lname?.length) ?` ${customer?.customer?.fname} ${customer?.customer?.lname}` : customer?.customer?.email
+
 
   return (
     <div className="p-4">
@@ -72,7 +73,7 @@ export default async function CustomerPage({
               href: "/dashboard/customers",
             },
             {
-              text: `${customer.customer?.fname} ${customer.customer?.lname}`,
+              text: detail,
               href: "",
             },
           ]}

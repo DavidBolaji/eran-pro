@@ -6,7 +6,7 @@ import { filterProduct } from "@/actions/get-products";
 import { useSearchParams } from "next/navigation";
 import { filterOrder } from "@/actions/get-orders";
 import { filterPromotions } from "@/actions/get-promotions";
-// import { useOverlay } from "./use-overlay";
+import { filterContent, filterContentFaq } from "@/actions/get-contents";
 
 export const useDeleteModal = () => {
     const queryClient = useQueryClient();
@@ -86,6 +86,8 @@ export const useDeleteModal = () => {
            if (item.key === "DELETE_PRODUCT") return filterProduct(formData, params)
            if (item.key === "DELETE_ORDERS") return filterOrder(formData, params)
            if (item.key === "DELETE_PROMOTIONS") return filterPromotions(formData, params)
+           if (item.key === "DELETE_BLOGS") return filterContent(formData, params)
+           if (item.key === "DELETE_FAQS") return filterContentFaq(formData, params, "/dashboard/contents?tab=FAQs")
         },
         onError: (error) => {
             toggleNotification({

@@ -11,7 +11,7 @@ import { ICreateProduct } from "@/actions/get-products";
 export const isAllowedFileType = (fileType: string) =>
   ["image/jpeg", "image/png"].includes(fileType);
 
-export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElement>, urls?: string[]}> = ({btnRef, urls}) => {
+export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElement>, urls?: string[], count?: number}> = ({btnRef, urls, count = 5}) => {
   const ref = useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
   const { toggleNotification } = useNotification();
@@ -152,7 +152,7 @@ export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElemen
                   </p>
                 </div>
               ) : loading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7">
+                <div className="grid grid-cols-5">
                   {values.urls.map((url: string, idx: number) => (
                     <div
                       key={idx}
@@ -184,7 +184,7 @@ export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElemen
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7">
+                <div className="grid grid-cols-5 ">
                   {values.urls.map((url: string, idx: number) => (
                     <div
                       key={idx}
@@ -207,7 +207,7 @@ export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElemen
                       </button>
                     </div>
                   ))}
-                  {values.urls.length > 0 && values.urls.length < 5 && (
+                  {values.urls.length > 0 && values.urls.length < count && (
                     <div className="relative aspect-square border-dashed w-16 h-16 rounded-2xl border-[#6E8C7B] bg-grey-200 border-2 flex items-center justify-center">
                       <div className="rounded-2xl object-cover p-2 w-16 h-16" />
                       <button
@@ -222,7 +222,7 @@ export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElemen
                 </div>
               )}
             </div>
-            {values.urls.length > 0 && values.urls.length < 5 && (
+            {values.urls.length > 0 && values.urls.length < count && (
               <div className="text-xs italic black-200 font-medium leading-4 pt-4 pb-2 text-center w-full block">
                 Add more images (Up to {5 - values.urls.length})
               </div>
@@ -239,6 +239,7 @@ export const UploadImageForm:React.FC<{btnRef?: React.RefObject<HTMLButtonElemen
               <Button
                 color="light"
                 size="lg"
+                disabled={values.urls.length === count}
                 className="bg-black-600 border-0 h-9"
                 onClick={open}
               >

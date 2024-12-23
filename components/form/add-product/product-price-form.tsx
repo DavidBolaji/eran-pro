@@ -29,7 +29,7 @@ export const ProductPriceForm:React.FC<{  btnRef?: React.RefObject<HTMLButtonEle
     <Formik
       initialValues={{
         unit: hash[product?.unit as keyof typeof hash]  ?? "Per kg",
-        price: typeof String(product?.price) === "undefined" ? "" : String(product?.price),
+        price: product?.price || "",
         promotion: product?.promotion[0]?.id ?? "",
       }}
       onSubmit={() => {}}

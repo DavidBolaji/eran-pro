@@ -16,12 +16,10 @@ import { useDeleteModal } from "@/hooks/use-delete-modal";
 
 export default function OrderTable({
   initialProducts = [],
-  onLoadMore,
   onSort,
   totalPages,
   page,
   itemsPerPage,
-  categories
 }: OrderTableProps) {
   const {toggleModal} = useDeleteModal()
   const {
@@ -36,13 +34,11 @@ export default function OrderTable({
     toggleSelectAll,
     toggleSelectItem,
     selectedItems,
-    isMobile,
     loading,
     deleteMultiple,
     handleSearch
   } = useTable<Order>({
     initialItems: initialProducts,
-    onLoadMore,
     onSort,
     onSearch(form, params) {
       filterOrder(form, params)
@@ -56,7 +52,7 @@ export default function OrderTable({
   });
 
   return (
-    <div className="w-full scrollbar-hide min-w-[1000px]">
+    <div className="w-full scrollbar-hide">
       <MainHeader
         title={"Orders"}
         name={"Create New Order"}
@@ -100,7 +96,7 @@ export default function OrderTable({
 
       <Pagination
         ref={ref}
-        isMobile={isMobile}
+        isMobile={false}
         loading={loading}
         totalPages={totalPages ?? 0}
         page={page ?? 1}

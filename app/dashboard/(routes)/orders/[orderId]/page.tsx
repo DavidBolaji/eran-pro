@@ -47,6 +47,7 @@ export default async function CustomerOrderPage({
       <div className="px-4">
         <ViewOrder order={order as unknown as Order ?? null} />
       </div>
+      {/* @ts-ignore */}
       <OrderComponent order={order as unknown as Order ?? null} />
     </div>
   );

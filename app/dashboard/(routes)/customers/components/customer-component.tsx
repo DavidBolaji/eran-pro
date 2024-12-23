@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import { SelectedCustomerButtons } from "./select-customer-buttons";
 import { IUser } from "@/actions/get-customers";

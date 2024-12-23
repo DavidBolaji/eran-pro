@@ -22,7 +22,8 @@ interface FilterDialogProps {
   status?: boolean;
   pStatus?: boolean;
   pType?: boolean;
-  orderStatus?: boolean;
+  post?: boolean;
+  calenderTxt?: string
 }
 
 export default function FilterDialog({
@@ -33,9 +34,10 @@ export default function FilterDialog({
   calender,
   payment,
   status,
-  orderStatus,
+  post,
   pStatus,
-  pType
+  pType,
+  calenderTxt
 }: FilterDialogProps) {
   const searchParams = useSearchParams();
   const btnRef = useRef<HTMLButtonElement | null>(null);
@@ -106,7 +108,6 @@ export default function FilterDialog({
     params.delete("dateFrom");
     params.delete("dateTo");
     onFilter(formData, params);
-    console.log(params, '[Parrr]')
 
     // Trigger Apply to reset filters
     btnRef.current?.click();
@@ -126,6 +127,7 @@ export default function FilterDialog({
             <X className="h-4 w-4" />
           </Button>
         </div>
+        {/* @ts-ignore */}
         <form action={handleFilter}>
           <FilterCollapse
             data={[
@@ -170,6 +172,48 @@ export default function FilterDialog({
                   },
                 ]
                 : []),
+
+                ...(post
+                  ? [
+                    {
+                      key: "111",
+                      label: "Status",
+                      children: (
+                        <div className="pt-2">
+                          <div className="space-y-2">
+                            {[
+                              { id: "478894", name: "Published" },
+                              { id: "478894", name: "Draft" },
+                             
+                            ]?.map((status) => (
+                              <div
+                                key={status.id}
+                                className="flex items-center space-x-2"
+                              >
+                                <Checkbox
+                                  id={status.name.toLowerCase()}
+                                  name="Cstat[]"
+                                  value={status.name}
+                                  defaultChecked={isChecked(
+                                    `cStat`,
+                                    status.name
+                                  )}
+                                />
+                                <label
+                                  htmlFor={status.name.toLowerCase()}
+                                  className="text-sm leading-5 font-medium"
+                                >
+                                  {status.name}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                          {/* <button className="hidden" type="submit" ref={btnRef} /> */}
+                        </div>
+                      ),
+                    },
+                  ]
+                  : []),
 
               ...(categories
                 ? [
@@ -296,7 +340,7 @@ export default function FilterDialog({
                 ? [
                   {
                     key: "2",
-                    label: pType ? "Date range": "Last order date range",
+                    label: pType ? "Date range": calenderTxt ? calenderTxt : "Last order date range",
                     children: (
                       <div className="-ml-4 scale-[0.95] translate-y-2">
                         <Calendar

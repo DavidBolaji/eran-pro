@@ -8,7 +8,7 @@ import { useTable } from "@/hooks/use-table";
 import { MainHeader } from "../main-header";
 import { Table, TableBody } from "@/components/ui/table";
 import { Product, ProductTableProps } from "./types";
-import {  filterProduct } from "@/actions/get-products";
+import {  filterProduct, loadMoreProducts } from "@/actions/get-products";
 import { Empty } from "antd";
 import { useDeleteModal } from "@/hooks/use-delete-modal";
 
@@ -34,13 +34,21 @@ export default function ProductTable({
     toggleSelectAll,
     toggleSelectItem,
     selectedItems,
-    isMobile,
     loading,
     deleteMultiple,
-    handleSearch
+    handleSearch,
+    hasMore
   } = useTable<Product>({
     initialItems: initialProducts,
-    onLoadMore,
+    async onLoadMore (page: number) {
+      try {
+        return await loadMoreProducts({page, limit:3})
+      
+      } catch (error) {
+        console.error('Error loading more items:', error);
+        return { items: [], hasMore: false };
+      }
+    },
     onSort,
     onSearch(form, params) {
       filterProduct(form, params)
@@ -52,9 +60,9 @@ export default function ProductTable({
       toggleModal(true, "DELETE_PRODUCT", data)
     },
   });
-
+  // min-w-[1000px]
   return (
-    <div className="w-full scrollbar-hide min-w-[1000px]">
+    <div className="w-full scrollbar-hide ">
       <MainHeader
         title={"Product List"}
         name={"Add Product"}
@@ -97,12 +105,13 @@ export default function ProductTable({
 
       <Pagination
         ref={ref}
-        isMobile={isMobile}
+        isMobile={false}
         loading={loading}
         totalPages={totalPages ?? 0}
         page={page ?? 1}
         itemsPerPage={itemsPerPage ?? 10}
         onFilter={filterProduct}
+        hasMore={hasMore}
       />
     </div>
   );

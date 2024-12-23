@@ -8,6 +8,9 @@ import React from "react";
 import { MenuStyled } from "./dashboard.styles";
 import usePath from "@/hooks/use-path";
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
+import { useUser } from "@/hooks/use-user";
+
 const { useBreakpoint } = Grid;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -40,10 +43,11 @@ const items: MenuItem[] = [
   ),
   getItem("Customers", "/dashboard/customers", <ICON.UsersIcon />),
   getItem("Promotions", "/dashboard/promotions", <ICON.GiftIcon />),
-  getItem("Content", "/dashboard/content", <ICON.FileIcon />),
+  getItem("Content", "/dashboard/contents", <ICON.FileIcon />),
 ];
 
 export const Sidebar = () => {
+  const {logout} = useUser()
   const { locationCurrent } = usePath();
   const screen = useBreakpoint();
   const router = useRouter();
@@ -79,6 +83,12 @@ export const Sidebar = () => {
             return true;
           })}
         />
+         <div className="absolute bottom-6  px-5 -translate-x-2 cursor-pointer gap-3 font-bold font-satoshi pl-12 flex items-center red-100"
+         onClick={() => logout(true)}
+         >
+          <LogOut size={16} />
+          Logout
+        </div>
       </Sider>
     )
   );

@@ -1,11 +1,13 @@
 import { Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
 
-import { CategoryDrawer } from "@/components/drawer/category-drawer/category-drawer";
+
 import Loading from "@/components/loading";
 import { Sidebar } from "../components/sidebar";
 import { DashboardHeader } from "../components/dashboard-header";
 import { IsAuthAdmin } from "../components/is-auth-admin";
+import { CategoryBlogDrawer } from "@/components/drawer/category-drawer/category-blog-drawer";
+import { CategoryDrawer } from "@/components/drawer/category-drawer/category-drawer";
 
 
 export default function DashboardLayout({
@@ -29,7 +31,7 @@ export default function DashboardLayout({
           <Loading />
           {children}
           <CategoryDrawer />
-         
+          <CategoryBlogDrawer />
         </Content>
       </Layout>
     </Layout>

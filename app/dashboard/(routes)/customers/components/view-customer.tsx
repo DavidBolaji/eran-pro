@@ -56,11 +56,13 @@ export default function ViewCustomer({
     mutate()
   };
 
+  const detail = (customer?.fname && customer?.fname?.length) && (customer?.lname && customer?.lname?.length) ?` ${customer?.fname} ${customer?.lname}` : customer?.email
+
   return (
     <div className="container mx-auto mt-6 overflow-hidden">
       {/* Header */}
       <CustomerTitleHeader
-        title={`${customer?.fname} ${customer?.lname}`}
+        title={detail}
         discardKey="ADD_PRODUCT"
         addItem={action}
         save={save}

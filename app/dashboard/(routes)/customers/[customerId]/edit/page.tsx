@@ -24,7 +24,7 @@ export default async function CustomerEditPage({
     customerRequest
   ]);
 
-  console.log(customer.customer?.orders)
+  const detail = (customer?.customer?.fname && customer?.customer?.fname?.length) && (customer?.customer?.lname && customer?.customer?.lname?.length) ?` ${customer?.customer?.fname} ${customer?.customer?.lname}` : customer?.customer?.email
 
   return (
     <div className="p-4">
@@ -40,7 +40,7 @@ export default async function CustomerEditPage({
               href: "/dashboard/customers",
             },
             {
-              text: `${customer.customer?.fname} ${customer.customer?.lname}`,
+              text: detail,
               href: "",
             },
           ]}
@@ -53,6 +53,7 @@ export default async function CustomerEditPage({
             user={customer?.customer}
             address={customer.customer?.orderAddress ?? []}
             disabled
+            customer={false}
           />
         </div>
       </div>

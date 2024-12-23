@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Images } from "@/constants/image";
 import { Typography } from "../typography/typography";
 import { ICON } from "@/constants/icon";
+import Link from "next/link";
 
 export const Header2 = () => {
   return (
@@ -11,6 +12,7 @@ export const Header2 = () => {
       <Wrapper>
         <div className="grid grid-cols-10 items-center h-full lg:px-0 md:px-4">
           <div className="col-span-2 md:px-0 pl-4">
+            <Link href={'/'}>
             <Image
               priority
               src={Images.BlackLogo}
@@ -18,6 +20,7 @@ export const Header2 = () => {
               width={120}
               height={40}
             />
+            </Link>
           </div>
           <div className="col-span-6 md:block hidden">
             <Typography 

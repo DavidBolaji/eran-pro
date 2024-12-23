@@ -25,8 +25,9 @@ export const EditCustomerForm: React.FC<{
   address: Address[] | null;
   disabled?: boolean,
   order?: boolean,
-  reset?: number
-}> = ({ user, address, disabled = false, order = false, reset }) => {
+  reset?: number,
+  customer?: boolean
+}> = ({ user, address, disabled = false, order = false, reset, customer = true }) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const { countries } = useCountry();
   const { fetchCity, states } = useAddress();
@@ -134,9 +135,9 @@ export const EditCustomerForm: React.FC<{
               />
             </div>
           </div>
-          {!order ? <div className="bg-white mt-6 px-4 lg:hidden block py-6 rounded-2xl">
-            <UserUploadComponent view />
-          </div>: null}
+          {!order ? customer ?  <div className="bg-white mt-6 px-4 lg:hidden block py-6 rounded-2xl">
+            <UserUploadComponent view customer={customer} />
+          </div>: null: null}
           <div className="bg-white mt-6 py-6 px-4 rounded-2xl space-y-4">
             <div className="flex lg:flex-row flex-col justify-between items-start lg:items-center">
               <Typography

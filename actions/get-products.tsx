@@ -84,7 +84,7 @@ export const getProducts = async (categoryId: string): Promise<IProduct[]> => {
   }
 };
 
-export const getProduct = async (productId: string): Promise<IProduct | null> => {
+export const  getProduct = async (productId: string): Promise<IProduct | null> => {
   try {
     const product = await db.product.findUnique({
       where: {
@@ -308,12 +308,21 @@ export const filterProduct = (
   const startDate = formData.get("startDate") as string;
   const endDate = formData.get("endDate") as string;
   const searchQuery = params.get("searchQuery") as string;
-
-  // Handle categories - Add or remove based on selection
-  params.delete("category");
+  const cat = params.getAll("category") as  unknown as (string | string[]);
+ console.log(params, '[ONE]');
+ 
+ // Handle categories - Add or remove based on selection
+ params.delete("category");
+ console.log(params, '[ONE]');
   if (categories.length > 0) {
     categories.forEach((category) => params.append("category", category));
     params.set("page", "1"); // Reset to page 1 if categories change
+  } else {
+    if(cat) {
+      (cat as string[]).forEach((el) => 
+        params.append("category", el as string)
+      )
+    }
   }
 
   // Handle page - Maintain page if unchanged, reset to 1 otherwise
@@ -358,6 +367,82 @@ export const filterProduct = (
   // Redirect to the new URL with updated parameters
   redirect(queryString ? `${destinationPath}?${queryString}` : destinationPath);
 };
+
+export const loadMoreProducts = async ({
+  page = 1,
+  limit = 10,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  const skip = (page - 1) * limit;
+
+  try {
+    // Count total items for determining `hasMore`
+    const totalItems = await db.product.count();
+
+    // Fetch the products for the given page and limit
+    const products = await db.product.findMany({
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" }, // Sort by creation date in descending order
+      select: {
+        id: true,
+        name: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            Promotion: {
+              where: { promotionType: "CATEGORY" },
+              select: {
+                code: true,
+                discount: true,
+              },
+            },
+          },
+        },
+        price: true,
+        stock: true,
+        qty: true,
+        promotion: {
+          select: {
+            code: true,
+            discount: true,
+          },
+        },
+        status: true,
+        img: true,
+        images: {
+          select: {
+            url: true,
+          },
+        },
+      },
+    });
+
+    // Determine if there are more items to load
+    const hasMore = skip + products.length < totalItems;
+
+    // Normalize promotions to include both category and product-level promotions
+    const finalProducts = products.map((product) => {
+      const categoryPromotions = product.category?.Promotion || [];
+      const productPromotions = product.promotion || [];
+      const allPromotions = [...categoryPromotions, ...productPromotions];
+
+      return {
+        ...product,
+        promotion: allPromotions,
+      };
+    });
+
+    return { items: finalProducts, hasMore };
+  } catch (error) {
+    console.error("Error loading more products:", error);
+    return { items: [], hasMore: false };
+  }
+};
+
 
 export const resetProduct = () => {
   redirect(`/dashboard/products`);

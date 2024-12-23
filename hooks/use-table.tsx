@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 function debounce<T extends (...args: any[]) => void>(func: T, wait: number): T {
@@ -17,54 +17,65 @@ export const useTable = <T extends { id: string }>({
   onLoadMore,
   onSearch,
   onFilter,
-  onDeleteMany
+  onDeleteMany,
 }: {
   initialItems: T[];
-  onLoadMore?: () => Promise<T[]>;
+  onLoadMore?: (page: number) => Promise<{ items: T[]; hasMore: boolean }>;
   onSort?: (column: keyof T, direction: "asc" | "desc") => void;
   onSearch?: (form: FormData, params: URLSearchParams) => void;
   onFilter?: (form: FormData, params: URLSearchParams, path?: string) => void;
   onDeleteMany?: (data: Set<string>) => void;
+
 }) => {
   const searchParams = useSearchParams();
-  const [items, setItems] = React.useState<T[]>(initialItems);
-  const [sortColumn, setSortColumn] = React.useState<keyof T | null>(null);
-  const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">(
-    "asc"
-  );
-  const [loading, setLoading] = React.useState(false);
-  const [selectedItems, setSelectedItems] = React.useState<Set<string>>(
-    new Set()
-  );
-  const [showFilters, setShowFilters] = React.useState(false);
+  const [items, setItems] = useState<T[]>(initialItems);
+  const [loading, setLoading] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, sethasMore] = useState(true);
+  
+  const [sortColumn, setSortColumn] = useState<keyof T | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [showFilters, setShowFilters] = useState(false);
+
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const { ref, inView } = useInView({ threshold: 0 });
+  const { ref, inView } = useInView({ threshold: 0.8 });
 
-  React.useEffect(() => {
-    if (inView && !loading && onLoadMore) {
-      loadMore();
-    }
-  }, [inView, loading, onLoadMore]);
-
-  React.useEffect(() => {
-    setItems(initialItems);
-  }, [initialItems]);
-
-  const loadMore = async () => {
-    if (!onLoadMore) return;
+  const loadMore = useCallback(async () => {
+    if (!onLoadMore || !hasMore || loading) return;
     setLoading(true);
     try {
-      const newItems = await onLoadMore();
-      setItems((prev) => [...prev, ...newItems]);
+      const { items: newItems, hasMore: moreItems } = await onLoadMore(currentPage);
+      console.log(currentPage)
+       // Avoid duplicates by filtering out products that are already in the current list
+    setItems((prev) => {
+      new Set(newItems.map((item) => item.id));
+      const filteredNewItems = newItems.filter((item) => !prev.some((p) => p.id === item.id));
+      return [...prev, ...filteredNewItems];
+    });
+
+    setCurrentPage((prevPage) => prevPage + 1);
+    sethasMore(moreItems);
+    } catch (error) {
+      console.error("Error loading more items:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (inView && !loading && hasMore) {
+      loadMore();
+    }
+  }, [inView, loading, hasMore]);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
 
   const handleSort = (column: keyof T, path?: string) => {
-    const direction =
-      sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
+    const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
     setSortColumn(column);
     setSortDirection(direction);
 
@@ -84,22 +95,17 @@ export const useTable = <T extends { id: string }>({
     }
   };
 
-  
-  const handleSearchDebounced = debounce(
-    (value: string) => {
+  const handleSearchDebounced = debounce((value: string) => {
+    const params = new URLSearchParams(
+      searchParams as unknown as Record<string, string>
+    );
+    const formData = new FormData();
+    params.set("searchQuery", value);
 
-      const params = new URLSearchParams(
-        searchParams as unknown as Record<string, string>
-      );
-      const formData = new FormData();
-      params.set("searchQuery", value);
-
-      if (onSearch) {
-        onSearch(formData, params);
-      }
-    },
-    300 // Adjust the delay as needed
-  );
+    if (onSearch) {
+      onSearch(formData, params);
+    }
+  }, 300);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSearchDebounced(e.target.value);
@@ -148,6 +154,7 @@ export const useTable = <T extends { id: string }>({
     allChecked,
     sortColumn,
     loading,
-    deleteMultiple
+    deleteMultiple,
+    hasMore
   };
 };

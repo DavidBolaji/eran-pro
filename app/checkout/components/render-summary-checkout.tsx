@@ -294,6 +294,7 @@ export const RenderSummaryCheckout = () => {
                 reference: Date.now().toString(),
               }));
               router.push("/success");
+              return
             }
             await Axios.post("/ordersusers/no-create", {
               ...data,

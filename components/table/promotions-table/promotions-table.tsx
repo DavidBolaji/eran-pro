@@ -16,7 +16,7 @@ import { useDeleteModal } from "@/hooks/use-delete-modal";
 
 export default function PromotionsTable({
   initialPromotions = [],
-  onLoadMore,
+
   onSort,
   totalPages,
   page,
@@ -36,13 +36,11 @@ export default function PromotionsTable({
     toggleSelectAll,
     toggleSelectItem,
     selectedItems,
-    isMobile,
     loading,
     deleteMultiple,
     handleSearch
   } = useTable<Promotion>({
     initialItems: initialPromotions,
-    onLoadMore,
     onSort,
     onSearch: (form, params) => {
       filterPromotions(form, params)
@@ -56,7 +54,7 @@ export default function PromotionsTable({
   });
 
   return (
-    <div className="w-full scrollbar-hide min-w-[1000px]">
+    <div className="w-full scrollbar-hide">
       <MainHeader
         title={"Promotions"}
         name={"Create Promotion"}
@@ -102,7 +100,7 @@ export default function PromotionsTable({
 
       <Pagination
         ref={ref}
-        isMobile={isMobile}
+        isMobile={false}
         loading={loading}
         totalPages={totalPages ?? 0}
         page={page ?? 1}

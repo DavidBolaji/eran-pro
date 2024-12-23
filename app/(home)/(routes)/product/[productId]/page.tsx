@@ -6,16 +6,58 @@ import { Crumb } from "@/components/crumb/crumb";
 import { ProductContent } from "@/components/product-content";
 import { Typography } from "@/components/typography/typography";
 import db from "@/db/db";
-import { collapseData, collapseData2 } from "@/utils/data";
+import { collapseData, ICollapseData } from "@/utils/data";
 import { formatToNaira } from "@/utils/helper";
+import { Product } from "@prisma/client";
+import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import React from "react";
 
 interface ProductPageProps {
   params: { productId: string };
 }
+export const revalidate = 0;
 
-const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
+export const dynamicParams = true;
+
+
+export async function generateStaticParams() {
+    const products = await db.product.findMany({})
+    return products.map((blog: Product) => ({
+        id: blog.id,
+    }));
+}
+
+export async function generateMetadata(
+    { params }: ProductPageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    // read route params
+    const id = params.productId;
+
+    // fetch data
+    const product = await db.product.findUnique({ where: { id }, include: {images: true} })
+
+    // optionally access and extend (rather than replace) parent metadata
+    const previousImages = (await parent).openGraph?.images || [];
+
+    if (!product) {
+        return {
+            title: "Not Found",
+            description: `Product does not exist`,
+        };
+    }
+
+    return {
+        title: product?.name,
+        description: product?.description,
+        openGraph: {
+            images: [product?.images[0].url, ...previousImages],
+        },
+    };
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
   const product = await db.product.findUnique({
     where: {
       id: params.productId,
@@ -23,12 +65,28 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     select: productQuery,
   });
 
+  const faqs = await db.faq.findMany();
+
   const relatedProducts = await db.product.findMany({
     where: {
       categoryId: product?.category.id,
     },
     select: productQuery,
   });
+
+  // Process FAQs into the required structure for `CollapseComponent`
+  const formattedFaqs: ICollapseData[] = faqs.map((faq) => ({
+    key: faq.id, // Assuming FAQ has a unique ID field
+    label: faq.question, // Assuming FAQ has a `question` field
+    children: (
+      <p className="bg-white w-full h-full">{faq.answer}</p> // Assuming FAQ has an `answer` field
+    ),
+  }));
+
+  // Split FAQs for larger screens
+  const halfIndex = Math.ceil(formattedFaqs.length / 2);
+  const firstColumnData = formattedFaqs.slice(0, halfIndex);
+  const secondColumnData = formattedFaqs.slice(halfIndex);
 
   return (
     <div className="bg-gray-100">
@@ -40,11 +98,11 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
               href: "/",
             },
             {
-              text: product?.category?.name as string,
+              text: product?.category?.name || "Category",
               href: "#",
             },
             {
-              text: product?.name as string,
+              text: product?.name || "Product",
               href: "",
             },
           ]}
@@ -74,9 +132,8 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
             <Image
               fill
               className="w-full h-full object-contain absolute"
-              src={product?.images[0].url as string}
-              alt={product?.category?.name as string}
-              
+              src={product?.images[0]?.url || "/placeholder-image.png"}
+              alt={product?.category?.name || "Product Image"}
             />
           </div>
           <div className="flex items-center lg:px-0 px-4 gap-3 lg:pb-0 pb-8 overflow-x-scroll scrollbar-hide pt-4">
@@ -89,7 +146,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
                   fill
                   className="w-full h-full object-contain absolute"
                   src={el.url}
-                  alt={product.category.name}
+                  alt={product?.category?.name || "Product Image"}
                 />
               </div>
             ))}
@@ -130,15 +187,15 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
         </Typography>
         <div className="lg:grid grid-cols-8 hidden gap-x-4 max-w-[1054px] mx-auto">
           <div className="col-span-4">
-            <CollapseComponent data={collapseData} />
+            <CollapseComponent data={firstColumnData} />
           </div>
           <div className="col-span-4">
-            <CollapseComponent data={collapseData2} />
+            <CollapseComponent data={secondColumnData} />
           </div>
         </div>
         <div className="lg:hidden grid-cols-8 grid gap-x-4 max-w-[1054px] mx-auto">
           <div className="col-span-8">
-            <CollapseComponent data={[...collapseData, ...collapseData2]} />
+            <CollapseComponent data={[...collapseData]} />
           </div>
         </div>
       </div>
@@ -149,7 +206,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
           align="center"
           className="mb-10 mt-20 font-bold leading-10 text-4xl black-100"
         >
-          Related Product
+          Related Products
         </Typography>
         <div className="pb-20 lg:px-0 px-4">
           <div className="grid md:grid-cols-10 grid-cols-4 gap-x-4 gap-y-10">
@@ -161,6 +218,4 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
       </div>
     </div>
   );
-};
-
-export default ProductPage;
+}

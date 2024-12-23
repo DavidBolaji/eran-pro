@@ -16,7 +16,6 @@ import Pagination from "../pagination";
 
 export default function CustomerOrdersTable({
   initialOrders,
-  onLoadMore,
   onSort,
   totalPages,
   page,
@@ -35,7 +34,7 @@ export default function CustomerOrdersTable({
     loading
   } = useTable<CustomerOrders>({
     initialItems: initialOrders as CustomerOrders[],
-    onLoadMore,
+
     onSort,
     onFilter(form, params) {
       alert(params)
@@ -48,7 +47,7 @@ export default function CustomerOrdersTable({
   });
 
   return (
-    <div className="w-full mt-6 scrollbar-hide min-w-[1000px]">
+    <div className="w-full mt-6 scrollbar-hide">
       <MainHeader
         title={"Orders History"}
         setShowFilters={setShowFilters}
@@ -85,7 +84,7 @@ export default function CustomerOrdersTable({
       </div>
       <Pagination
         ref={ref}
-        isMobile={isMobile}
+        isMobile={false}
         loading={loading}
         totalPages={totalPages ?? 0}
         page={page ?? 1}

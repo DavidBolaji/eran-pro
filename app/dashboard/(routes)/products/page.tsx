@@ -20,7 +20,7 @@ export default async function ProductPage({
   ? [searchParams.category]
   : []; // Ensure categories is always an array
   const page = parseInt(searchParams.page) || 1;
-  const limit = parseInt(searchParams.limit) || 7;
+  const limit = parseInt(searchParams.limit) || 3;
   const sort = searchParams.sort || "createdAt"; 
   const sortOrder = searchParams.sortOrder || "asc"; 
   const searchQuery = searchParams.searchQuery || ""; 

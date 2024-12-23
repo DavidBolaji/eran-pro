@@ -11,8 +11,9 @@ import Image from "next/image";
 import React, { ChangeEvent, useRef, useState } from "react";
 
 
-export const UserUploadComponent: React.FC<{ view?: boolean }> = ({
+export const UserUploadComponent: React.FC<{ view?: boolean, customer?: boolean  }> = ({
   view = false,
+  customer = true
 }) => {
   const ref = useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
@@ -97,7 +98,7 @@ export const UserUploadComponent: React.FC<{ view?: boolean }> = ({
   };
 
   return (
-    <>
+    <div className={!customer ? "hidden": ""}>
       <Typography as="p" size="s1" align="left" className=" black-100">
         Profile Image
       </Typography>
@@ -156,6 +157,6 @@ export const UserUploadComponent: React.FC<{ view?: boolean }> = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

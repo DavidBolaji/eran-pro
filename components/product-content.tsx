@@ -11,7 +11,7 @@ export const ProductContent: React.FC<{
 
   return (
     <div>
-      {["descriptions", "reviews"].map((el) => (
+      {["descriptions"].map((el) => (
         <Button
           key={el}
           onClick={() => setTab(el)}

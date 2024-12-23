@@ -5,7 +5,7 @@ import { useEffect, useCallback, useMemo } from "react";
 import { debounce } from "lodash";
 import { useAxios } from "./use-axios";
 import { useNotification } from "./use-notification";
-import { useSignIn, useSignUp, useSession } from "@clerk/nextjs";
+// import { useSignIn, useSignUp, useSession } from "@clerk/nextjs";
 import { Address, Image, Product, User } from "@prisma/client";
 import { useLoginModal } from "./use-login-modal";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,9 +27,9 @@ export const useUser = () => {
   const { toggleNotification } = useNotification();
   const { close } = useLoginModal();
   const { toggleModal } = useLoginModal();
-  const { signIn } = useSignIn();
-  const { signUp } = useSignUp();
-  const { isSignedIn, session } = useSession();
+  // const { signIn } = useSignIn();
+  // const { signUp } = useSignUp();
+  // const { isSignedIn, session } = useSession();
   const router = usePathname();
   const route = useRouter();
 
@@ -50,7 +50,7 @@ export const useUser = () => {
 
   // Debounce refetch to avoid excessive calls
   const debouncedRefetch = useMemo(
-    () => debounce(() => refetch(), 8000),
+    () => debounce(() => refetch(), 1000),
     [refetch]
   );
 
@@ -162,45 +162,45 @@ export const useUser = () => {
   });
 
   // Handle Google login or signup
-  const handleGoogleAuth = useCallback(
-    async (action: "login" | "signup") => {
-      queryClient.setQueryData(["GOOGLE_ACTION"], action);
+  // const handleGoogleAuth = useCallback(
+  //   async (action: "login" | "signup") => {
+  //     queryClient.setQueryData(["GOOGLE_ACTION"], action);
 
-      try {
-        const method = action === "login" ? signIn : signUp;
-        await method?.authenticateWithRedirect({
-          strategy: "oauth_google",
-          redirectUrl: "/",
-          redirectUrlComplete: "/",
-        });
-        close();
-      } catch (error) {
-        const title =
-          action === "login" ? "Google Login Error" : "Google Sign-Up Error";
-        toggleNotification({
-          show: true,
-          type: "error",
-          title,
-          message:
-            "Failed to authenticate with Google." + (error as Error).message,
-        });
-      }
-    },
-    [signIn, signUp, queryClient, toggleNotification, close]
-  );
+  //     try {
+  //       const method = action === "login" ? signIn : signUp;
+  //       await method?.authenticateWithRedirect({
+  //         strategy: "oauth_google",
+  //         redirectUrl: "/",
+  //         redirectUrlComplete: "/",
+  //       });
+  //       close();
+  //     } catch (error) {
+  //       const title =
+  //         action === "login" ? "Google Login Error" : "Google Sign-Up Error";
+  //       toggleNotification({
+  //         show: true,
+  //         type: "error",
+  //         title,
+  //         message:
+  //           "Failed to authenticate with Google." + (error as Error).message,
+  //       });
+  //     }
+  //   },
+  //   [signIn, signUp, queryClient, toggleNotification, close]
+  // );
 
   // Handle user session for Google login/signup
-  const createOrRegister = useMutation({
-    mutationKey: ["CREATE_OR_REGISTER"],
-    mutationFn: async (data: unknown) => {
-      const response = await Axios.post("/user/google", data);
-      return response.data.user;
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["USER"], data);
-      debouncedRefetch(); // Use debounced version
-    },
-  });
+  // const createOrRegister = useMutation({
+  //   mutationKey: ["CREATE_OR_REGISTER"],
+  //   mutationFn: async (data: unknown) => {
+  //     const response = await Axios.post("/user/google", data);
+  //     return response.data.user;
+  //   },
+  //   onSuccess: (data) => {
+  //     queryClient.setQueryData(["USER"], data);
+  //     debouncedRefetch(); // Use debounced version
+  //   },
+  // });
 
   // Handle update
   const update = useMutation({
@@ -232,16 +232,16 @@ export const useUser = () => {
     login.isPending ||
     register.isPending ||
     update.isPending ||
-    createOrRegister.isPending ||
+    // createOrRegister.isPending ||
     adminLogin.isPending;
 
-  useEffect(() => {
-    if (isSignedIn) {
-      createOrRegister.mutate(session.publicUserData);
-    }
+  // useEffect(() => {
+  //   if (isSignedIn) {
+  //     createOrRegister.mutate(session.publicUserData);
+  //   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSignedIn]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isSignedIn]);
 
   // Refetch user data on route change with debounce
   useEffect(() => {
@@ -273,8 +273,8 @@ export const useUser = () => {
     adminLogin: adminLogin.mutate,
     update: update.mutate,
     isLoggedIn,
-    googleLogin: () => handleGoogleAuth("login"),
-    googleSignUP: () => handleGoogleAuth("signup"),
+    // googleLogin: () => handleGoogleAuth("login"),
+    // googleSignUP: () => handleGoogleAuth("signup"),
     loading
   };
 };

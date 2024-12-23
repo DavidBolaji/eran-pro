@@ -9,6 +9,8 @@ interface HomeOrdersPageProps {
   searchParams: { [key: string]: string | undefined };
 }
 
+export const revalidate = 0;
+
 export default async function HomeOrdersPage({
   params,
   searchParams,

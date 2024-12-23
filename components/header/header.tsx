@@ -92,7 +92,20 @@ export const Header = () => {
         <div className="flex h-full items-center justify-between px-4">
           <div className="md:hidden flex items-center relative">
             <StyledDropdown
-              menu={{ items: menu }}
+              menu={{ items: [...menu, {
+                key: "5",
+                label: (
+                  <Typography
+                    className="black-300 h-8 flex items-center w-full"
+                    align="center"
+                    as="p"
+                    size="s1"
+                    onClick={() => router.push(`/blog`)}
+                  >
+                    Blog
+                  </Typography>
+                ),
+              } ] }}
               open={visible}
               onOpenChange={setVisible}
               trigger={["click"]}

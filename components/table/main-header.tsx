@@ -24,41 +24,49 @@ interface MainHeaderProps {
   search?: boolean;
   filter?: boolean;
   more?: boolean;
-  handleSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  setShowFilters?: Dispatch<SetStateAction<boolean>>;
-  showFilters?: boolean;
   payment?: boolean;
   status?: boolean;
   pType?: boolean;
   pStatus?: boolean;
+  post?: boolean;
+  showFilters?: boolean;
+  calender?: boolean;
+
   url?: string;
   name?: string;
   title: string;
   categories?: Pick<Category, "id" | "name">[];
-  calender?: boolean;
+  placeholder?: string
+  calenderTxt?: string
+
+  handleSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFilter: (form: FormData, params: URLSearchParams, path?: string) => void;
   action?: () => void;
-  placeholder?: string
+
+  setShowFilters?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({
   search = false,
   filter = false,
   more = false,
-
   payment = false,
   status = false,
   pType = false,
   pStatus = false,
-  handleSearch,
+  post = false,
+  calender = false,
+
   url,
   name,
   title,
   categories,
-  calender = false,
+  placeholder,
+  calenderTxt,
+
+  handleSearch,
   onFilter,
-  action,
-  placeholder
+  action
 }) => {
   const divRef = useRef<null | HTMLButtonElement>(null);
   const { toggleOverlay } = useOverlay();
@@ -132,7 +140,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                 </Badge>
               </ShadButton>
               <div
-                className={`absolute top-0 ${status ? "-right-1/4 -translate-x-8" : ""
+                className={`absolute top-0 ${screen.lg ? "-right-1/4 -translate-x-8" : ""
                   } z-10`}
               >
                 <FilterDialog
@@ -145,6 +153,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                   status={status}
                   pStatus={pStatus}
                   pType={pType}
+                  post={post}
+                  calenderTxt={calenderTxt}
                 />
               </div>
             </div>

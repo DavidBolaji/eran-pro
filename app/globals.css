@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer utilities {
     .scrollbar-hide {
       -ms-overflow-style: none;  /* IE and Edge */
@@ -22,6 +23,13 @@
 body > * {
     font-family: 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
 }
+
+/* In your global CSS */
+/* .toolbarClassName .rdw-dropdown-selected-text {
+  z-index: 10000 !important;
+  } 
+   */
+
 /* styles.css or a similar global stylesheet */
 .custom-calendar-width {
   width: 500px !important; /* or any width you prefer */

@@ -24,7 +24,7 @@ export default function PendingOrdersTable({
     sortDirection,
   } = useTable<PendingOrders>({
     initialItems: initialOrders as PendingOrders[],
-    onLoadMore,
+
     onSort,
     onFilter(form, params) {
       filterPendingOrders(form, params)
@@ -32,7 +32,7 @@ export default function PendingOrdersTable({
   });
 
   return (
-    <div className="w-full scrollbar-hide lg:min-w-0 min-w-[1000px]">
+    <div className="w-full scrollbar-hide ">
       <MainHeader
         title={"Pending Orders"}
         name={"Create New Order"}

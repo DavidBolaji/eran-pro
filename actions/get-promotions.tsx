@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { Prisma, Promotion, PromotionType } from "@prisma/client";
+import { BlogCategory, Prisma, Promotion, PromotionType } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 interface GetPromotionsParams {
@@ -481,4 +481,20 @@ export const deletePromotions = async (data: Set<string>) => {
       }
     }
   });
+};
+
+
+export const getBlogCategories = async (): Promise<Pick<BlogCategory, "id" | "name">[]> => {
+  try {
+    const blogCategories = await db.blogCategory.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    return blogCategories;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
 };

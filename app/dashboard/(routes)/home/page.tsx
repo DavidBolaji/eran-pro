@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { dashboardCard } from "@/utils/data";
 
 import db from "@/db/db";
@@ -10,6 +11,7 @@ import { RenderProductOrder } from "../../components/render-product-order";
 interface DashboardSearchParams {
   [key: string]: string;
 }
+export const revalidate = 0;
 
 export default async function Dashboard({
   searchParams,

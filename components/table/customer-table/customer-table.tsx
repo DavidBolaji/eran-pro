@@ -14,7 +14,6 @@ import { Empty } from "antd";
 
 export default function CustomerTable({
   initialCustomers = [],
-  onLoadMore,
   onSort,
   totalPages,
   page,
@@ -38,7 +37,7 @@ export default function CustomerTable({
     loading,
   } = useTable<Customer>({
     initialItems: initialCustomers,
-    onLoadMore,
+
     onSort,
     onSearch: (form, params) => {
       filterCustomer(form, params)
@@ -89,7 +88,7 @@ export default function CustomerTable({
 
       <Pagination
         ref={ref}
-        isMobile={isMobile}
+        isMobile={false}
         loading={loading}
         totalPages={totalPages ?? 0}
         page={page ?? 1}

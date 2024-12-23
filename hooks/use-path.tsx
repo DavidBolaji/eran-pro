@@ -9,6 +9,8 @@ const usePath = () => {
   const orderId = params?.orderId;
   const productId = params?.productId;
   const promotionId = params?.promotionId;
+  const blogId = params?.blogId;
+  const faqId = params?.faqId;
   const [locationCurrent, setLoc] = useState("");
 
   useEffect(() => {
@@ -41,9 +43,19 @@ const usePath = () => {
         ? "/dashboard/promotions"
          : pathname === `/dashboard/promotions/${promotionId}/edit`
         ? "/dashboard/promotions"
+         : pathname === `/dashboard/contents`
+        ? "/dashboard/contents"
+         : pathname === "/dashboard/contents/add"
+        ? "/dashboard/contents"
+         : pathname === `/dashboard/contents/${blogId}/edit`
+        ? "/dashboard/contents"
+         : pathname === `/dashboard/contents/faq/${faqId}/edit`
+        ? "/dashboard/contents"
+         : pathname === `/dashboard/contents/faq/add`
+        ? "/dashboard/contents"
         : pathname?.split("/")[pathname?.split("/").length - 1];
     setLoc(key);
-  }, [pathname, customerId, orderId, promotionId]);
+  }, [pathname, customerId, orderId, promotionId, blogId, faqId]);
 
   return { locationCurrent };
 };
