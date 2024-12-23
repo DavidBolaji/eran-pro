@@ -33,7 +33,9 @@ async function updateHandler(userId: string, req: NextRequest) {
       );
     }
 
-    const { id, fname, lname, phone, pic, address, orderAddress } = await req.json();
+    const { id, fname, lname, phone, pic, address, 
+      // orderAddress 
+    } = await req.json();
 
     // Fetch existing addresses from the database
     const existingAddresses = await db.address.findMany({

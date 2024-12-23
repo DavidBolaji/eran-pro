@@ -1,4 +1,4 @@
-import { getCategories } from "@/actions/get-categories";
+
 import { ICreateProduct } from "@/actions/get-products";
 import { getBlogCategories } from "@/actions/get-promotions";
 import FormikSelectInput from "@/components/input/formik-select-input";

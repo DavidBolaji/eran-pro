@@ -15,7 +15,7 @@ import { useState } from "react";
 
 
 
-export default function ViewPromotion({ promotion, edit = false }: { promotion: Promotion | null, edit: boolean }) {
+export default function ViewPromotion({ promotion, edit = false }: { promotion: Promotion | null, edit?: boolean }) {
   const router = useRouter()
   const queryClient = useQueryClient();
   const { toggleNotification } = useNotification()

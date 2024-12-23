@@ -33,7 +33,7 @@ export const EditCustomerForm: React.FC<{
   const { fetchCity, states } = useAddress();
   const queryClient = useQueryClient();
   const [processedAddresses, setProcessedAddresses] = useState<
-    Array<Address & { cityOption: any[] }>
+    Array<Address & { cityOption: unknown }>
   >([]);
 
   

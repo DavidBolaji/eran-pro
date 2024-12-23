@@ -14,7 +14,6 @@ import { filterPendingOrders } from '@/actions/get-orders'
 
 export default function PendingOrdersTable({
   initialOrders,
-  onLoadMore,
   onSort,
 }:  PendingOrdersTableProps) {
   const {

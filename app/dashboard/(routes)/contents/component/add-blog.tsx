@@ -51,6 +51,7 @@ export default function AddBlog({ blog }: { blog?: Blog & { blogCategory: BlogCa
                 images: [url]
             }));
         }
+        // @react-hooks/exhaustive-deps
     }, [blog])
 
     const reset = () => {

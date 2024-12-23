@@ -1,9 +1,9 @@
 import { Button } from "@/components/button/button"
 import { Typography } from "@/components/typography/typography"
+import { timeAgo } from "@/utils/helper"
 import { Blog, BlogCategory } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
-import { timeAgo } from "../../page"
 
 const MoreArticles: React.FC<{ blog: (Blog & { blogCategory: BlogCategory })[] }> = ({ blog }) => {
     return blog?.length ? <section className="mt-16">

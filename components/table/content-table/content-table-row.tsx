@@ -20,7 +20,6 @@ export default function ContentTableRow({
   blog,
   selectedItems,
   toggleSelectItem,
-  deleteOne
 }: ContentTableRowProps) {
   return (
     <TableRow>

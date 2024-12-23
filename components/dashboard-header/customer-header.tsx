@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../button/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Grid } from "antd";
 import { useAxios } from "@/hooks/use-axios";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useNotification } from "@/hooks/use-notification";
 import { AxiosError } from "axios";
 import { Spinner } from "../spinner";

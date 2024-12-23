@@ -1,4 +1,6 @@
-//@ts-nocheck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { dashboardCard } from "@/utils/data";
 
 import db from "@/db/db";

@@ -29,7 +29,6 @@ export default function CustomerOrdersTable({
     sortDirection,
     showFilters,
     setShowFilters,
-    isMobile,
     ref,
     loading
   } = useTable<CustomerOrders>({

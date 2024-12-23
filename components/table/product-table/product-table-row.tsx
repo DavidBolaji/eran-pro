@@ -6,7 +6,7 @@ import { formatToNaira } from "@/utils/helper";
 import Image from "next/image";
 import React from "react";
 import { Product } from "./types";
-import { Edit, Eye, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

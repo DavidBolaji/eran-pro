@@ -1,6 +1,7 @@
 import db from "@/db/db";
 import { NextResponse } from "next/server";
 import { generateSixDigitCode } from "@/utils/helper";
+import { Prisma } from "@prisma/client";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
       },
     });
 
-    let order: any;
+    let order: Prisma.OrderCreateInput;
     if (!existingUser) {
       order = await db.order.create({
         data: {

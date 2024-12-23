@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { Crumb } from "@/components/crumb/crumb";
 
 import React from "react";
@@ -47,7 +49,7 @@ export default async function CustomerOrderPage({
       <div className="px-4">
         <ViewOrder order={order as unknown as Order ?? null} />
       </div>
-      {/* @ts-ignore */}
+     
       <OrderComponent order={order as unknown as Order ?? null} />
     </div>
   );

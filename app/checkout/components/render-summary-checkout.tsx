@@ -40,7 +40,7 @@ export const RenderSummaryCheckout = () => {
     queryClient.setQueryData([
       "ADDRESS_ID",
     ], null)
-
+ //@typescript-eslint/ban-ts-comment
   }, []);
 
   const navigateTo = useCallback(async () => {
@@ -172,6 +172,7 @@ export const RenderSummaryCheckout = () => {
         }
       }
     }
+    // @typescript-eslint/react-hooks/exhaustive-deps
   }, [queryClient, total, user]);
 
   return (

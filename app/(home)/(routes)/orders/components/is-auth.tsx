@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/use-user";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const IsAuth: React.FC<{ admin?: boolean }> = ({ admin = false }) => {
+export const IsAuth = () => {
   const { user } = useUser();
   const { toggleNotification } = useNotification();
   const router = useRouter();

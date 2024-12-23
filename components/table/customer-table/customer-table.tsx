@@ -33,7 +33,6 @@ export default function CustomerTable({
     toggleSelectAll,
     toggleSelectItem,
     selectedItems,
-    isMobile,
     loading,
   } = useTable<Customer>({
     initialItems: initialCustomers,

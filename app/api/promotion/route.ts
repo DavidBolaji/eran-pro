@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     }
 
     // Function to combine date and time strings into a Date object using date-fns
-    //@ts-ignore
+
     const combineDateTime = (dateStr: string, timeStr: string): Date => {
       // Define the format based on your input. Adjust if necessary.
       const dateTimeStr = `${dateStr} ${timeStr}`;

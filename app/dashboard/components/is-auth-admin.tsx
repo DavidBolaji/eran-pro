@@ -9,17 +9,17 @@ export const IsAuthAdmin: React.FC<{ admin?: boolean }> = ({ admin = false }) =>
   const { user, loading } = useUser();
   const router = useRouter();
 
-  if(loading) return null;
-
+  
   useEffect(() => {
     if (admin) {
       if(!loading){
         if(!user?.id) return router.push("/");
         if (user?.role === "USER") return router.push("/dashboard");
       } 
-        
+      
     }
   }, [admin, loading, user]);
-
+  
+  if(loading) return null;
   return null;
 };

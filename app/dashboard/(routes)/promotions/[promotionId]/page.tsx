@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { getSinglePromotion } from "@/actions/get-promotions";
 import { Crumb } from "@/components/crumb/crumb";
 import { endOfToday, isAfter, isBefore, startOfToday } from "date-fns";

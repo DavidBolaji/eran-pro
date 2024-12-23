@@ -24,22 +24,23 @@ export const promotionSchema = Yup.object().shape({
     endTime: Yup.array().optional(),
 });
 
-const initialValues = {
-    name: "",
-    type: "Category",
-    code: "",
-    discount: "",
-    startDate: "",
-    startTime: "",
-    endDate: "",
-    endTime: "",
-    status: true,
-};
+const initial = (promotion?:Promotion) => ({
+    name: promotion?.name ?? "",
+    type: promotion?.promotionType === "CATEGORY" ? "Category" : "Item",
+    code: promotion?.code ?? "",
+    discount: String(promotion?.discount) ?? "",
+    startDate: format(promotion?.startDate ?? "", "yyyy-MM-dd") ?? "", 
+    startTime: format(promotion?.startDate ?? "", "HH:mm") ?? "",
+    endDate: format(promotion?.endDate ?? "", "yyyy-MM-dd") ?? "", 
+    endTime: format(promotion?.endDate ?? "", "HH:mm") ?? "",
+    status: promotion?.status ?? true,
+});
 
 export const EditPromotionForm: React.FC<{
     promotion: IPromotion
 }> = ({ promotion }) => {
     const queryClient = useQueryClient();
+    const initialValues = initial(promotion)
 
     useEffect(() => {
         if (promotion) {
@@ -52,17 +53,7 @@ export const EditPromotionForm: React.FC<{
 
     return (
         <Formik
-            initialValues={{
-                name: promotion?.name ?? "",
-                type: promotion?.promotionType === "CATEGORY" ? "Category" : "Item",
-                code: promotion?.code ?? "",
-                discount: String(promotion?.discount) ?? "",
-                startDate: format(promotion?.startDate ?? "", "yyyy-MM-dd") ?? "", 
-                startTime: format(promotion?.startDate ?? "", "HH:mm") ?? "",
-                endDate: format(promotion?.endDate ?? "", "yyyy-MM-dd") ?? "", 
-                endTime: format(promotion?.endDate ?? "", "HH:mm") ?? "",
-                status: promotion?.status ?? true,
-            }}
+            initialValues={initialValues}
             onSubmit={() => { }}
             validate={(values: typeof initialValues) => {
                 const errors = {};

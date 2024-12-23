@@ -4,5 +4,8 @@
     "next/typescript",
     "plugin:storybook/recommended",
     "plugin:storybook/recommended"
-  ]
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  }
 }

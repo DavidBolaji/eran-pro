@@ -32,7 +32,6 @@ export default function FAQTable({
     sortDirection,
     showFilters,
     setShowFilters,
-    isMobile,
     ref,
     loading,
     handleSearch,

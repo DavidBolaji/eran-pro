@@ -10,7 +10,7 @@ import { SelectPromotionType } from "@/app/dashboard/components/select-promotion
 import { PromotionProduct } from "./promotion-product";
 import { format } from "date-fns";
 
-export const PromotionComponent = async ({
+export const PromotionComponent =  ({
   promotion,
   edit = false
 }: {

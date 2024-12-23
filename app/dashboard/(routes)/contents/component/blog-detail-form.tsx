@@ -1,4 +1,4 @@
-import { ICreateProduct, IProduct } from "@/actions/get-products";
+import { ICreateProduct } from "@/actions/get-products";
 import FormikNormalInput from "@/components/input/formik-normal-input";
 import FormikTextAreaInput from "@/components/input/formik-textarea-input";
 import { Blog } from "@prisma/client";

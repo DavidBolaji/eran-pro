@@ -12,7 +12,7 @@ export async function OPTIONS() {
     return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function handler(req: Request, userId: string) {
+async function handler(req: Request, userId: string) {
 
     try {
         const { question, answer, status } = await req.json();
@@ -40,7 +40,7 @@ export async function handler(req: Request, userId: string) {
     }
 }
 
-export async function updateHandler(req: Request, userId: string) {
+async function updateHandler(req: Request, userId: string) {
 
     try {
         const { question, answer, faqId, status } = await req.json();
@@ -68,6 +68,8 @@ export async function updateHandler(req: Request, userId: string) {
             data: faq,
         });
     } catch (error) {
+        console.log(error);
+        
         return new NextResponse("Internal error", { status: 500 });
     }
 }

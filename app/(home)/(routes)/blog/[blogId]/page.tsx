@@ -3,7 +3,7 @@ import { Typography } from "@/components/typography/typography";
 import db from "@/db/db";
 import React from "react";
 import { Crumb } from "@/components/crumb/crumb";
-import { timeAgo } from "../page";
+
 import { Wrapper } from "@/components/wrapper/wrapper";
 import Image from "next/image";
 import SafeHTML from "./components/safe-html";
@@ -11,6 +11,7 @@ import MoreArticles from "./components/more-articles";
 import { Blog } from "@prisma/client";
 import { Metadata, ResolvingMetadata } from "next";
 import ShareCard from "./components/share-component";
+import { timeAgo } from "@/utils/helper";
 
 export const revalidate = 0;
 

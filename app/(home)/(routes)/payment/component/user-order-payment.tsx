@@ -29,7 +29,7 @@ export const UserOrderPayment:React.FC<{email: string, total: number, orderId: s
         publicKey: paystackKey,
         reference: Date.now().toString(),
       });
-  }, [])
+  }, [email, queryClient, total])
 
   return (
     <PaymentComponent

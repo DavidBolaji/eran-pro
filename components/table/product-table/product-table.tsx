@@ -14,7 +14,6 @@ import { useDeleteModal } from "@/hooks/use-delete-modal";
 
 export default function ProductTable({
   initialProducts = [],
-  onLoadMore,
   onSort,
   totalPages,
   page,

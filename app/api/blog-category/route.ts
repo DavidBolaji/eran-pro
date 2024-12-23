@@ -12,7 +12,7 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function handler(req: Request, userId: string) {
+async function handler(req: Request) {
    
   try {
     const { name, description } = await req.json();
@@ -29,7 +29,7 @@ export async function handler(req: Request, userId: string) {
       data: category,
     });
   } catch (error) {
-
+    console.log(error)
     return new NextResponse("Internal error", { status: 500 });
   }
 }
@@ -51,6 +51,6 @@ export async function POST(req: NextRequest) {
         if (!exist) {
             return NextResponse.json({ message: "Only admin can create blog category" }, { status: 401 });
         }
-        return handler(req, userId);
+        return handler(req);
     });
 }

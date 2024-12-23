@@ -6,7 +6,6 @@ import * as React from "react";
 import { Table, TableBody } from "@/components/ui/table";
 import { useTable } from "@/hooks/use-table";
 import { MainHeader } from "../main-header";
-import CustomerordersTableRow from "./content-table-row";
 import { filterCustomerOrder } from "@/actions/get-customers";
 import { Empty } from "antd";
 import Pagination from "../pagination";
@@ -31,8 +30,6 @@ export default function ContentTable({
     sortColumn,
     sortDirection,
     showFilters,
-    setShowFilters,
-    isMobile,
     ref,
     loading,
     handleSearch,
@@ -40,6 +37,7 @@ export default function ContentTable({
     toggleSelectAll,
     allChecked,
     selectedItems,
+    setShowFilters,
     toggleSelectItem
   } = useTable<Content>({
     initialItems: initialContent as Content[],

@@ -1,4 +1,6 @@
-//@ts-nocheck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import React from "react";
 import { SelectedCustomerButtons } from "./select-customer-buttons";
 import { IUser } from "@/actions/get-customers";

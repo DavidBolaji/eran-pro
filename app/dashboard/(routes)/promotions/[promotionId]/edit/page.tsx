@@ -1,11 +1,8 @@
-//@ts-nocheck
+
 import { getSinglePromotion } from "@/actions/get-promotions";
 import { Crumb } from "@/components/crumb/crumb";
-import { endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
 
 import React from "react";
-
-import { Category, Image, Product, Promotion } from "@prisma/client";
 import ViewPromotion from "../components/view-promotion";
 import { PromotionComponent } from "../components/promotion-component";
 import { IPromotion } from "../components/types";

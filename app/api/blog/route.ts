@@ -13,7 +13,7 @@ export async function OPTIONS() {
     return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function handler(req: Request, userId: string) {
+async function handler(req: Request, userId: string) {
 
     try {
         const { title, img, text, description, categoryId, status } = await req.json();
@@ -44,7 +44,7 @@ export async function handler(req: Request, userId: string) {
     }
 }
 
-export async function updateHandler(req: Request, userId: string) {
+async function updateHandler(req: Request, userId: string) {
 
     try {
         const { title, img, text, description, categoryId, status, blogId } = await req.json();
@@ -73,6 +73,7 @@ export async function updateHandler(req: Request, userId: string) {
             data: blog,
         });
     } catch (error) {
+        console.log(error)
         return new NextResponse("Internal error", { status: 500 });
     }
 }

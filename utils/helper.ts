@@ -22,7 +22,7 @@ export const formatToNaira = (amount: number, dp?: number) => {
   }).format(amount);
 };
 
-import { parse, format } from "date-fns";
+import { parse, format, formatDistanceToNow } from "date-fns";
 import { Order } from "@/components/table/orders-table/types";
 
 export function formatDate(dateString: string) {
@@ -104,6 +104,8 @@ export const addWeightToProducts =  (order: Order  & {code: string[]} | null)  =
     code
   };
 };
+
+export const timeAgo = (createdAt: Date) => formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   // if (productOrder?.promotionId) {
     //   const promotion = await db.promotion.findUnique({

@@ -3,22 +3,16 @@ import { ICON } from '@/constants/icon';
 import React, { useState } from 'react';
 
 const FilterComponent = () => {
-  const [selectedOption, setSelectedOption] = useState('1 Year');
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
+  const [selectedOption] = useState('1 Year');  
 
   return (
     <div className="relative inline-block">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+       
         className="bg-black-600 text-black-100 px-3 py-1 font-bold rounded-full flex items-center focus:outline-none"
       >
         {selectedOption}
-        <span className={`ml-2 transform ${isOpen ? 'rotate-0' : 'rotate-0'}`}>
+        <span className={`ml-2 transform rotate-0`}>
           <ICON.ChevronDownIcon size='14' />
         </span>
       </button>

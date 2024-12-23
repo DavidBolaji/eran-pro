@@ -1,4 +1,3 @@
-import { getDashboardCustomer } from "@/actions/get-customers";
 import { Crumb } from "@/components/crumb/crumb";
 
 import React from "react";

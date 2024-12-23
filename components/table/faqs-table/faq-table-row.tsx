@@ -20,7 +20,6 @@ export default function ContentTableRow({
   faq,
   selectedItems,
   toggleSelectItem,
-  deleteOne
 }: ContentFaqTableRowProps) {
   return (
     <TableRow>

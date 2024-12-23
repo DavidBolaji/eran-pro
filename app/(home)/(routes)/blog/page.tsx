@@ -2,13 +2,12 @@
 import { Typography } from "@/components/typography/typography";
 import db from "@/db/db";
 import React from "react";
-import { formatDistanceToNow } from 'date-fns'
 import ArticleCard from "@/components/card/article-card";
 import { Wrapper } from "@/components/wrapper/wrapper";
 
 import MoreArticles from "./[blogId]/components/more-articles";
+import { timeAgo } from "@/utils/helper";
 
-export const timeAgo = (createdAt: Date) => formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
 export const revalidate = 0;
 
