@@ -13,7 +13,7 @@ import styled from "@emotion/styled";
 import { Typography } from "../typography/typography";
 import { useUser } from "@/hooks/use-user";
 import { useRouter } from "next/navigation";
-import PwaNotification from "../pwa-notification";
+// import PwaNotification from "../pwa-notification";
 
 const StyledDropdown = styled(Dropdown)`
   margin-top: 50px;
@@ -125,7 +125,7 @@ export const Header = () => {
           </div>
           <LogedIn />
           <LogedOut />
-          <PwaNotification />
+          {/* <PwaNotification /> */}
         </div>
       </Wrapper>
     </nav>
