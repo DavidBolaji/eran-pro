@@ -28,6 +28,7 @@ async function handler(userId: string) {
         email: true,
         phone: true,
         role: true,
+        Notifications: true,
         orders: {
           select: {
             products: {

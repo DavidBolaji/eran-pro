@@ -18,6 +18,9 @@ export const MenuStyled = styled(Menu)`
       background-color: #DDEEE5;
       border-radius: 0px;
       border-left: 4px solid #066932;
+       > * {
+        margin-left: -5px;
+      }
     }
 
     .ant-menu-item.ant-menu-item-selected > * {

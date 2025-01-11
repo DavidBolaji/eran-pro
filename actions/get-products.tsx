@@ -309,11 +309,9 @@ export const filterProduct = (
   const endDate = formData.get("endDate") as string;
   const searchQuery = params.get("searchQuery") as string;
   const cat = params.getAll("category") as  unknown as (string | string[]);
- console.log(params, '[ONE]');
  
  // Handle categories - Add or remove based on selection
  params.delete("category");
- console.log(params, '[ONE]');
   if (categories.length > 0) {
     categories.forEach((category) => params.append("category", category));
     params.set("page", "1"); // Reset to page 1 if categories change

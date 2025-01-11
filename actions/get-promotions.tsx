@@ -255,7 +255,7 @@ export const getDashboardPromotion = async ({
   }
 };
 
-
+// 30% roi on 1000 dollars is what
 export const getSinglePromotion = async (id: string) => {
   try {
     // Fetch the promotion

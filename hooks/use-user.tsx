@@ -6,10 +6,11 @@ import { debounce } from "lodash";
 import { useAxios } from "./use-axios";
 import { useNotification } from "./use-notification";
 // import { useSignIn, useSignUp, useSession } from "@clerk/nextjs";
-import { Address, Image, Product, User } from "@prisma/client";
+import { Address, Image, Product, User, Notifications } from "@prisma/client";
 import { useLoginModal } from "./use-login-modal";
 import { usePathname, useRouter } from "next/navigation";
 import { IUser } from "@/actions/get-customers";
+import { sendNotification } from "@/actions/notification";
 
 export type UserType = Omit<
   User,
@@ -19,6 +20,7 @@ export type UserType = Omit<
     images: Image[];
   })[];
   orderAddress: Address[];
+  Notifications: Notifications[]
 };
 
 export const useUser = () => {
@@ -76,6 +78,12 @@ export const useUser = () => {
             title: "Logout Success",
             message: "Logout process is successful",
           });
+          sendNotification(
+            "Logout process is successful",
+            user?.id,
+            "",
+            "Logout"
+          )
         }
       } catch (error) {
         console.error("Logout Error:", error);
@@ -92,7 +100,7 @@ export const useUser = () => {
       const response = await Axios.post("/user/login", data);
       return response.data.user;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       debouncedRefetch(); // Use debounced version
       toggleNotification({
         show: true,
@@ -100,6 +108,12 @@ export const useUser = () => {
         title: "Login Successful",
         message: "User has successfully logged in",
       });
+      await sendNotification(
+        "Login process is successful",
+        user?.id,
+        user?.pic,
+        "Logout"
+      )
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toggleNotification({
@@ -121,7 +135,7 @@ export const useUser = () => {
       return response.data.user;
     },
     onSuccess: async () => {
-     
+
       toggleNotification({
         show: true,
         type: "success",
@@ -130,7 +144,7 @@ export const useUser = () => {
       });
       // await new Promise(resolve => setTimeout(resolve, 1000))
       await debouncedRefetch(); // Use debounced version
-      
+
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toggleNotification({

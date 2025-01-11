@@ -52,6 +52,7 @@ export const getUserByEmail = async (email: string) => {
         pic: true,
         email: true,
         phone: true,
+        Notifications: true,
         orders: {
           select: {
             products: {

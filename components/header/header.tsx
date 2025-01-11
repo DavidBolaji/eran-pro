@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import { Typography } from "../typography/typography";
 import { useUser } from "@/hooks/use-user";
 import { useRouter } from "next/navigation";
+import PwaNotification from "../pwa-notification";
 
 const StyledDropdown = styled(Dropdown)`
   margin-top: 50px;
@@ -90,6 +91,7 @@ export const Header = () => {
     <nav className="h-20 bg-white border-b sticky z-50 top-0">
       <Wrapper>
         <div className="flex h-full items-center justify-between px-4">
+          <PwaNotification />
           <div className="md:hidden flex items-center relative">
             <StyledDropdown
               menu={{ items: [...menu, {

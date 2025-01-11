@@ -83,8 +83,6 @@ export default function AddProduct({ product }: { product?: IProduct | null }) {
           const { id, urls, images, ...rest } = product as unknown as  IProduct & {  urls: string[]} ;
           let img: string[] = [];
 
-        
-
           if (images && images?.length) {
             img = images as unknown as string[]
           }
