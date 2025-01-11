@@ -3,7 +3,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import { CartDrawer } from "@/components/drawer/cart-drawer/cart-drawer";
 import { Metadata } from "next";
-// import Pwa from "@/components/pwa";
+import Pwa from "@/components/pwa";
 
 export const metadata: Metadata = {
   title: "Eranpro",
@@ -40,8 +40,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <Pwa /> */}
         <UIProvider>
+          <Pwa />
           <AntdRegistry>
             <TanstackProvider>
               {children}
