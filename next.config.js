@@ -6,7 +6,7 @@ const withPwa = require('next-pwa')({
 
 const nextConfig = {
   images: {
-    remotePatterns: ["avatar.iran.liara.run", "res.cloudinary.com", "img.freepik.com", "img.clerk.com"],
+    domains: ["avatar.iran.liara.run", "res.cloudinary.com", "img.freepik.com", "img.clerk.com"],
   },
   // Add other Next.js config options if needed
 };
