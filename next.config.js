@@ -11,4 +11,4 @@ const nextConfig = {
   // Add other Next.js config options if needed
 };
 
-module.exports = withPwa(nextConfig);
+module.exports = nextConfig;
