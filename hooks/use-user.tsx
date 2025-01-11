@@ -10,7 +10,7 @@ import { Address, Image, Product, User, Notifications } from "@prisma/client";
 import { useLoginModal } from "./use-login-modal";
 import { usePathname, useRouter } from "next/navigation";
 import { IUser } from "@/actions/get-customers";
-import { sendNotification } from "@/actions/notification";
+// import { sendNotification } from "@/actions/notification";
 
 export type UserType = Omit<
   User,
@@ -27,7 +27,7 @@ export const useUser = () => {
   const queryClient = useQueryClient();
   const Axios = useAxios();
   const { toggleNotification } = useNotification();
-  const { close } = useLoginModal();
+  // const { close } = useLoginModal();
   const { toggleModal } = useLoginModal();
   // const { signIn } = useSignIn();
   // const { signUp } = useSignUp();
@@ -78,12 +78,12 @@ export const useUser = () => {
             title: "Logout Success",
             message: "Logout process is successful",
           });
-          sendNotification(
-            "Logout process is successful",
-            user?.id,
-            "",
-            "Logout"
-          )
+          // await sendNotification(
+          //   "Logout process is successful",
+          //   user?.id,
+          //   "",
+          //   "Logout"
+          // )
         }
       } catch (error) {
         console.error("Logout Error:", error);
@@ -108,12 +108,12 @@ export const useUser = () => {
         title: "Login Successful",
         message: "User has successfully logged in",
       });
-      await sendNotification(
-        "Login process is successful",
-        user?.id,
-        user?.pic,
-        "Logout"
-      )
+      // await sendNotification(
+      //   "Login process is successful",
+      //   user?.id,
+      //   user?.pic,
+      //   "Logout"
+      // )
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toggleNotification({
