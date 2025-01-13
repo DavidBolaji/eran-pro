@@ -345,6 +345,7 @@ export const getSingleOrder = async (id: string) => {
         paymentType: true,
         User: {
           select: {
+            id: true,
             fname: true,
             lname: true,
             phone: true,

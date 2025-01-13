@@ -5,12 +5,6 @@ import { CartDrawer } from "@/components/drawer/cart-drawer/cart-drawer";
 import { Viewport } from "next";
 
 
-// export const metadata: Metadata = {
-//   title: "Eranpro",
-//   description:
-//     "Enjoy fresh, premium chicken delivered to your doorstep at a discount. Don't miss out – order now and savor the savings!",
-// };
-
 import dynamic from "next/dynamic";
 import { Overlay } from "@/components/overlay/overlay";
 import { NotificationDrawer } from "@/components/drawer/notification-drawer/notification-drawer";

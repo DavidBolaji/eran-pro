@@ -1,6 +1,7 @@
 "use client";
 
 import { IProduct } from "@/actions/get-products";
+import { sendNotification } from "@/actions/notification";
 import { PaymentOrder } from "@/app/dashboard/components/payment-order";
 import { Button } from "@/components/button/button";
 import { Spinner } from "@/components/spinner";
@@ -38,7 +39,13 @@ export default function ViewOrder({ order }: { order: Order | null }) {
       setLoading(true)
       return await Axios.put('/order', { id: order?.id, status, balance })
     },
-    onSuccess: () => {
+    onSuccess: async (data, variable) => {
+      await sendNotification(
+        `Order has been ${variable.status}`,
+        order.User.id,
+        undefined,
+        'Order Status'
+      )
       toggleNotification({
         type: "success",
         show: true,

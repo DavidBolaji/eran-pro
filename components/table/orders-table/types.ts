@@ -22,6 +22,7 @@ export interface Order {
     }[] | null;
   }[];
   User: {
+    id: string | null;
     fname: string | null;
     lname: string | null;
     phone: string | null;

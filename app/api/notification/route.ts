@@ -18,17 +18,17 @@ async function handler(req: Request, userId: string) {
     const { subscription } =
         await req.json();
 
-    const existing = await db.notifications.findMany({
-        where: {
-            userId
-        }
-    })
+    // const existing = await db.notifications.findMany({
+    //     where: {
+    //         userId
+    //     }
+    // })
 
-    if (existing.length) {
-        return NextResponse.json({
-            message: `Notification created succesfully`,
-        });
-    }
+    // if (existing.length) {
+    //     return NextResponse.json({
+    //         message: `Notification created succesfully`,
+    //     });
+    // }
 
     try {
         await db.notifications.create({
