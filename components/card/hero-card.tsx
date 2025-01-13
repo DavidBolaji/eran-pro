@@ -1,11 +1,14 @@
-
+"use client"
 import React from "react";
 import { Typography } from "../typography/typography";
 import { Button } from "../button/button";
 import Image from "next/image";
 import { Images } from "@/constants/image";
+import { sendNotification } from "@/actions/notification";
+import { useUser } from "@/hooks/use-user";
 
 export const HeroCcard = () => {
+  const { user } = useUser()
   return (
     <div className="relative w-full py-10 bg-black-600 md:rounded-2xl">
       <div className="px-6">
@@ -35,6 +38,16 @@ export const HeroCcard = () => {
             Make an Order Now
           </Button>
         </a>
+        {user && user?.email === "odavidbolaji14@gmail.com" ? <button className="ml-4" onClick={async () => {
+          if (user?.id) {
+            await sendNotification(
+              'test',
+              user?.id,
+              user?.pic,
+              'Test'
+            )
+          }
+        }}>test</button> : null}
       </div>
 
       <Image

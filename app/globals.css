@@ -22,6 +22,7 @@
 
 body > * {
     font-family: 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* In your global CSS */

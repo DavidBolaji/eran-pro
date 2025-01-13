@@ -2,6 +2,19 @@
 
 import db from '@/db/db';
 import webpush from 'web-push'
+// import sharp from 'sharp';
+// import path from 'path';
+
+// const resizeIcon = async (iconFilename: string) => {
+//     const iconPath = path.join(process.cwd(), 'public', iconFilename);
+//     return sharp(iconPath).resize(72, 72).toFormat('png').toBuffer();
+// };
+
+webpush.setVapidDetails(
+    'https://buyeranpro.com',
+    process.env.NEXT_PUBLIC_VAPID_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+)
 
 export const sendNotification = async (
     message: string,
@@ -9,13 +22,14 @@ export const sendNotification = async (
     icon: string,
     name: string
 ) => {
+    // const resizedIcon = await resizeIcon(icon.replace("/",""));
     const vapidKeys = {
         publicKey: process.env.NEXT_PUBLIC_VAPID_KEY,
         privateKey: process.env.VAPID_PRIVATE_KEY
     }
 
     webpush.setVapidDetails(
-        "mailto:muserId@email.com",
+        "https://buyeranpro.com",
         vapidKeys.publicKey,
         vapidKeys.privateKey
     );
@@ -34,7 +48,7 @@ export const sendNotification = async (
         await webpush.sendNotification(
             JSON.parse(notification[0].notification),
             JSON.stringify({
-                message: name,
+                title: name,
                 icon,
                 body: message,
 
@@ -44,8 +58,6 @@ export const sendNotification = async (
         return "{}"
 
     } catch (error) {
-        return JSON.stringify({error: error.message})
+        return JSON.stringify({ error: error.message })
     }
 }
-
-

@@ -5,13 +5,12 @@ import { useEffect, useCallback, useMemo } from "react";
 import { debounce } from "lodash";
 import { useAxios } from "./use-axios";
 import { useNotification } from "./use-notification";
-// import { useSignIn, useSignUp, useSession } from "@clerk/nextjs";
 import { Address, Image, Product, User, Notifications } from "@prisma/client";
 import { useLoginModal } from "./use-login-modal";
 import { usePathname, useRouter } from "next/navigation";
 import { IUser } from "@/actions/get-customers";
-import { sendNotification } from "@/actions/notification";
-// import { sendNotification } from "@/actions/notification";
+import usePwa from "./use-pwa";
+
 
 export type UserType = Omit<
   User,
@@ -28,11 +27,8 @@ export const useUser = () => {
   const queryClient = useQueryClient();
   const Axios = useAxios();
   const { toggleNotification } = useNotification();
-  // const { close } = useLoginModal();
+  const {showNotification} = usePwa()
   const { toggleModal } = useLoginModal();
-  // const { signIn } = useSignIn();
-  // const { signUp } = useSignUp();
-  // const { isSignedIn, session } = useSession();
   const router = usePathname();
   const route = useRouter();
 
@@ -79,12 +75,6 @@ export const useUser = () => {
             title: "Logout Success",
             message: "Logout process is successful",
           });
-          // await sendNotification(
-          //   "Logout process is successful",
-          //   user?.id,
-          //   "",
-          //   "Logout"
-          // )
         }
       } catch (error) {
         console.error("Logout Error:", error);
@@ -99,9 +89,9 @@ export const useUser = () => {
     mutationKey: ["LOGIN"],
     mutationFn: async (data: { email: string; password: string }) => {
       const response = await Axios.post("/user/login", data);
-      return response.data.user;
+      return response.data.user as UserType;
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       debouncedRefetch(); // Use debounced version
       toggleNotification({
         show: true,
@@ -109,12 +99,8 @@ export const useUser = () => {
         title: "Login Successful",
         message: "User has successfully logged in",
       });
-      await sendNotification(
-        "Login process is successful",
-        user?.id,
-        user?.pic,
-        "Logout"
-      )
+     
+       showNotification()
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toggleNotification({
@@ -164,7 +150,11 @@ export const useUser = () => {
       const response = await Axios.post("/user", data);
       return response.data.user;
     },
-    onSuccess: () => debouncedRefetch(), // Use debounced version
+    onSuccess: () => {
+      debouncedRefetch()
+      showNotification()
+
+    }, // Use debounced version
     onError: (error: AxiosError<{ message: string }>) => {
       toggleNotification({
         show: true,
@@ -175,47 +165,6 @@ export const useUser = () => {
     },
     onSettled: () => toggleModal(false, "LOGIN_MODAL"),
   });
-
-  // Handle Google login or signup
-  // const handleGoogleAuth = useCallback(
-  //   async (action: "login" | "signup") => {
-  //     queryClient.setQueryData(["GOOGLE_ACTION"], action);
-
-  //     try {
-  //       const method = action === "login" ? signIn : signUp;
-  //       await method?.authenticateWithRedirect({
-  //         strategy: "oauth_google",
-  //         redirectUrl: "/",
-  //         redirectUrlComplete: "/",
-  //       });
-  //       close();
-  //     } catch (error) {
-  //       const title =
-  //         action === "login" ? "Google Login Error" : "Google Sign-Up Error";
-  //       toggleNotification({
-  //         show: true,
-  //         type: "error",
-  //         title,
-  //         message:
-  //           "Failed to authenticate with Google." + (error as Error).message,
-  //       });
-  //     }
-  //   },
-  //   [signIn, signUp, queryClient, toggleNotification, close]
-  // );
-
-  // Handle user session for Google login/signup
-  // const createOrRegister = useMutation({
-  //   mutationKey: ["CREATE_OR_REGISTER"],
-  //   mutationFn: async (data: unknown) => {
-  //     const response = await Axios.post("/user/google", data);
-  //     return response.data.user;
-  //   },
-  //   onSuccess: (data) => {
-  //     queryClient.setQueryData(["USER"], data);
-  //     debouncedRefetch(); // Use debounced version
-  //   },
-  // });
 
   // Handle update
   const update = useMutation({

@@ -19,15 +19,16 @@ export const Avatar: React.FC<AvatarProps> = ({
   const avatarClassnames = classNames(
     "rounded-full object-cover bg-green",
     {
-      "w-14 h-14": size === "lg",
+      "w-12 h-12": size === "lg",
       "w-10 h-10": size === "sm",
     },
     !src && "flex justify-center items-center",
-    className
+    src && "border-0 bg-transparent",
+    className,
   );
 
   return src ? (
-    <Image width={40} height={40} src={src} className={avatarClassnames} alt={alt ?? "avatar"} />
+    <Image priority width={110} height={111} src={src} className={avatarClassnames} alt={alt ?? "avatar"} />
   ) : (
     <div className={avatarClassnames}>
       <UserIcon color="#ffffff" />

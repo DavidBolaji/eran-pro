@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // Check if the user already exists
     const existingUser = await db.user.findUnique({
       where: { email },
-      select: { password: true, id: true },
+      select: { password: true, id: true, Notifications: true },
     });
     if (!existingUser) {
       return NextResponse.json(
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
     const response = NextResponse.json(
       {
         message: "User Logged in successfully",
+        user: {Notifications: existingUser.Notifications }
       },
       { status: 200 }
     );

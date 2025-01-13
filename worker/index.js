@@ -1,15 +1,21 @@
-self.addEventListener("push", async (e) => {
-    const { message, body, icon } = JSON.parse(e.data.text());
+self.addEventListener('push', function (event) {
+    const { title, body, icon } = JSON.parse(event.data.text());
+    if (event.data) {
+      const options = {
+        body,
+        icon: icon || '/icon.png',
+        badge: '/badge.png',
+        vibrate: [100, 50, 100],
+        data: {
+          dateOfArrival: Date.now(),
+          primaryKey: '2',
+        },
+      }
+      event.waitUntil(self.registration.showNotification(title, options))
+    }
+  })
 
-    e.waitUntil(
-        self.registration.showNotification(message, {
-            body,
-            icon
-        })
-    )
-})
-
-self.addEventListener("notificationclick", async (e) => {
+  self.addEventListener("notificationclick", async (e) => {
     e.notification.close()
 
     e.waitUntil(
@@ -26,3 +32,9 @@ self.addEventListener("notificationclick", async (e) => {
        })
     )
 })
+   
+  // self.addEventListener('notificationclick', function (event) {
+  //   console.log('Notification click received.')
+  //   event.notification.close()
+  //   event.waitUntil(clients.openWindow('https://buyeranpro.com'))
+  // })
