@@ -1,6 +1,5 @@
 "use client"
 import { useAxios } from './use-axios';
-import { useQueryClient } from '@tanstack/react-query';
 
 const usePwa = () => {
     const Axios = useAxios();
