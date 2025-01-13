@@ -27,7 +27,7 @@ export const metadata = {
   title: 'Eran Pro',
   description: 'Enjoy fresh, premium chicken delivered to your doorstep at a discount. Don\'t miss out – order now and savor the savings!',
   icons: {
-    icon: [{ url: "/favicon-196.png", sizes: "196x196", type: "image/png" }],
+    icon: [{ url: "/icon.png", sizes: "196x196", type: "image/png" }],
     apple: [{ url: "/apple-icon-180.png" }],
   },
   appleTouchIcon: "/apple-icon-180.png",

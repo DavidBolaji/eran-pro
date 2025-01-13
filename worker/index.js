@@ -1,10 +1,9 @@
 self.addEventListener('push', function (event) {
-    const { title, body, icon } = JSON.parse(event.data.text());
+    const { title, body } = JSON.parse(event.data.text());
     if (event.data) {
       const options = {
         body,
-        icon: icon || '/icon.png',
-        badge: '/badge.png',
+        icon: '/icon-128x128.png',
         vibrate: [100, 50, 100],
         data: {
           dateOfArrival: Date.now(),

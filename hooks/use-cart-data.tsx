@@ -11,38 +11,71 @@ export const useCartData = () => {
 
   const addProduct = (product: IProduct & { weight: number }) => {
     const stepValue = product.unit === "PER_KG" ? 0.5 : 1;
+  
+    // Set the query for quantity
     queryClient.setQueryData(["CART_QTY"], stepValue);
+  
+    // Update the cart data
     queryClient.setQueryData(["CART_DATA"], (prev: Product[]) => {
-      const exists = prev.length;
-      const exists2 = prev?.filter((el) => el.id === product.id);
-      const all = exists && exists2.length;
-
-      if (all) {
-        return prev?.map((el) => {
-          if (el.id === product.id) {
-            return {
-              ...product,
-              weight: product.weight ? product.weight : stepValue,
-            };
-          } else {
-            return el;
-          }
+      const exists = prev.length > 0;
+      const existsInCart = prev?.some((el) => el.id === product.id);
+  
+      if (existsInCart) {
+        // If product exists, update it
+        toggleNotification({
+          type: "info",
+          show: true,
+          title: "Item Updated",
+          message: `The item "${product.name}" has been replaced in the cart.`,
         });
+  
+        return prev.map((el) =>
+          el.id === product.id
+            ? {
+                ...product,
+                weight: product.weight || stepValue,
+              }
+            : el
+        );
       }
-
+  
       if (!exists) {
-        const productData = {
-          ...product,
-          weight: product.weight ? product.weight : stepValue,
-        };
-        return [productData];
+        // If cart is empty, add the first product
+        toggleNotification({
+          type: "success",
+          show: true,
+          title: "Item Added",
+          message: `The item "${product.name}" has been added to the cart.`,
+        });
+  
+        return [
+          {
+            ...product,
+            weight: product.weight || stepValue,
+          },
+        ];
       }
+  
+      // If product is new, add it to the cart
+      toggleNotification({
+        type: "success",
+        show: true,
+        title: "Item Added",
+        message: `The item "${product.name}" has been added to the cart.`,
+      });
+  
       return [
         ...prev,
-        { ...product, weight: product.weight ? product.weight : stepValue },
+        {
+          ...product,
+          weight: product.weight || stepValue,
+        },
       ];
     });
+  
+  
   };
+  
 
 
   const applyPromotion = (promotion: Promotion) => {

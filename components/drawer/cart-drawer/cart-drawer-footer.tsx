@@ -27,7 +27,7 @@ export const CartDrawerFooter = () => {
 
 
   return (
-    <div className="h-[200px] bg-black-700 py-6 px-4">
+    <div className="h-[220px] bg-black-700 py-6 px-4 ">
       <div className="flex justify-between items-center mb-8">
         <Typography
           as="h6"

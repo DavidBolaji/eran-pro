@@ -27,6 +27,7 @@ export default async function Home({
   const categoryId = searchParams?.category || "1";
   const products = await getProducts(categoryId);
   const allProducts = await getProducts("");
+  const firstThreeCat = categories?.slice(0,3) || [];
 
   return (
     <div className="bg-grey-200">
@@ -63,17 +64,17 @@ export default async function Home({
           <div className="md:col-span-4 col-span-10 md:mb-0 mb-4">
             <FreshMeatCard />
           </div>
-          {["a", "b", "c"].map((el: string) => (
-            <div key={el} className="md:col-span-2 md:mt-0 mt-6 md:mb-0 mb-4">
-              <FoodCard />
+          {firstThreeCat.map((el) => (
+            <div key={el.id} className="md:col-span-2 md:mt-0 mt-6 md:mb-0 mb-4">
+              <FoodCard name={el.name} />
             </div>
           ))}
         </div>
         <div className="md:hidden block">
           <FreshMeatCard />
           <div className="flex px-4 gap-x-4 overflow-x-scroll mt-6 mb-12 scrollbar-hide">
-            {["a", "b", "c"].map((food) => (
-              <FoodCard key={food} />
+            {firstThreeCat?.map((food) => (
+              <FoodCard key={food.id} name={food.name} />
             ))}
           </div>
         </div>

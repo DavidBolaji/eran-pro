@@ -4,7 +4,7 @@ import { Button } from "../button/button";
 import Image from "next/image";
 import { Images } from "@/constants/image";
 
-export const FoodCard = () => {
+export const FoodCard: React.FC<{ name: string }> = ({ name }) => {
   return (
     <div className="bg-gradient-to-b min-w-[213px] from-[#23342A] to-[#7DBA00] overflow-hidden h-[347px] flex flex-col items-center justify-center rounded-2xl relative">
       <div className="flex items-center justify-center border border-white bg-transparent w-[22px] h-[22px] rounded-full mb-1.5">
@@ -16,7 +16,7 @@ export const FoodCard = () => {
         align="center"
         className="black-600 mb-2 px-4"
       >
-        Cow Meat
+        {name} Meat
       </Typography>
       <Typography
         as="h6"
@@ -24,15 +24,17 @@ export const FoodCard = () => {
         align="center"
         className="black-600 font-medium leading-[22px] text-sm mb-6 px-4"
       >
-        Premium cow meat cuts for every meal.
+        Premium {name} meat cuts for every meal.
       </Typography>
-      <Button
-        color="light"
-        size="lg"
-        className="border-0 bg-black-600 black-100 text-[14px] font-bold black-100"
-      >
-        Shop Now
-      </Button>
+      <a href="#sellings">
+        <Button
+          color="light"
+          size="lg"
+          className="border-0 bg-black-600 black-100 text-[14px] font-bold black-100"
+        >
+          Shop Now
+        </Button>
+      </a>
       <div className="absolute top-0">
         <Image
           src={Images.Top}

@@ -15,6 +15,7 @@ import BottomMeat from "./images/bottom-meat.png";
 import BreastMeat from "./images/breast.png";
 import CowMeat from "./images/cow.png";
 import Circle from "./images/circle.png";
+import IconFav from "./images/icon-128x128.png";
 
 export const Images = {
   BlackLogo,
@@ -34,4 +35,5 @@ export const Images = {
   LeftMeat,
   Side3,
   Top,
+  IconFav
 };
