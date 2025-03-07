@@ -68,7 +68,12 @@ export const NotificationDrawer = () => {
             <CloseIcon size="24" color="#92B09F" />
           </div>
           <div className="w-10 h-10 flex items-center justify-center relative rounded-full bg-grey-200">
-            <Image fill src={Images.IconFav} alt="eranpro favlogo" className="w-5 h-5 scale-50 absolute" />
+            <Image
+              fill
+              src={Images.IconFav}
+              alt="eranpro favlogo"
+              className="w-5 h-5 scale-50 absolute"
+            />
           </div>
           <div>
             <Typography
@@ -124,7 +129,12 @@ export const NotificationDrawer = () => {
               <CloseIcon size="24" color="#92B09F" />
             </div>
             <div className="w-10 h-10 relative flex items-center justify-center rounded-full bg-grey-200">
-              <Image fill src={Images.IconFav} alt="eranpro favlogo" className="w-5 h-5 scale-50 absolute" />
+              <Image
+                fill
+                src={Images.IconFav}
+                alt="eranpro favlogo"
+                className="w-5 h-5 scale-50 absolute"
+              />
             </div>
             <div>
               <Typography
@@ -143,14 +153,6 @@ export const NotificationDrawer = () => {
               >
                 {notificationDrawer.message}
               </Typography>
-              {/* <Button
-                onClick={close}
-                color="light"
-                size="lg"
-                className="border-0 bg-black-600 p-2 h-8 flex items-center justify-center"
-              >
-                Button
-              </Button> */}
             </div>
           </motion.div>
         </div>

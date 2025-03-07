@@ -18,7 +18,7 @@ export default function CustomerTable({
   totalPages,
   page,
   itemsPerPage,
-  categories
+  categories,
 }: CustomerTableProps) {
   const {
     items,
@@ -39,10 +39,10 @@ export default function CustomerTable({
 
     onSort,
     onSearch: (form, params) => {
-      filterCustomer(form, params)
+      filterCustomer(form, params);
     },
     onFilter(form, params, path) {
-        filterCustomer(form, params, path)
+      filterCustomer(form, params, path);
     },
   });
 
@@ -80,9 +80,11 @@ export default function CustomerTable({
             ))}
           </TableBody>
         </Table>
-        {items.length < 1 && <div className="py-8">
-          <Empty />
-        </div>}
+        {items.length < 1 && (
+          <div className="py-8">
+            <Empty />
+          </div>
+        )}
       </div>
 
       <Pagination

@@ -1,9 +1,7 @@
-
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import { CartDrawer } from "@/components/drawer/cart-drawer/cart-drawer";
 import { Viewport } from "next";
-
 
 import dynamic from "next/dynamic";
 import { Overlay } from "@/components/overlay/overlay";
@@ -18,14 +16,16 @@ import { DeleteModal } from "@/components/modal/delete-modal/delete-modal";
 import "./globals.css";
 import UIProvider from "@/tanstack/ui-provider";
 
-const defaultUrl = process.env.NEXT_PUBLIC_ENV === 'prod'
-  ? `https://${process.env.NEXT_PUBLIC_FRONT}`
-  : "http://localhost:3000"
+const defaultUrl =
+  process.env.NEXT_PUBLIC_ENV === "prod"
+    ? `https://${process.env.NEXT_PUBLIC_FRONT}`
+    : "http://localhost:3000";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Eran Pro',
-  description: 'Enjoy fresh, premium chicken delivered to your doorstep at a discount. Don\'t miss out – order now and savor the savings!',
+  title: "Eran Pro",
+  description:
+    "Enjoy fresh, premium chicken delivered to your doorstep at a discount. Don't miss out – order now and savor the savings!",
   icons: {
     icon: [{ url: "/icon.png", sizes: "196x196", type: "image/png" }],
     apple: [{ url: "/apple-icon-180.png" }],
@@ -207,13 +207,12 @@ export const metadata = {
       },
     ],
   },
-}
- 
- 
+};
+
 export const viewport: Viewport = {
   maximumScale: 1,
-  userScalable: false
-}
+  userScalable: false,
+};
 
 const TanstackProvider = dynamic(
   () =>

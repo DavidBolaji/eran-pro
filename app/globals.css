@@ -1,145 +1,254 @@
 /* @import url('https://fonts.cdnfonts.com/css/satoshi'); */
-@import url('/satoshi.css');
+
+@import url("/satoshi.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 @layer utilities {
     .scrollbar-hide {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
     }
-    
     .scrollbar-hide::-webkit-scrollbar {
-      display: none;  /* Chrome, Safari and Opera */
+        display: none;
+        /* Chrome, Safari and Opera */
     }
-  }
+}
 
-  * {
+* {
     scroll-behavior: smooth;
-  }
+}
 
-body > * {
-    font-family: 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
+body>* {
+    font-family: "Satoshi-Variable", "Satoshi-Regular", sans-serif;
     -webkit-tap-highlight-color: transparent;
 }
 
+
 /* In your global CSS */
+
+
 /* .toolbarClassName .rdw-dropdown-selected-text {
   z-index: 10000 !important;
   } 
    */
 
+
 /* styles.css or a similar global stylesheet */
+
 .custom-calendar-width {
-  width: 500px !important; /* or any width you prefer */
+    width: 500px !important;
+    /* or any width you prefer */
 }
 
 .ant-dropdown-placement-bottomLeft {
-  min-width: 150px !important;
+    min-width: 150px !important;
 }
 
+
 /* Custom styles for NProgress */
+
 #nprogress .bar {
-  background: #7DBA00 !important; /* Blue color */
+    background: #7dba00 !important;
+    /* Blue color */
 }
 
 #nprogress .peg {
-  box-shadow: 0 0 10px #7DBA00, 0 0 5px #7DBA00 !important;
+    box-shadow: 0 0 10px #7dba00, 0 0 5px #7dba00 !important;
 }
 
 #nprogress .spinner-icon {
-  border-top-color: #7DBA00 !important;
-  border-left-color: #7DBA00 !important;
+    border-top-color: #7dba00 !important;
+    border-left-color: #7dba00 !important;
 }
 
+
 /* Black color classes */
-.black-100 { color: #23342A; }
-.black-200 { color: #516158; }
-.black-300 { color: #6E8C7B; }
-.black-400 { color: #92B09F; }
-.black-500 { color: #C8E0D2; }
-.black-600 { color: #DDEEE5; }
-.black-700 { color: #F0FAF4; }
+
+.black-100 {
+    color: #23342a;
+}
+
+.black-200 {
+    color: #516158;
+}
+
+.black-300 {
+    color: #6e8c7b;
+}
+
+.black-400 {
+    color: #92b09f;
+}
+
+.black-500 {
+    color: #c8e0d2;
+}
+
+.black-600 {
+    color: #ddeee5;
+}
+
+.black-700 {
+    color: #f0faf4;
+}
+
 
 /* Background color variants for black */
-.bg-black-100 { background-color: #23342A; }
-.bg-black-200 { background-color: #516158; }
-.bg-black-300 { background-color: #6E8C7B; }
-.bg-black-400 { background-color: #92B09F; }
-.bg-black-500 { background-color: #C8E0D2; }
-.bg-black-600 { background-color: #DDEEE5; }
-.bg-black-700 { background-color: #F0FAF4; }
+
+.bg-black-100 {
+    background-color: #23342a;
+}
+
+.bg-black-200 {
+    background-color: #516158;
+}
+
+.bg-black-300 {
+    background-color: #6e8c7b;
+}
+
+.bg-black-400 {
+    background-color: #92b09f;
+}
+
+.bg-black-500 {
+    background-color: #c8e0d2;
+}
+
+.bg-black-600 {
+    background-color: #ddeee5;
+}
+
+.bg-black-700 {
+    background-color: #f0faf4;
+}
+
 
 /* Green and Lemon color classes */
-.green { color: #066932; }
-.bg-green { background-color: #066932; }
 
-.lemon { color: #7DBA00; }
-.bg-lemon { background-color: #7DBA00; }
+.green {
+    color: #066932;
+}
+
+.bg-green {
+    background-color: #066932;
+}
+
+.lemon {
+    color: #7dba00;
+}
+
+.bg-lemon {
+    background-color: #7dba00;
+}
+
 
 /* Grey color classes */
-.grey-100 { color: #E7E7E7; }
-.grey-200 { color: #F5F5F5; }
 
-.bg-grey-100 { background-color: #E7E7E7; }
-.bg-grey-200 { background-color: #F5F5F5; }
+.grey-100 {
+    color: #e7e7e7;
+}
+
+.grey-200 {
+    color: #f5f5f5;
+}
+
+.bg-grey-100 {
+    background-color: #e7e7e7;
+}
+
+.bg-grey-200 {
+    background-color: #f5f5f5;
+}
+
 
 /* Red color classes */
-.red-100 { color: #E83B3B; }
-.red-200 { color: #FF8A8A; }
 
-.bg-red-100 { background-color: #E83B3B; }
-.bg-red-200 { background-color: #FF8A8A; }
+.red-100 {
+    color: #e83b3b;
+}
+
+.red-200 {
+    color: #ff8a8a;
+}
+
+.bg-red-100 {
+    background-color: #e83b3b;
+}
+
+.bg-red-200 {
+    background-color: #ff8a8a;
+}
+
 
 /* Orange color classes */
-.orange-100 { color: #D28209; }
-.orange-200 { color: #F9C77B; }
 
-.bg-orange-100 { background-color: #D28209; }
-.bg-orange-200 { background-color: #F9C77B; }
+.orange-100 {
+    color: #d28209;
+}
 
-.white { color: "#ffffff" !important}
-.bg-white { background-color: "#ffffff";}
+.orange-200 {
+    color: #f9c77b;
+}
+
+.bg-orange-100 {
+    background-color: #d28209;
+}
+
+.bg-orange-200 {
+    background-color: #f9c77b;
+}
+
+.white {
+    color: "#ffffff" !important;
+}
+
+.bg-white {
+    background-color: "#ffffff";
+}
 
 select {
-   transition: border-color 0.3s ease;
-  /* Remove default styling in browsers */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  position: absolute !important;
+    transition: border-color 0.3s ease;
+    /* Remove default styling in browsers */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: absolute !important;
 }
 
 select:focus {
-  position: absolute !important;
-  top: 15px !important;
-  /* color: #516158 !important; */
+    position: absolute !important;
+    top: 15px !important;
+    /* color: #516158 !important; */
 }
 
 .no-s {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #d9d9d9 white;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: #d9d9d9 white;
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #fff;
-  border-radius: 100vw;
+    background: #fff;
+    border-radius: 100vw;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
-  border-radius: 100vw;
+    background: #d9d9d9;
+    border-radius: 100vw;
 }
 
 @layer base {
-  :root {
+     :root {
         --background: 0 0% 100%;
         --foreground: 0 0% 3.9%;
         --card: 0 0% 100%;
@@ -166,7 +275,7 @@ select:focus {
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
     }
-  .dark {
+    .dark {
         --background: 0 0% 3.9%;
         --foreground: 0 0% 98%;
         --card: 0 0% 3.9%;
@@ -195,10 +304,10 @@ select:focus {
 }
 
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
 }

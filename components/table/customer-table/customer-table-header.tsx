@@ -34,16 +34,19 @@ export default function CustomerTableHeader({
     <TableHeader>
       <TableRow>
         <TableHead className="pl-6 h-full py-3 flex items-center">
-          <CheckboxMinus checked={allChecked} onCheckedChange={toggleSelectAll} />
+          <CheckboxMinus
+            checked={allChecked}
+            onCheckedChange={toggleSelectAll}
+          />
         </TableHead>
         {headerList.map((header) =>
           header.hasSort ? (
             <TableHead
               className="pl-6 py-3 black-300 font-bold text-sm text-nowrap"
-              key={header.title}
+              key={header?.title}
             >
               <button
-                onClick={() => handleSort(header.key as keyof Customer)}
+                onClick={() => handleSort(header?.key as keyof Customer)}
                 className="flex items-center gap-1"
               >
                 {header.title}
@@ -66,4 +69,3 @@ export default function CustomerTableHeader({
     </TableHeader>
   );
 }
-

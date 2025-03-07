@@ -25,11 +25,11 @@ export default function CustomerTableRow({
   const router = useRouter();
 
   return (
-    <TableRow className={selectedItems.has(customer.id) ? "bg-black-600" : ""}>
+    <TableRow className={selectedItems.has(customer?.id) ? "bg-black-600" : ""}>
       <TableCell className="pl-6 py-3 flex mt-2 items-end h-full">
         <Checkbox
-          checked={selectedItems.has(customer.id)}
-          onCheckedChange={() => toggleSelectItem(customer.id)}
+          checked={selectedItems.has(customer?.id)}
+          onCheckedChange={() => toggleSelectItem(customer?.id)}
         />
       </TableCell>
       <TableCell className="pl-6 py-3">
@@ -37,16 +37,28 @@ export default function CustomerTableRow({
           {customer?.pic ? (
             <Image
               src={customer?.pic ?? ""}
-              alt={customer.fname + " avatar"}
+              alt={customer?.fname + " avatar"}
               width={40}
               height={40}
               className="rounded-full object-cover"
             />
-          ) : <Avatar size="sm" src={customer.fname ? `https://avatar.iran.liara.run/username?username=${customer?.fname + "" + customer?.lname}
+          ) : (
+            <Avatar
+              size="sm"
+              src={
+                customer.fname
+                  ? `https://avatar.iran.liara.run/username?username=${
+                      customer?.fname + "" + customer?.lname
+                    }
 
-`: undefined} />}
+`
+                  : undefined
+              }
+            />
+          )}
           <span className="font-bold text-sm  black-100">
-            {customer.fname} {customer.lname} {(customer?.fname?.length ?? 0) < 1 ? "-" : null}
+            {customer?.fname} {customer?.lname}{" "}
+            {(customer?.fname?.length ?? 0) < 1 ? "-" : null}
           </span>
         </div>
       </TableCell>
@@ -54,17 +66,23 @@ export default function CustomerTableRow({
         {customer?.email}
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
-        {customer?.phone ? customer.phone : "-"}
+        {customer?.phone ? customer?.phone : "-"}
       </TableCell>
       <TableCell className="pl-6 flex justify-center items-center font-bold text-sm black-100">
-        <div className={selectedItems.has(customer.id) ? "" : "-translate-y-1"}>{customer?.totalOrders}</div>
+        <div
+          className={selectedItems.has(customer?.id) ? "" : "-translate-y-1"}
+        >
+          {customer?.totalOrders}
+        </div>
       </TableCell>
       <TableCell className="pl-6 font-bold text-sm black-100">
-        {customer?.lastOrderDate.toLocaleDateString() === "1/1/1970" ? "-" : formatDate(customer?.lastOrderDate.toLocaleDateString())}
+        {customer?.lastOrderDate.toLocaleDateString() === "1/1/1970"
+          ? "-"
+          : formatDate(customer?.lastOrderDate.toLocaleDateString())}
       </TableCell>
       <TableCell className="pl-6 py-3 font-bold text-sm black-100">
         <Badge variant="outline" className={cn("capitalize rounded-full")}>
-          {customer.status.toLowerCase()}
+          {customer?.status?.toLowerCase()}
         </Badge>
       </TableCell>
       <TableCell className="py-3">
